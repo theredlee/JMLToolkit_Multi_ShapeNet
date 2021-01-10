@@ -1,0 +1,13 @@
+.zc-body {
+  background-color: #363b42;
+}
+
+.chart--container {
+  height: 100%;
+  width: 100%;
+  min-height: 100px;
+}
+
+.zc-ref {
+  display: none;
+}
