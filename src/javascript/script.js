@@ -4,6 +4,23 @@ google.charts.load('current', { packages: ['corechart', 'bar'] });
 
 // Load timeseries dataset
 var globalLinesTimeseries = [];
+var globalLabelArr = [];
+var globalCoefArr = [];
+var globalInterceptArr = [];
+var globalFeaturesArr = [];
+var globalMultiArr = [];
+var globalMultiplication = [];
+
+// -------------------------------
+var GlobalFlag = false;
+var timeSeriesLoadEndFlag1 = false;
+var timeSeriesLoadEndFlag2 = false;
+var coefEndFlag = false;
+var interceptEndFlag = false;
+var featureEndFlag1 = false;
+var featureEndFlag2 = false;
+var multiEndFlag = false;
+
 /*
 [
     [[0], [1, 2, 3, 4, 5, 6 ...]],
@@ -28,80 +45,30 @@ var currentShapeletSelection;
 var distanceAll; // A shapelet to all timeseries with the same label
 const topK = 5; // Initialize the topK = 5
 
-// Asynchronous call before onload
-
 // The ready event occurs after the HTML document has been loaded, =>
 $(document).ready(function () {
-    // Asynchronous
-    // readShapeletWeight();
-    loadTimeseries();
-    // loadShapelet();
+    // Asynchronous function involking
+    // lineChart();
 });
 
 // while the onload event occurs later, when all content (e.g. images) also has been loaded.
 window.onload = function () {
     // multiCharts()
+    // readMultiplication();
+    loadTimeseries();
+
+    console.log((timeSeriesLoadEndFlag1 && timeSeriesLoadEndFlag2 && coefEndFlag && interceptEndFlag && 
+        featureEndFlag1 && featureEndFlag2 && multiEndFlag))
+
+    // while (!(timeSeriesLoadEndFlag1 && timeSeriesLoadEndFlag2 && coefEndFlag && interceptEndFlag && 
+    //     featureEndFlag1 && featureEndFlag2 && multiEndFlag)) {
+    //         pauseComp(100);
+    //         console.log('')
+    //     }
+    //     multiplication();
 }
 
 function addEventHandlers() {
-    $('#timeseriesLabelSelectionInput').on("change", function (event) {
-        newValue = $(this).find("option:selected").text();
-        var label;
-        if (newValue == "Timeseries - Class0") {
-            label = 0;
-        } else {
-            label = 1;
-        }
-        currentTimeseriesLabelSelection = parseInt(parseInt(label));
-        updateTimeseries(currentTimeseriesLabelSelection);
-        updateChart(currentTimeseriesSelection, currentShapeletSelection); // Use the currentShapeletSelection with the last shapelet selection// updateTopKCharts(currentShapeletSelection, currentShapeletLabelSelection, topK); // TopK is initialized at the variable declaration
-    });
-
-    $('#shapeletLabelSelectionInput').on("change", function (event) {
-        newValue = $(this).find("option:selected").text();
-        var label;
-        if (newValue == "Shapelet - Class0") {
-            label = 0;
-        } else {
-            label = 1;
-        }
-        currentShapeletLabelSelection = parseInt(parseInt(label));
-        updateShapelet(currentShapeletLabelSelection);
-        updateChart(currentTimeseriesSelection, currentShapeletSelection); // Use the currentShapeletSelection with the last shapelet selection// updateTopKCharts(currentShapeletSelection, currentShapeletLabelSelection, topK); // TopK is initialized at the variable declaration
-    });
-
-    $("#timeseriesSelectionInput").on("change", function (event) {
-        newValue = $(this).val()
-        currentTimeseriesSelection = parseInt(newValue); // Update currentTimeseriesSelection with the clicking item and use it in the next line
-        updateChart(currentTimeseriesSelection, currentShapeletSelection); // Use the currentShapeletSelection with the last shapelet selection
-    })
-
-    $("#shapeletSelectionInput").on("change", function (event) {
-        newValue = $(this).val()
-        currentShapeletSelection = parseInt(newValue); // Update currentTimeseriesSelection with the clicking item and use it in the next line
-        updateChart(currentTimeseriesSelection, currentShapeletSelection); // Use the currentTimeseriesSelection with the last timeseries selection
-        drawOneShapeletAllDistanceHistogram(currentShapeletSelection, currentShapeletLabelSelection);
-    })
-
-    var maxLenLabel = labelSet.size - 1;
-    var maxLenTimeseries = currentLabelLinesTimeseries.length - 1;
-    var maxLenShapelet = currentLabelLinesShapelet.length - 1;
-    var minLen = 0
-
-    $("#labelSelectionInput").attr({
-        "max": maxLenLabel,        // substitute your own
-        "min": minLen          // values (or variables) here
-    });
-
-    $("#timeseriesSelectionInput").attr({
-        "max": maxLenTimeseries,        // substitute your own
-        "min": minLen          // values (or variables) here
-    });
-
-    $("#shapeletSelectionInput").attr({
-        "max": maxLenShapelet,        // substitute your own
-        "min": minLen          // values (or variables) here
-    });
 }
 
 /*----------------------------------------*/
@@ -112,41 +79,102 @@ function loadTimeseries() {
             type: "GET",
             url: "../datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff",
             dataType: null,
-            success: function (data) { processData(data, "timeseries"); }
+            success: function (data) {
+                processData(data, "timeseries");
+                timeSeriesLoadEndFlag1 = true;
+            }
         });
-        // Loading train dataset
-        // $.ajax({
-        //     type: "GET",
-        //     url: "../datasets/ItalyPowerDemand_dataset/v_1/ItalyPowerDemand/ItalyPowerDemand0/ItalyPowerDemand0_TRAIN",
-        //     dataType: null,
-        //     success: function (data) { processData(data, "timeseries"); }
-        // });
-    });
-}
-
-function loadShapelet() {
-    $(document).ready(function () {
+        // -------------
         $.ajax({
             type: "GET",
-            url: "../datasets/ItalyPowerDemand_dataset/v_1/shapelet/shapelet\&weight/shapelet-original.txt",
+            url: "../datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff",
             dataType: null,
-            success: function (data) { processData(data, "shapelet"); }
+            success: function (data) {
+                processData(data, "timeseries");
+                timeSeriesLoadEndFlag2 = true;
+                readCoef();
+                readIntercept();
+                readFeatures();
+            }
         });
     });
 }
 
-function readShapeletWeight() {
+function readCoef() {
     $(document).ready(function () {
+        // Loading test dataset
         $.ajax({
             type: "GET",
-            url: "../datasets/ItalyPowerDemand_dataset/v_1/shapelet/shapelet\&weight/shapelet-weight.txt",
+            url: "../datasets/Distance/coef.txt",
             dataType: null,
-            success: function (data) { processData(data, "shapeletweight"); }
+            success: function (data) {
+                processCoef(data);
+                coefEndFlag = true;
+            }
         });
     });
 }
 
-function processData(allText, type) {
+function readIntercept() {
+    $(document).ready(function () {
+        // Loading test dataset
+        $.ajax({
+            type: "GET",
+            url: "../datasets/Distance/intercept.txt",
+            dataType: null,
+            success: function (data) {
+                processIntercept(data);
+                interceptEndFlag = true;
+            }
+        });
+    });
+}
+
+function readFeatures() {
+    $(document).ready(function () {
+        // Loading test dataset
+        $.ajax({
+            type: "GET",
+            url: "../datasets/Distance/feature_train.txt",
+            dataType: null,
+            success: function (data) {
+                processFeatures(data);
+                featureEndFlag1 = true;
+            }
+        });
+    });
+    // ---------------------------
+    $(document).ready(function () {
+        // Loading test dataset
+        $.ajax({
+            type: "GET",
+            url: "../datasets/Distance/feature_test.txt",
+            dataType: null,
+            success: function (data) {
+                processFeatures(data);
+                featureEndFlag2 = true;
+                multiplication();
+            }
+        });
+    });
+}
+
+function readMultiplication() {
+    $(document).ready(function () {
+        // Loading test dataset
+        $.ajax({
+            type: "GET",
+            url: "../datasets/Distance/multiplication.txt",
+            dataType: null,
+            success: function (data) {
+                processMultiplication(data);
+                multiEndFlag = true;
+            }
+        });
+    });
+}
+
+async function processData(allText, type) {
     var labelIndex = 0; // The first element of each row is the lable in terms of both timeseries and shapelet
     var allTextLines = allText.split(/\r\n|\n/);
     var lines = [];
@@ -155,9 +183,8 @@ function processData(allText, type) {
     var count = 0
     var readStart = false
     allTextLines.forEach(element => {
-
         // Put it brfore the recognition statement to skip the '@data' row
-        if (readStart && count <= 0) {
+        if (readStart) {
             var entries = element.split('\\n');
             var firstStrFlag = true
             var len;
@@ -183,10 +210,13 @@ function processData(allText, type) {
                 var valueArr = entryArrToCut.slice(0, len);
 
                 if (entryArrToCut.length > len) {
-                    label = entryArrToCut.slice(len, len+1);
+                    label = entryArrToCut.slice(len, len + 1);
                     // Use unshift to push the label at the first element
                     aMultiTimeseriesArr.unshift(label);
-                    console.log("label: " + label)
+                    // console.log("label: " + label)
+                    // console.log('-----')
+                    // label format: [val]
+                    globalLabelArr.push(label[0]);
                 }
 
                 tarr.push(valueArr);
@@ -197,22 +227,101 @@ function processData(allText, type) {
             aMultiTimeseriesArr.push(tarr)
             lines.push(aMultiTimeseriesArr);
 
-            // console.log("aMultiTimeseriesArr.length: " + aMultiTimeseriesArr.length)
-            // console.log(aMultiTimeseriesArr)
-            // console.log("---------")
-
-            // Pass aMultiTimeseriesArr to function multiGoogleCharts
-            multiGoogleCharts(aMultiTimeseriesArr)
-            
             // console.log("-------------------------------- count: " + count)
-            count++
+            count++;
         }
 
         if (element.includes("@data")) {
             readStart = true
         }
     });
+
+    console.log('globalLabelArr.length: ' + globalLabelArr.length);
+    // console.log(globalLabelArr)
+
+    // if (timeSeriesLoadEndFlag1 || timeSeriesLoadEndFlag2) {
+    //     timeSeriesLoadEndFlag2 = true;
+    // }else {
+    //     timeSeriesLoadEndFlag1 = true;
+    // }
 }
+
+async function processCoef(allText) {
+    var entries = allText.split(', ');
+    entries.forEach(entry => {
+        globalCoefArr.push(entry);
+    });
+    console.log("globalCoefArr: " + globalCoefArr);
+    // coefEndFlag = true;
+}
+
+async function processIntercept(allText) {
+    var entries = allText.split(', ');
+    entries.forEach(entry => {
+        globalInterceptArr.push(entry);
+    });
+    console.log("globalInterceptArr: " + globalInterceptArr);
+    // interceptEndFlag = true;
+}
+
+async function processFeatures(allText) {
+    var entries = allText.split('\n');
+    // console.log(entries.length);
+    entries.forEach(entryStr => {
+        // Handle the empty line case
+        if (entryStr.length != 0) {
+            var entry = entryStr.split(' ');
+            arr = [];
+            entry.forEach(element => {
+                arr.push(parseFloat(element));
+            });
+            globalFeaturesArr.push(arr);
+        }
+    });
+    console.log("globalFeaturesArr.length: " + globalFeaturesArr.length)
+    // if (globalFeaturesArr.length == entries.length) {
+    //     featureEndFlag1 = true;
+    // }else {
+    //     featureEndFlag2 = true;
+    // }
+}
+
+async function processMultiplication(allText) {
+    var entries = allText.split('\n');
+    entries.forEach(entry => {
+        // Handle the empty line case
+        if (entry.length > 0) {
+            globalMultiplication.push(entry);
+        }
+    });
+    console.log("globalMultiplication.length: " + globalMultiplication.length)
+    // multiEndFlag = true;
+}
+
+async function multiplication() {
+    var count = 0;
+    console.log('-------------------');
+    intercept = globalInterceptArr[0];
+
+    globalFeaturesArr.forEach(featureRow => {
+        var rowSum = 0;
+        for (var i; i < featureRow.length; i++) {
+            fVal = featureRow[i];
+            coefVal = globalCoefArr[i];
+            rowSum += fVal * coefVal;
+        }
+        count++;
+        rowSum += intercept;
+        globalMultiArr.push(rowSum);
+    });
+
+    console.log("count: " + count);
+
+    console.log("globalMultiArr.length: " + globalMultiArr.length);
+}
+
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 
 function multiCharts() {
     let chartConfig = {
@@ -568,4 +677,68 @@ function multiGoogleCharts(aMultiTimeseriesArr) {
     chart1.draw(data1, options);
 
     multiCharts();
+}
+
+function lineChart() {
+    Highcharts.getJSON(
+        'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
+        function (data) {
+
+            Highcharts.chart('container', {
+                chart: {
+                    zoomType: 'x'
+                },
+                title: {
+                    text: 'USD to EUR exchange rate over time'
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                        'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+                },
+                xAxis: {
+                    //   type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Exchange rate'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        marker: {
+                            radius: 2
+                        },
+                        lineWidth: 1,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+
+                series: [{
+                    type: 'area',
+                    name: 'USD to EUR',
+                    data: data
+                }]
+            });
+        }
+    );
 }

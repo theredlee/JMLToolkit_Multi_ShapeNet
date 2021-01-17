@@ -47,6 +47,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js"
         integrity="sha512-zO8oeHCxetPn1Hd9PdDleg5Tw1bAaP0YmNvPY8CwcRyUk7d7/+nyElmFrB6f7vg4f7Fv4sui1mcep8RIEShczg=="
         crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 </head>
 
 <body>
@@ -58,7 +63,16 @@
     <div id="chart_div"></div>
     <div id="chart_div1"></div>
     <!--  -->
-    <div id="myChart" class="chart--container"></div>
+    <!-- <div id="myChart" class="chart--container"></div> -->
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+        <p class="highcharts-description">
+            Highcharts has extensive support for time series, and will adapt
+            intelligently to the input data. Click and drag in the chart to zoom in
+            and inspect the data.
+        </p>
+    </figure>
+
 </body>
 
 </html>
