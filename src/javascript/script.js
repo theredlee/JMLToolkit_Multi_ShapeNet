@@ -12,23 +12,7 @@ var globalMultiArr = [];
 var globalMultiplication = [];
 
 // -------------------------------
-var GlobalFlag = false;
-var timeSeriesLoadEndFlag1 = false;
-var timeSeriesLoadEndFlag2 = false;
-var coefEndFlag = false;
-var interceptEndFlag = false;
-var featureEndFlag1 = false;
-var featureEndFlag2 = false;
-var multiEndFlag = false;
 
-/*
-[
-    [[0], [1, 2, 3, 4, 5, 6 ...]],
-    [[1], [1, 2, 3, 4, 5, 6 ...]],
-    [[0], [1, 2, 3, 4, 5, 6 ...]],
-    ...
-]
-*/
 var globalLinesShapelet = [];
 var globalShapeletWeight = [];
 var currentLabelLinesTimeseries = [];
@@ -54,18 +38,7 @@ $(document).ready(function () {
 // while the onload event occurs later, when all content (e.g. images) also has been loaded.
 window.onload = function () {
     // multiCharts()
-    // readMultiplication();
     loadTimeseries();
-
-    console.log((timeSeriesLoadEndFlag1 && timeSeriesLoadEndFlag2 && coefEndFlag && interceptEndFlag && 
-        featureEndFlag1 && featureEndFlag2 && multiEndFlag))
-
-    // while (!(timeSeriesLoadEndFlag1 && timeSeriesLoadEndFlag2 && coefEndFlag && interceptEndFlag && 
-    //     featureEndFlag1 && featureEndFlag2 && multiEndFlag)) {
-    //         pauseComp(100);
-    //         console.log('')
-    //     }
-    //     multiplication();
 }
 
 function addEventHandlers() {
@@ -81,7 +54,6 @@ function loadTimeseries() {
             dataType: null,
             success: function (data) {
                 processData(data, "timeseries");
-                timeSeriesLoadEndFlag1 = true;
             }
         });
         // -------------
@@ -91,10 +63,8 @@ function loadTimeseries() {
             dataType: null,
             success: function (data) {
                 processData(data, "timeseries");
-                timeSeriesLoadEndFlag2 = true;
+                // Call Ajax function one by one
                 readCoef();
-                readIntercept();
-                readFeatures();
             }
         });
     });
@@ -109,7 +79,8 @@ function readCoef() {
             dataType: null,
             success: function (data) {
                 processCoef(data);
-                coefEndFlag = true;
+                // Call Ajax function one by one
+                readIntercept();
             }
         });
     });
@@ -124,7 +95,8 @@ function readIntercept() {
             dataType: null,
             success: function (data) {
                 processIntercept(data);
-                interceptEndFlag = true;
+                // Call Ajax function one by one
+                readFeatures();
             }
         });
     });
@@ -139,7 +111,6 @@ function readFeatures() {
             dataType: null,
             success: function (data) {
                 processFeatures(data);
-                featureEndFlag1 = true;
             }
         });
     });
@@ -152,7 +123,7 @@ function readFeatures() {
             dataType: null,
             success: function (data) {
                 processFeatures(data);
-                featureEndFlag2 = true;
+                // Call the last function - multiplication()
                 multiplication();
             }
         });
@@ -168,7 +139,6 @@ function readMultiplication() {
             dataType: null,
             success: function (data) {
                 processMultiplication(data);
-                multiEndFlag = true;
             }
         });
     });
@@ -238,12 +208,6 @@ async function processData(allText, type) {
 
     console.log('globalLabelArr.length: ' + globalLabelArr.length);
     // console.log(globalLabelArr)
-
-    // if (timeSeriesLoadEndFlag1 || timeSeriesLoadEndFlag2) {
-    //     timeSeriesLoadEndFlag2 = true;
-    // }else {
-    //     timeSeriesLoadEndFlag1 = true;
-    // }
 }
 
 async function processCoef(allText) {
@@ -301,23 +265,27 @@ async function processMultiplication(allText) {
 async function multiplication() {
     var count = 0;
     console.log('-------------------');
+    // console.log(globalFeaturesArr);
+    // console.log(globalCoefArr);
     intercept = globalInterceptArr[0];
 
     globalFeaturesArr.forEach(featureRow => {
         var rowSum = 0;
-        for (var i; i < featureRow.length; i++) {
+        for (var i=0; i < featureRow.length; i++) {
             fVal = featureRow[i];
             coefVal = globalCoefArr[i];
-            rowSum += fVal * coefVal;
+            rowSum = rowSum + parseFloat(fVal * coefVal);
+            // console.log('fVal * coefVal: ' + fVal * coefVal);
         }
-        count++;
-        rowSum += intercept;
+        rowSum = rowSum + parseFloat(intercept);
         globalMultiArr.push(rowSum);
+        count++;
+        // console.log('rowSum: ' + rowSum);
     });
 
     console.log("count: " + count);
 
-    console.log("globalMultiArr.length: " + globalMultiArr.length);
+    console.log("globalMultiArr: " + globalMultiArr);
 }
 
 // ------------------------------------------------------------------------------
