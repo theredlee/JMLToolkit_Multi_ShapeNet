@@ -264,6 +264,7 @@ async function processMultiplication(allText) {
 
 async function multiplication() {
     var count = 0;
+    var trueCount = 0;
     console.log('-------------------');
     // console.log(globalFeaturesArr);
     // console.log(globalCoefArr);
@@ -278,12 +279,17 @@ async function multiplication() {
             // console.log('fVal * coefVal: ' + fVal * coefVal);
         }
         rowSum = rowSum + parseFloat(intercept);
+        if (rowSum>0 && globalLabelArr[count]>0) {
+            trueCount++;
+        }
+
         globalMultiArr.push(rowSum);
         count++;
         // console.log('rowSum: ' + rowSum);
     });
 
     console.log("count: " + count);
+    console.log("trueCount: " + trueCount);
 
     console.log("globalMultiArr: " + globalMultiArr);
 }
