@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class Main {
 
@@ -22,8 +23,15 @@ public class Main {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         new Main();
+        Dataset aDataset = new Dataset();
+        aDataset.loadTimeseries();
+        aDataset.loadCoef();
+        aDataset.loadIntercept();
+        aDataset.loadFeatures();
+        aDataset.multiplication_PN_TF();
+//        new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
     }
 }
 

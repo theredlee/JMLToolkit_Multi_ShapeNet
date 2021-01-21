@@ -1,20 +1,20 @@
+import org.jfree.ui.RefineryUtilities;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dataset {
 
-    public ArrayList<ArrayList<Double>> globalLinesTimeseries = new ArrayList<ArrayList<Double>>();
+    public ArrayList<ArrayList<ArrayList<Double>>> globalTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     public ArrayList<Double> globalLabelArr = new ArrayList<Double>();
     public ArrayList<ArrayList<Double>> globalCoefArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalInterceptArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalFeaturesArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<Double> globalMultArr = new ArrayList<Double>();
-    public ArrayList<Double> globalMultiplication = new ArrayList<Double>();
 
     public ArrayList<ArrayList<Double>> globalMultPosAndNegArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalMultTFArr = new ArrayList<ArrayList<Double>>();
@@ -44,17 +44,34 @@ public class Dataset {
                     // To split by "\n", you'll need \\\\n instead, because \\n in regex represents an actual line break, just as \n represents one in Java.
                     List<String> arrOfStr = Arrays.asList(newline.split("\\\\n"));
 
+                    ArrayList<ArrayList<Double>> timeseriesArr = new ArrayList<ArrayList<Double>>();
+                    // Initialize timeseriesArr with size 2
+                    int size = 2;
+                    for (int l=0; l<size; l++) {
+                        timeseriesArr.add(new ArrayList<Double>());
+                    }
+
                     for (int j=0; j<arrOfStr.size(); j++) {
                         String str = arrOfStr.get(j);
-
                         newStrList = Arrays.asList(str.split("\\s*,\\s*"));
 
-                        if (j>0) {
-                            label = Double.valueOf(newStrList.get(newStrList.size()-1));
-                            globalLabelArr.add(label);
+                        for (int k=0; k<newStrList.size(); k++) {
+
+                            if (j>0) {
+                                if (k<newStrList.size()-1) {
+                                    // For the second timeseries and ignore the last label element
+                                    timeseriesArr.get(j).add(Double.valueOf(newStrList.get(k)));
+                                }else{
+                                    // Get the labels
+                                    label = Double.valueOf(newStrList.get(k));
+                                    globalLabelArr.add(label);
+                                }
+                            }else{
+                                timeseriesArr.get(j).add(Double.valueOf(newStrList.get(k)));
+                            }
                         }
                     }
-//                    globalLinesTimeseries.add(valArr);
+                    globalTimeseries.add(timeseriesArr);
                     count++;
                 }
                 // read next line
@@ -63,8 +80,9 @@ public class Dataset {
             reader.close();
             System.out.println("count: " + count);
             System.out.println("globalLabelArr.size(): " + globalLabelArr.size());
+            System.out.println("globalLinesTimeseries.size(): " + globalTimeseries.size());
         }
-//        System.out.println(globalLabelArr);
+//        System.out.println(globalLinesTimeseries);
     }
 
     public void loadCoef() throws IOException {
@@ -166,7 +184,7 @@ public class Dataset {
         System.out.println("globalMultArr: " + globalMultArr);
     }
 
-    public void multiplicationPosAndNeg() {
+    public void multiplication_PN_TF() {
         final int[] count = {0};
         final int[] accuracyCount = {0};
         System.out.println("-------------------");
@@ -235,42 +253,8 @@ public class Dataset {
         System.out.println("accuracy: " + accuracyCount[0]*1.0/count[0]);
     }
 
-    public void multiplicationTF() {
-        final int[] count = {0};
-        System.out.println("-------------------");
-        double intercept = globalInterceptArr.get(0).get(0);
-        ArrayList<Double> arrT = new ArrayList<Double>();
-        ArrayList<Double> arrF = new ArrayList<Double>();
-
-        globalFeaturesArr.forEach((featureRow) -> {
-            double rowSum = 0;
-
-            for (var i=0; i < featureRow.size(); i++) {
-                double fVal = featureRow.get(i);
-                double coefVal = globalCoefArr.get(0).get(i);
-                // Perform dot product
-
-                rowSum = rowSum + fVal * coefVal;
-                // System.out.println('fVal * coefVal: ' + fVal * coefVal);
-            }
-
-            rowSum = rowSum + intercept;
-            double label = globalLabelArr.get(count[0]);
-
-            if (label==0) {
-                arrT.add(rowSum);
-            }else {
-                arrF.add(rowSum);
-            }
-            count[0] += 1;
-            // System.out.println('rowSum: ' + rowSum);
-        });
-
-        globalMultTFArr.add(arrT);
-        globalMultTFArr.add(arrF);
-//        System.out.println("count: " + count[0]);
-
-//        System.out.println("globalMultTFArr: " + globalMultTFArr);
+    public ArrayList<ArrayList<ArrayList<Double>>> getGlobalTimeseries() {
+        return globalTimeseries;
     }
 
     public ArrayList<Double> getGlobalMultArr() {
@@ -292,12 +276,18 @@ public class Dataset {
     public static void main(String[] args) throws IOException {
         Dataset aDataset = new Dataset();
         aDataset.loadTimeseries();
-        aDataset.loadCoef();
-        aDataset.loadIntercept();
-        aDataset.loadFeatures();
-        aDataset.multiplicationPosAndNeg();
+//        aDataset.loadCoef();
+//        aDataset.loadIntercept();
+//        aDataset.loadFeatures();
+//        aDataset.multiplication_PN_TF();
 //        aDataset.multiplicationTF();
-        new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
-        System.out.println("Done.");
+        //---------
+        final String title = "Score Bord";
+        final DualAxisChart chart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
+        chart.pack();
+        RefineryUtilities.centerFrameOnScreen(chart);
+        chart.setVisible(true);
+        //---------
+        new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalLabelArr(), chart);
     }
 }

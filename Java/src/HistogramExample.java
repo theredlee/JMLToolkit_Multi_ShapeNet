@@ -131,11 +131,11 @@ public class HistogramExample extends JFrame {
             }
             String key = PNlabelArr[i];
 //            if(i==0) {}
-            dataset.addSeries(key, aPosNegArr[i], 100);
+            dataset.addSeries(key, aPosNegArr[i], 75);
         }
 
         // 0: arrT & 1: arrF
-        String[] TFlabelArr = {"True", "False"};
+        String[] TFlabelArr = {">0_True", "<0_True"};
         for (int i=0; i<valTFArr.size(); i++) {
             ArrayList<Double> valArr = valTFArr.get(i);
             for (int j=0; j<valArr.size(); j++) {
@@ -143,7 +143,7 @@ public class HistogramExample extends JFrame {
             }
             String key = TFlabelArr[i];
 //            if(i==0) {}
-            dataset.addSeries(key, TFArr[i], 100);
+            dataset.addSeries(key, TFArr[i], 75);
         }
 
         PlotOrientation orientation = PlotOrientation.VERTICAL;
@@ -165,7 +165,8 @@ public class HistogramExample extends JFrame {
 
 
         ChartPanel aChartPanel = new ChartPanel(histogram);
-        aChartPanel.setBounds(0, 0, 905-540, 350);
+        aChartPanel.setBounds(0, 0, 905, 350);
+        aChartPanel.setPreferredSize(new Dimension(905, 350));
 
         JFrame frame = new JFrame();
 
