@@ -22,10 +22,14 @@ public class Dataset {
 
     public void loadTimeseries() throws IOException {
         // 2576
-        // System.getProperty("user.dir"): /Users/leone/ShapeNet
-        String expected_value = "Hello, world!";
-        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        // System.out.println(System.getProperty("user.dir")); /Users/leone/ShapeNet
+        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
+//        String expected_value = "Hello, world!";
+//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+//        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        String file1 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+        String file2 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+
         String[] fileArr = {file1, file2};
 
         int count = 0;
@@ -165,7 +169,7 @@ public class Dataset {
 
         globalFeaturesArr.forEach((featureRow) -> {
             double rowSum = 0;
-            for (var i=0; i < featureRow.size(); i++) {
+            for (int i=0; i < featureRow.size(); i++) {
                 double fVal = featureRow.get(i);
                 double coefVal = globalCoefArr.get(0).get(i);
                 // Perform dot product
@@ -203,7 +207,7 @@ public class Dataset {
         globalFeaturesArr.forEach((featureRow) -> {
             double rowSum = 0;
 
-            for (var i=0; i < featureRow.size(); i++) {
+            for (int i=0; i < featureRow.size(); i++) {
                 double fVal = featureRow.get(i);
                 double coefVal = globalCoefArr.get(0).get(i);
                 // Perform dot product
