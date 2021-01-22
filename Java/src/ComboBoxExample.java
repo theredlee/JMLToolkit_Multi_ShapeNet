@@ -38,14 +38,6 @@ public class ComboBoxExample {
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setSize(400,100);
 
-        String languages[]={"C","C++","C#","Java","PHP"};
-
-        String[] selectionArr = new String[localTimeseries.size()];
-
-        for (int i=0; i<localTimeseries.size(); i++) {
-            selectionArr[i] = String.valueOf(i);
-        }
-
         // Transform to set to remove all duplicated items
         Set<Double> labelSet = new HashSet<Double>(localLabelArr);
         ArrayList<Double> newLabelArr = new ArrayList<>();
@@ -57,7 +49,7 @@ public class ComboBoxExample {
         }
 
         final JComboBox cbLabel=new JComboBox(labelArr);
-        final JComboBox cbTimeseries =new JComboBox(selectionArr);
+        final JComboBox cbTimeseries =new JComboBox();
 
         cbLabel.setBounds(50, 100,90,20);
         cbTimeseries.setBounds(cbLabel.getX()+cbLabel.getWidth()+10, 100,90,20);
@@ -72,14 +64,38 @@ public class ComboBoxExample {
         f.setLayout(null);
         f.setSize(350,350);
         f.setVisible(true);
+
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String data = "Programming language Selected: "
-                        + cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex());
+                // -------- Set timeseries with specific label
+                ArrayList<Integer> timeseriesIndexArr = new ArrayList<>();
+                int timeserisWithLabelCount = 0;
+                int selectedLabel = Integer.parseInt((String) cbLabel.getItemAt(cbLabel.getSelectedIndex()));
+
+                String data = "Programming language (label) Selected: "
+                        + selectedLabel;
                 label.setText(data);
 
-                // --------
-                chart.setTimeseriesInChart(0);
+
+                for (int i=0; i<localLabelArr.size(); i++) {
+                    double localLabel = localLabelArr.get(i);
+                    if (localLabel==selectedLabel) {
+                        timeseriesIndexArr.add(i);
+                        timeserisWithLabelCount++;
+                    }
+                }
+
+                System.out.println("Number of timeseris selected: " + timeserisWithLabelCount + " with label: " + selectedLabel);
+
+                String[] timeseriesArr = new String[timeserisWithLabelCount];
+                for (int i=0; i<timeseriesIndexArr.size(); i++) {
+                    timeseriesArr[i] = String.valueOf(timeseriesIndexArr.get(i));
+                }
+
+                DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( timeseriesArr );
+                cbTimeseries.setModel( model );
+                // -------- Set timeseries
+//                chart.setTimeseriesInChart(0);
             }
         });
     }
