@@ -112,10 +112,10 @@ public class HistogramExample extends JFrame {
         XYBarRenderer renderer = (XYBarRenderer)plot.getRenderer();
         renderer.setBarPainter(new StandardXYBarPainter());
         renderer.setShadowVisible(false);
-        renderer.setSeriesPaint(0, new Color(0, 0, 1, 0.5f));
-        renderer.setSeriesPaint(1, new Color(102,102,102, 150));
-        renderer.setSeriesPaint(2, new Color(1, 0, 0, 0.5f));
-        renderer.setSeriesPaint(3, new Color(0,255,51, 150));
+        renderer.setSeriesPaint(0, new Color(0, 0, 1, 0.7f));
+        renderer.setSeriesPaint(1, new Color(102,102,102, 180));
+        renderer.setSeriesPaint(2, new Color(1, 0, 0, 0.7f));
+        renderer.setSeriesPaint(3, new Color(0,255,51, 180));
 
 //        setHistogramChart(histogram);
 

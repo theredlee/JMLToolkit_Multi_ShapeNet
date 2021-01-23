@@ -1,5 +1,4 @@
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.util.ArrayList;
 
 import org.jfree.chart.ChartPanel;
@@ -191,7 +190,7 @@ public class DualAxisChart extends ApplicationFrame {
         final JFreeChart chart = createChart();
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(
-                new java.awt.Dimension(600, 450));
+                new Dimension(600, 450));
         setContentPane(chartPanel);
         // Set the panel globally
         setPanel(chartPanel);

@@ -1,6 +1,5 @@
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +20,7 @@ public class Main {
     }
 
     public static void setDataset(Dataset aDataset) throws IOException {
+        aDataset.loadShapelet();
         aDataset.loadTimeseries();
         aDataset.loadCoef();
         aDataset.loadIntercept();
@@ -68,14 +68,22 @@ public class Main {
         ChartPanel aHistogramChartPanel = histogram.getChartPanel();
         NEPanel.add(aHistogramChartPanel, BorderLayout.CENTER);
 
-        // 2. Initialize dualAxisChart and set panel for dualAxisChart
+        // 2. Initialize lineChart and set panel for comboBox
+        JPanel SEEPanel = new JPanel();
+        SEEPanel.setLayout(new BorderLayout());
+        SWPanel.add(SEEPanel, BorderLayout.EAST);
+        LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
+        ChartPanel aLineChartPanel = lineChart.getPanel();
+        SEEPanel.add(aLineChartPanel, BorderLayout.NORTH);
+
+        // 3. Initialize dualAxisChart and set panel for dualAxisChart
         final String title = "Score Bord";
         final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
         ChartPanel aDualAxisChartPanel = dualAxisChart.getPanel();
-        SEPanel.add(aDualAxisChartPanel, BorderLayout.CENTER);
+        SEEPanel.add(aDualAxisChartPanel, BorderLayout.SOUTH);
 
-        // 3. Initialize comboBox and set panel for comboBox
-        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalLabelArr(), dualAxisChart);
+        // 4. Initialize comboBox and set panel for comboBox
+        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart);
         JPanel comboBoxPanel = comboBox.getPanel();
         NWPanel.add(comboBoxPanel, BorderLayout.WEST);
 

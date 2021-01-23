@@ -1,5 +1,3 @@
-import org.jfree.ui.RefineryUtilities;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,7 +8,9 @@ import java.util.List;
 public class Dataset {
 
     public ArrayList<ArrayList<ArrayList<Double>>> globalTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
-    public ArrayList<Double> globalLabelArr = new ArrayList<Double>();
+    public ArrayList<ArrayList<Double>> globalShapelet = new ArrayList<ArrayList<Double>>();
+    public ArrayList<Double> globalTimeseriesLabelArr = new ArrayList<Double>();
+    public ArrayList<Double> globalShapeletLabelArr = new ArrayList<Double>();
     public ArrayList<ArrayList<Double>> globalCoefArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalInterceptArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalFeaturesArr = new ArrayList<ArrayList<Double>>();
@@ -71,7 +71,7 @@ public class Dataset {
                                 }else{
                                     // Get the labels
                                     label = Double.valueOf(newStrList.get(k));
-                                    globalLabelArr.add(label);
+                                    globalTimeseriesLabelArr.add(label);
                                 }
                             }else{
                                 timeseriesArr.get(j).add(Double.valueOf(newStrList.get(k)));
@@ -86,10 +86,56 @@ public class Dataset {
             }
             reader.close();
             System.out.println("count: " + count);
-            System.out.println("globalLabelArr.size(): " + globalLabelArr.size());
+            System.out.println("globalLabelArr.size(): " + globalTimeseriesLabelArr.size());
             System.out.println("globalLinesTimeseries.size(): " + globalTimeseries.size());
         }
 //        System.out.println(globalLinesTimeseries);
+    }
+
+    public void loadShapelet() throws IOException {
+        // 2576
+        System.out.println(System.getProperty("user.dir"));
+        // /Users/leone/ShapeNet
+        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
+        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
+        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
+
+        // Read shapelet
+        BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
+        String line = reader.readLine();
+        String newline;
+        List<String> newStrList;
+        double label;
+        while (line != null) {
+            String[] arrOfStr = line.split(" ");
+
+            ArrayList<Double> valArr = new ArrayList<Double>();
+            for (int j=0; j<arrOfStr.length; j++) {
+                String str = arrOfStr[j];
+                valArr.add(Double.valueOf(str));
+            }
+            globalShapelet.add(valArr);
+
+            // read next line
+            line = reader.readLine();
+        }
+        reader.close();
+
+        // Read shapelet label
+        reader = new BufferedReader(new FileReader(file_dim));
+        line = reader.readLine();
+        while (line != null) {
+            ArrayList<Double> valArr = new ArrayList<Double>();
+            double val = Double.valueOf(line);
+            globalShapeletLabelArr.add(val);
+
+            // read next line
+            line = reader.readLine();
+        }
+        reader.close();
+
+//        System.out.println(globalShapelet);
+        System.out.println("globalShapeletLabelArr.size(): " + globalShapeletLabelArr.size());
     }
 
     public void loadCoef() throws IOException {
@@ -198,7 +244,7 @@ public class Dataset {
             }
 
             rowSum = rowSum + intercept;
-            double label = globalLabelArr.get(count[0]);
+            double label = globalTimeseriesLabelArr.get(count[0]);
 
             if (rowSum>0) {
                 if (label==0) {
@@ -239,6 +285,10 @@ public class Dataset {
         System.out.println("accuracy: " + accuracyCount[0]*1.0/count[0]);
     }
 
+    public ArrayList<ArrayList<Double>> getGlobalShapelet() {
+        return globalShapelet;
+    }
+
     public ArrayList<ArrayList<ArrayList<Double>>> getGlobalTimeseries() {
         return globalTimeseries;
     }
@@ -255,18 +305,22 @@ public class Dataset {
         return globalMultTFArr;
     }
 
-    public ArrayList<Double> getGlobalLabelArr() {
-        return globalLabelArr;
+    public ArrayList<Double> getGlobalTimeseriesLabelArr() {
+        return globalTimeseriesLabelArr;
+    }
+
+    public ArrayList<Double> getGlobalShapeletLabelArr() {
+        return globalShapeletLabelArr;
     }
 
     public static void main(String[] args) throws IOException {
         Dataset aDataset = new Dataset();
+        aDataset.loadShapelet();
         aDataset.loadTimeseries();
         aDataset.loadCoef();
         aDataset.loadIntercept();
         aDataset.loadFeatures();
         aDataset.multiplication_PN_TF();
         //---------
-
     }
 }
