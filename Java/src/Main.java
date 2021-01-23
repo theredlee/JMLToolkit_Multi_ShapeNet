@@ -99,3 +99,8 @@ public class Main {
     }
 }
 
+
+// One line chart to divide all timeseries distances into two sides (If can show the distance, it would be better)
+
+// Show one bar/pie chart to show the accuracy
+
