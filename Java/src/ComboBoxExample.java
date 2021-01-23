@@ -71,6 +71,7 @@ public class ComboBoxExample {
                 ArrayList<Integer> timeseriesIndexArr = new ArrayList<>();
                 int timeserisWithLabelCount = 0;
                 int selectedLabel = Integer.parseInt((String) cbLabel.getItemAt(cbLabel.getSelectedIndex()));
+                int selectedTimeseries = 0;
 
                 String data = "Programming language (label) Selected: "
                         + selectedLabel;
@@ -95,15 +96,15 @@ public class ComboBoxExample {
 
                     DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( timeseriesArr );
                     cbTimeseries.setModel( model );
-                    // -------- Set timeseries
-//                  chart.setTimeseriesInChart(0);
                 }
 
+                // -------- Set timeseries
                 // Get the selectedTimeseries after assignment
-                int selectedTimeseries = 0;
                 if (cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()) != null) {
                     selectedTimeseries = Integer.parseInt((String) cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()));
                 }
+
+                chart.setTimeseriesInChart(selectedTimeseries);
 
                 System.out.println("Number of timeseris selected: " + selectedTimeseries + " with label: " + selectedLabel);
             }

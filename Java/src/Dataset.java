@@ -22,13 +22,16 @@ public class Dataset {
 
     public void loadTimeseries() throws IOException {
         // 2576
-        // System.out.println(System.getProperty("user.dir")); /Users/leone/ShapeNet
+         System.out.println(System.getProperty("user.dir"));
+        // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
 //        String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-        String file1 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-        String file2 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+//        String file1 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+//        String file2 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        String file1 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+        String file2 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
 
         String[] fileArr = {file1, file2};
 
