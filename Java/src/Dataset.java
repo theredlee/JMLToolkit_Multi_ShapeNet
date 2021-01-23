@@ -95,7 +95,8 @@ public class Dataset {
     public void loadCoef() throws IOException {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
         String expected_value = "Hello, world!";
-        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/coef.txt";
+//        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/coef.txt";
+        String file = "/Users/student/Desktop/RedLee/datasets/Distance/coef.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -117,7 +118,8 @@ public class Dataset {
     public void loadIntercept() throws IOException {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
         String expected_value = "Hello, world!";
-        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/intercept.txt";
+//        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/intercept.txt";
+        String file = "/Users/student/Desktop/RedLee/datasets/Distance/intercept.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -139,8 +141,11 @@ public class Dataset {
     public void loadFeatures() throws IOException {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
         String expected_value = "Hello, world!";
-        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_train.txt";
-        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_test.txt";
+//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_train.txt";
+//        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_test.txt";
+        String file1 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_train.txt";
+        String file2 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_test.txt";
+
         String[] fileArr = {file1, file2};
 
         for (int i=0; i<fileArr.length; i++) {
@@ -163,32 +168,6 @@ public class Dataset {
 //            System.out.println(globalFeaturesArr.size());
         }
 //        System.out.println(globalFeaturesArr.size());
-    }
-
-    public void multiplication() {
-        final int[] count = {0};
-        System.out.println("-------------------");
-        double intercept = globalInterceptArr.get(0).get(0);
-
-        globalFeaturesArr.forEach((featureRow) -> {
-            double rowSum = 0;
-            for (int i=0; i < featureRow.size(); i++) {
-                double fVal = featureRow.get(i);
-                double coefVal = globalCoefArr.get(0).get(i);
-                // Perform dot product
-
-                rowSum = rowSum + fVal * coefVal;
-                // System.out.println('fVal * coefVal: ' + fVal * coefVal);
-            }
-            rowSum = rowSum + intercept;
-            globalMultArr.add(rowSum);
-            count[0] += 1;
-            // System.out.println('rowSum: ' + rowSum);
-    });
-
-        System.out.println("count: " + count[0]);
-
-        System.out.println("globalMultArr: " + globalMultArr);
     }
 
     public void multiplication_PN_TF() {
@@ -283,18 +262,11 @@ public class Dataset {
     public static void main(String[] args) throws IOException {
         Dataset aDataset = new Dataset();
         aDataset.loadTimeseries();
-//        aDataset.loadCoef();
-//        aDataset.loadIntercept();
-//        aDataset.loadFeatures();
-//        aDataset.multiplication_PN_TF();
-//        aDataset.multiplicationTF();
+        aDataset.loadCoef();
+        aDataset.loadIntercept();
+        aDataset.loadFeatures();
+        aDataset.multiplication_PN_TF();
         //---------
-        final String title = "Score Bord";
-        final DualAxisChart chart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
-        chart.pack();
-        RefineryUtilities.centerFrameOnScreen(chart);
-        chart.setVisible(true);
-        //---------
-        new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalLabelArr(), chart);
+
     }
 }

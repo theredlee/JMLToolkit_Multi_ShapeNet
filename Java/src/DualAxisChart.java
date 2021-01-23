@@ -16,8 +16,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import javax.swing.*;
+
 public class DualAxisChart extends ApplicationFrame {
 
+    public ChartPanel panel;
     private CombinedDomainCategoryPlot plot = new CombinedDomainCategoryPlot();
     final String team1 = "1st Team";
     final String team2 = "2nd Team";
@@ -190,6 +193,8 @@ public class DualAxisChart extends ApplicationFrame {
         chartPanel.setPreferredSize(
                 new java.awt.Dimension(600, 450));
         setContentPane(chartPanel);
+        // Set the panel globally
+        setPanel(chartPanel);
     }
 
     public ArrayList<ArrayList<ArrayList<Double>>> getLocalTimeseries() {
@@ -237,8 +242,6 @@ public class DualAxisChart extends ApplicationFrame {
         };
         return run;
     }
-
-
 
     private JFreeChart createChart() {
         final int defaultInex = 0;
@@ -315,10 +318,17 @@ public class DualAxisChart extends ApplicationFrame {
         subplot1.setDataset(datesetIndex, timeserise1);
     }
 
+    private void setPanel (ChartPanel panel) {
+        this.panel = panel;
+    }
+
+    public ChartPanel getPanel() {
+        return panel;
+    }
+
     // ------------------------------------------------------------------------------
 
     public static void main(final String[] args) {
-
 //        final String title = "Score Bord";
 //        final DualAxisChart chart = new DualAxisChart(title);
 //        chart.pack();

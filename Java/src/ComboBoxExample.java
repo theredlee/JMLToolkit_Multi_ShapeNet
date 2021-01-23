@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -6,6 +7,8 @@ import java.util.Set;
 
 public class ComboBoxExample {
     JFrame f;
+    public JPanel panel;
+
     ComboBoxExample(){
         f=new JFrame("ComboBox Example");
         final JLabel label = new JLabel();
@@ -32,7 +35,7 @@ public class ComboBoxExample {
     }
 
     ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<Double> localLabelArr, DualAxisChart chart){
-        f=new JFrame("ComboBox Example");
+
         final JLabel label = new JLabel();
         final int[] lastLabel = {-1};
         label.setHorizontalAlignment(JLabel.CENTER);
@@ -57,13 +60,23 @@ public class ComboBoxExample {
         JButton b=new JButton("Show");
         b.setBounds(cbTimeseries.getX()+cbTimeseries.getWidth()+10,100,75,20);
 
-        f.add(cbLabel);
-        f.add(cbTimeseries);
-        f.add(label);
-        f.add(b);
-        f.setLayout(null);
-        f.setSize(350,350);
-        f.setVisible(true);
+//        f=new JFrame("ComboBox Example");
+//        f.add(cbLabel);
+//        f.add(cbTimeseries);
+//        f.add(label);
+//        f.add(b);
+//        f.setLayout(null);
+//        f.setSize(350,350);
+//        f.setVisible(true);
+
+        JPanel panel = new JPanel();
+        panel.add(cbLabel);
+        panel.add(cbTimeseries);
+        panel.add(label);
+        panel.add(b);
+        panel.setPreferredSize(new Dimension(350,350));
+        // Set the panel globally
+        setPanel(panel);
 
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -109,6 +122,14 @@ public class ComboBoxExample {
                 System.out.println("Number of timeseris selected: " + selectedTimeseries + " with label: " + selectedLabel);
             }
         });
+    }
+
+    private void setPanel (JPanel panel) {
+        this.panel = panel;
+    }
+
+    public JPanel getPanel() {
+        return panel;
     }
 
     public static void main(String[] args) {
