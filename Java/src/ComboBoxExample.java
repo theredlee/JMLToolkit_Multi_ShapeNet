@@ -74,7 +74,7 @@ public class ComboBoxExample {
         panel.add(cbTimeseries);
         panel.add(label);
         panel.add(b);
-        panel.setPreferredSize(new Dimension(350,350));
+        panel.setPreferredSize(new Dimension(500,350));
         // Set the panel globally
         setPanel(panel);
 

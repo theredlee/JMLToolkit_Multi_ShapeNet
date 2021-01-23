@@ -43,34 +43,46 @@ public class Main {
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(maxWidth, maxLen));
 
+        JPanel EPanel = new JPanel();
+        EPanel.setLayout(new BorderLayout());
+        JPanel NEPanel = new JPanel();
+        NEPanel.setLayout(new BorderLayout());
+        JPanel SEPanel = new JPanel();
+        SEPanel.setLayout(new BorderLayout());
+        EPanel.add(NEPanel, BorderLayout.NORTH);
+        EPanel.add(SEPanel, BorderLayout.SOUTH);
+
+        JPanel WPanel = new JPanel();
+        WPanel.setLayout(new BorderLayout());
+        JPanel NWPanel = new JPanel();
+        NWPanel.setLayout(new BorderLayout());
+        JPanel SWPanel = new JPanel();
+        SWPanel.setLayout(new BorderLayout());
+        WPanel.add(NWPanel, BorderLayout.NORTH);
+        WPanel.add(SWPanel, BorderLayout.SOUTH);
+
         // ---------------------------------------------------------------------------------------------------------
 
         // 1. Initialize histogram and set panel for histogram
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new BorderLayout());
         HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
         ChartPanel aHistogramChartPanel = histogram.getChartPanel();
-
-        northPanel.add(aHistogramChartPanel, BorderLayout.EAST);
-        panel.add(northPanel, BorderLayout.NORTH);
+        NEPanel.add(aHistogramChartPanel, BorderLayout.CENTER);
 
         // 2. Initialize dualAxisChart and set panel for dualAxisChart
-        JPanel southPanel = new JPanel();
-        southPanel.setLayout(new BorderLayout());
         final String title = "Score Bord";
         final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
         ChartPanel aDualAxisChartPanel = dualAxisChart.getPanel();
-
-        southPanel.add(aDualAxisChartPanel, BorderLayout.EAST);
-        panel.add(southPanel, BorderLayout.SOUTH);
+        SEPanel.add(aDualAxisChartPanel, BorderLayout.CENTER);
 
         // 3. Initialize comboBox and set panel for comboBox
         ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalLabelArr(), dualAxisChart);
         JPanel comboBoxPanel = comboBox.getPanel();
-
-        panel.add(comboBoxPanel, BorderLayout.WEST);
+        NWPanel.add(comboBoxPanel, BorderLayout.WEST);
 
         // n. Add the globalPanel to frame
+        panel.add(EPanel, BorderLayout.EAST);
+        panel.add(WPanel, BorderLayout.WEST);
+
         frame.add(panel);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
