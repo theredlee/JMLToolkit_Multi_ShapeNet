@@ -190,7 +190,7 @@ public class DualAxisChart extends ApplicationFrame {
         final JFreeChart chart = createChart();
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(
-                new Dimension(600, 450));
+                new Dimension(500, 300));
         setContentPane(chartPanel);
         // Set the panel globally
         setPanel(chartPanel);

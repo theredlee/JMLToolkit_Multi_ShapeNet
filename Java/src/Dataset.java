@@ -19,6 +19,7 @@ public class Dataset {
     public ArrayList<ArrayList<Double>> globalMultPosAndNegArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalMultTFArr = new ArrayList<ArrayList<Double>>();
     public Dataset() {}
+    public double accuracy;
 
     public void loadTimeseries() throws IOException {
         // 2576
@@ -279,10 +280,12 @@ public class Dataset {
         globalMultTFArr.add(arrPosT);
         globalMultTFArr.add(arrNegT);
 
+        accuracy = accuracyCount[0]*1.0/count[0];
+
         System.out.println("positiveCount: " + positiveCount[0] + ", negativeCount: " + (count[0]-positiveCount[0]));
         System.out.println("accuracyCount: " + accuracyCount[0]);
         System.out.println("count: " + count[0]);
-        System.out.println("accuracy: " + accuracyCount[0]*1.0/count[0]);
+        System.out.println("accuracy: " + accuracy);
     }
 
     public ArrayList<ArrayList<Double>> getGlobalShapelet() {
@@ -309,6 +312,14 @@ public class Dataset {
         return globalTimeseriesLabelArr;
     }
 
+    public double getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
+    }
+
     public ArrayList<Double> getGlobalShapeletLabelArr() {
         return globalShapeletLabelArr;
     }
@@ -326,11 +337,6 @@ public class Dataset {
             aTimeseries = localTimeseries.get(timeseriesIndex).get(dimension);
             // Only calculate the distance with the matched dimension
             aShapelet = localShapelet.get(j);
-
-            System.out.println("dimension: " + dimension);
-            System.out.println("aTimeseries: " + aTimeseries);
-            System.out.println("aShapelet: " + aShapelet);
-            System.out.println();
 
             aDistance = getDistance(aTimeseries, aShapelet);
             distanceArr.add(aDistance);

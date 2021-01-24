@@ -29,70 +29,73 @@ public class Main {
         Dataset aDataset = new Dataset();
         setDataset(aDataset);
         int maxWidth = 1500;
-        int maxHeight = 1200;
+        int maxHeight = 900;
         final JFrame frame = new JFrame("ShapeNet");
         final JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        panel.setLayout(new GridLayout(3,3));
         panel.setPreferredSize(new Dimension(maxWidth, maxHeight));
 
-        JPanel EPanel = new JPanel();
-        EPanel.setLayout(new BorderLayout());
-        JPanel NEPanel = new JPanel();
-        NEPanel.setLayout(new BorderLayout());
-        JPanel SEPanel = new JPanel();
-        SEPanel.setLayout(new BorderLayout());
-        EPanel.add(NEPanel, BorderLayout.NORTH);
-        EPanel.add(SEPanel, BorderLayout.SOUTH);
-
-        JPanel WPanel = new JPanel();
-        WPanel.setLayout(new BorderLayout());
-        JPanel NWPanel = new JPanel();
-        NWPanel.setLayout(new BorderLayout());
-        JPanel SWPanel = new JPanel();
-        SWPanel.setLayout(new BorderLayout());
-        WPanel.add(NWPanel, BorderLayout.NORTH);
-        WPanel.add(SWPanel, BorderLayout.SOUTH);
+        JPanel gridPanel1 = new JPanel();
+        panel.add(gridPanel1);
+        JPanel gridPanel2 = new JPanel();
+        panel.add(gridPanel2);
+        JPanel gridPanel3 = new JPanel();
+        panel.add(gridPanel3);
+        JPanel gridPanel4 = new JPanel();
+        panel.add(gridPanel4);
+        JPanel gridPanel5 = new JPanel();
+        panel.add(gridPanel5);
+        JPanel gridPanel6 = new JPanel();
+        panel.add(gridPanel6);
+        JPanel gridPanel7 = new JPanel();
+        panel.add(gridPanel7);
+        JPanel gridPanel8 = new JPanel();
+        panel.add(gridPanel8);
+        JPanel gridPanel9 = new JPanel();
+        panel.add(gridPanel9);
+        /*
+        1, 2, 3
+        4, 5, 6
+        7, 8, 9
+         */
 
         // ---------------------------------------------------------------------------------------------------------
 
         // 1. Initialize histogram and set panel for histogram
         HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
         ChartPanel aHistogramChartPanel = histogram.getChartPanel();
-        NEPanel.add(aHistogramChartPanel, BorderLayout.CENTER);
+        gridPanel3.add(aHistogramChartPanel);
 
         // 2. Initialize lineChart and set panel for comboBox
-        JPanel SWEPanel = new JPanel();
-        SWEPanel.setLayout(new BorderLayout());
-        SWPanel.add(SWEPanel, BorderLayout.CENTER);
         LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
         ChartPanel aLineChartPanel = lineChart.getPanel();
-        SWEPanel.add(aLineChartPanel, BorderLayout.NORTH);
+        gridPanel4.add(aLineChartPanel, BorderLayout.NORTH);
 
         // 3. Initialize dualAxisChart and set panel for dualAxisChart
         final String title = "Score Bord";
         final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
         ChartPanel aDualAxisChartPanel = dualAxisChart.getPanel();
-        SWEPanel.add(aDualAxisChartPanel, BorderLayout.SOUTH);
+        gridPanel7.add(aDualAxisChartPanel, BorderLayout.SOUTH);
 
-        // 4. Initialize comboBox and set panel for comboBox
-        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart);
+        // 4. Initialize labelBox and set panel for labelBox
+        // JPanel SEEPanel = new JPanel();
+        // SEEPanel.setLayout(new BorderLayout());
+        // SEPanel.add(SEEPanel, BorderLayout.CENTER);
+        LabeBoxExample labelBox = new LabeBoxExample();
+        JPanel labeBoxPanel = labelBox.getPanel();
+        gridPanel8.add(labeBoxPanel, BorderLayout.NORTH);
+
+        // 5. Initialize pieChart and set panel for pieChart
+        PieChartExample pieChart = new PieChartExample("Pie Chart Example");
+        ChartPanel pieChartPanel = pieChart.getPanel();
+        gridPanel6.add(pieChartPanel, BorderLayout.SOUTH);
+
+        // n-1. Initialize comboBox and set panel for comboBox
+        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, labelBox);
         JPanel comboBoxPanel = comboBox.getPanel();
-        NWPanel.add(comboBoxPanel, BorderLayout.NORTH);
-
-        // 5. Initialize labelBox and set panel for labelBox
-//        JPanel SEEPanel = new JPanel();
-//        SEEPanel.setLayout(new BorderLayout());
-//        SEPanel.add(SEEPanel, BorderLayout.CENTER);
-        LabeBoxExample labeBox = new LabeBoxExample();
-        JPanel labeBoxPanel = labeBox.getPanel();
-        SEPanel.add(labeBoxPanel, BorderLayout.NORTH);
-
-        // n. Add the globalPanel to frame
-        panel.add(EPanel, BorderLayout.EAST);
-        panel.add(WPanel, BorderLayout.WEST);
+        gridPanel1.add(comboBoxPanel, BorderLayout.NORTH);
 
         frame.add(panel);
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
