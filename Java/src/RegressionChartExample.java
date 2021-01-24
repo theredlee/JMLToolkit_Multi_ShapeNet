@@ -11,7 +11,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.function.LineFunction2D;
 import org.jfree.data.general.DatasetUtilities;
@@ -22,7 +21,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
-public class PriceEstimator extends ApplicationFrame {
+public class RegressionChartExample extends ApplicationFrame {
 
     private static final long serialVersionUID = 1L;
     public ArrayList<ChartPanel> panelArr;
@@ -36,13 +35,13 @@ public class PriceEstimator extends ApplicationFrame {
     JFreeChart chart1;
 
     public static void main(String[] args) throws IOException {
-        PriceEstimator demo = new PriceEstimator("prices.txt");
+        com.technobium.regression.RegressionChartExample demo = new com.technobium.regression.RegressionChartExample("prices.txt");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
     }
 
-    public PriceEstimator(String inputFileName) throws IOException {
+    public RegressionChartExample(String inputFileName) throws IOException {
         super("Technobium - Linear Regression");
 
         // Read sample data from prices.txt file
@@ -56,7 +55,7 @@ public class PriceEstimator extends ApplicationFrame {
         setContentPane(chartPanel);
     }
 
-    public PriceEstimator(ArrayList<ArrayList<Double>> localMultArr) {
+    public RegressionChartExample(ArrayList<ArrayList<Double>> localMultArr) {
         super("Technobium - Linear Regression");
 
         // Read sample data from prices.txt file
@@ -71,34 +70,48 @@ public class PriceEstimator extends ApplicationFrame {
         // Set the panel globally
         setPanel(chartPanel);
         setContentPane(chartPanel);
+
+        // Draw chart
+        drawRegressionLine();
     }
 
-    public PriceEstimator(ArrayList<Double> localMultArr, ArrayList<Double> localTimeseriesLabelArr) {
+    public RegressionChartExample(ArrayList<Double> localMultArr, ArrayList<Double> localTimeseriesLabelArr) {
         super("Technobium - Linear Regression");
 
         // Read sample data from prices.txt file
+        int chartIndex = -1;
         int chartIndex0 = 0;
         int chartIndex1 = 1;
+//        inputData0 = createDataset(chartIndex0, localMultArr, localTimeseriesLabelArr);
+//        inputData1 = createDataset(chartIndex1, localMultArr, localTimeseriesLabelArr);
+        inputData = createDataset(localMultArr, localTimeseriesLabelArr);
         inputData0 = createDataset(chartIndex0, localMultArr, localTimeseriesLabelArr);
         inputData1 = createDataset(chartIndex1, localMultArr, localTimeseriesLabelArr);
 
         // Create the chart using the sample data
-        chart0 = createChart(inputData0);
-        chart1 = createChart(inputData1);
+        chart = createChart(chartIndex, inputData);
+        chart0 = createChart(chartIndex0, inputData0);
+        chart1 = createChart(chartIndex1, inputData1);
 
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(500, 300));
         ChartPanel chartPanel0 = new ChartPanel(chart0);
         chartPanel0.setPreferredSize(new Dimension(500, 300));
         ChartPanel chartPanel1 = new ChartPanel(chart1);
         chartPanel1.setPreferredSize(new Dimension(500, 300));
 
         ArrayList<ChartPanel> aChartPanelArr = new ArrayList<>();
+        aChartPanelArr.add(chartPanel);
         aChartPanelArr.add(chartPanel0);
         aChartPanelArr.add(chartPanel1);
 
         // Set the panel/aChartPanelArr globally
         // setPanel(chartPanel0);
         setPanelArr(aChartPanelArr);
-        setContentPane(chartPanel0);
+        setContentPane(chartPanel);
+
+        // Draw chart
+        drawRegressionLine();
     }
 
     public XYDataset createDatasetFromFile(String fileName) throws IOException {
@@ -132,12 +145,12 @@ public class PriceEstimator extends ApplicationFrame {
 
         // Read the price and the living area
         for (int i=0; i<localMultArr.get(index).size(); i++) {
-            if (count%2 == 0) {
+//            if (count%2 == 0) {
                 distance = localMultArr.get(index).get(i);
                 series.add(count, distance);
-            }else {
-                series.add(count, null);
-            }
+//            }else {
+//                series.add(count, null);
+//            }
             count++;
         }
 
@@ -171,6 +184,26 @@ public class PriceEstimator extends ApplicationFrame {
         return dataset;
     }
 
+    public XYDataset createDataset(ArrayList<Double> localMultArr, ArrayList<Double> localTimeseriesLabelArr){
+        int count = 0;
+        int label;
+        double distance;
+
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        XYSeries series = new XYSeries("Real estate item");
+
+        // Read the price and the living area
+        for (int i=0; i<localMultArr.size(); i++) {
+            distance = localMultArr.get(i);
+            series.add(count, distance);
+            count++;
+        }
+
+        dataset.addSeries(series);
+
+        return dataset;
+    }
+
     private void drawRegressionLine() {
         // Get the parameters 'a' and 'b' for an equation y = a + b * x,
         // fitted to the inputData using ordinary least squares regression.
@@ -184,14 +217,14 @@ public class PriceEstimator extends ApplicationFrame {
 
         // Creates a dataset by taking sample values from the line function
         XYDataset dataset = DatasetUtilities.sampleFunction2D(linefunction2d,
-                0D, 300, 100, "Fitted Regression Line");
+                0D, 13000, 20000, "Fitted Regression Line");
 
         // Draw the line dataset
         XYPlot xyplot = chart.getXYPlot();
         xyplot.setDataset(1, dataset);
         XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer(
                 true, false);
-        xylineandshaperenderer.setSeriesPaint(0, Color.YELLOW);
+        xylineandshaperenderer.setSeriesPaint(0, Color.RED);
         xyplot.setRenderer(1, xylineandshaperenderer);
     }
 
@@ -203,6 +236,27 @@ public class PriceEstimator extends ApplicationFrame {
 
         XYPlot plot = chart.getXYPlot();
         plot.getRenderer().setSeriesPaint(0, Color.blue);
+        return chart;
+    }
+
+    private JFreeChart createChart(int index, XYDataset inputData) {
+        // Create the chart using the data read from the prices.txt file
+        JFreeChart chart = ChartFactory.createScatterPlot(
+                "Price for living area", "Price", "Living area", inputData,
+                PlotOrientation.VERTICAL, true, true, false);
+
+        XYPlot plot = chart.getXYPlot();
+
+        Color color;
+        if (index==-1) {
+            color = Color.blue;
+        }else if (index==0) {
+            color = Color.RED;
+        }else {
+            color = Color.orange;
+        }
+
+        plot.getRenderer().setSeriesPaint(0, color);
         return chart;
     }
 

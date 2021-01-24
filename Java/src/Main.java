@@ -69,18 +69,18 @@ public class Main {
         // 2. Initialize lineChart and set panel for comboBox
         LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
         ChartPanel aLineChartPanel = lineChart.getPanel();
-        gridPanel4.add(aLineChartPanel);
+        gridPanel2.add(aLineChartPanel);
 
         // 3. Initialize dualAxisChart and set panel for dualAxisChart
         final String title = "Score Bord";
         final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
         ChartPanel aDualAxisChartPanel = dualAxisChart.getPanel();
-        gridPanel7.add(aDualAxisChartPanel);
+        gridPanel4.add(aDualAxisChartPanel);
 
         // 4. Initialize labelBox and set panel for labelBox
         LabeBoxExample labelBox = new LabeBoxExample();
         JPanel labeBoxPanel = labelBox.getPanel();
-        gridPanel4.add(labeBoxPanel);
+        gridPanel2.add(labeBoxPanel);
 
         // 5. Initialize pieChart and set panel for pieChart
         PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
@@ -90,11 +90,15 @@ public class Main {
         // 6. Initialize PriceEstimator and set panel for PriceEstimator
         int chartIndex0 = 0;
         int chartIndex1 = 1;
+        int chartIndex2 = 2;
 //        com.technobium.regression.PriceEstimator priceEstimator = new com.technobium.regression.PriceEstimator(aDataset.getGlobalMulti0And1Arr());
-        com.technobium.regression.PriceEstimator priceEstimator = new com.technobium.regression.PriceEstimator(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
-        ArrayList<ChartPanel> priceEstimatorPanelArr = priceEstimator.getPanelArr();
-        gridPanel8.add(priceEstimatorPanelArr.get(chartIndex0));
-        gridPanel9.add(priceEstimatorPanelArr.get(chartIndex1));
+//        ChartPanel priceEstimatorPanel = priceEstimator.getPanel();
+//        gridPanel9.add(priceEstimatorPanel);
+        com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
+        ArrayList<ChartPanel> priceEstimatorPanelArr = regressionChart.getPanelArr();
+        gridPanel7.add(priceEstimatorPanelArr.get(chartIndex0));
+        gridPanel8.add(priceEstimatorPanelArr.get(chartIndex1));
+        gridPanel9.add(priceEstimatorPanelArr.get(chartIndex2));
 
         // n-1. Initialize comboBox and set panel for comboBox
         ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, labelBox);
