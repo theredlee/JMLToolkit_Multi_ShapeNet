@@ -7,7 +7,6 @@ import java.util.Set;
 
 public class ComboBoxExample {
     JFrame f;
-    final String[] switchArr = {"Shapelet", "Timeseries"};
     public JPanel panel;
 
     ComboBoxExample(){
@@ -35,11 +34,11 @@ public class ComboBoxExample {
         });
     }
 
-    ComboBoxExample(ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart dualAxischart, LineChartExample lineChart){
+    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart dualAxischart, LineChartExample lineChart){
 
         final JLabel label = new JLabel();
-        final int[] previousLabel = {-1};
-        final String[] previousSwitch = {"None"};
+        final int[] previousSwitchLabel = {-1, -1};
+        final int[] previousSwitch = {-1, -1};
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setSize(400,100);
 
@@ -53,93 +52,157 @@ public class ComboBoxExample {
             labelArr[i] = String.valueOf((int)((double)newLabelArr.get(i)));
         }
 
-        final JComboBox cbSwitch=new JComboBox(switchArr);
-        final JComboBox cbLabel=new JComboBox(labelArr);
-        final JComboBox cb =new JComboBox();
+        final JComboBox cbShapeletLabel=new JComboBox(labelArr);
+        final JComboBox cbShapelet =new JComboBox();
+        final JComboBox cbTimeseriesLabel=new JComboBox(labelArr);
+        final JComboBox cbTimeseries =new JComboBox();
 
-        cbSwitch.setBounds(50, 100,90,20);
-        cbLabel.setBounds(cbSwitch.getX()+cbSwitch.getWidth()+10, cbSwitch.getY(),90,20);
-        cb.setBounds(cbLabel.getX()+cbLabel.getWidth()+10, cbSwitch.getY(),90,20);
+        cbShapeletLabel.setPreferredSize(new Dimension(90,20));
+        cbShapelet.setPreferredSize(new Dimension(90,20));
+        cbTimeseriesLabel.setPreferredSize(new Dimension(90,20));
+        cbTimeseries.setPreferredSize(new Dimension(90,20));
 
-        JButton b=new JButton("Show");
-        b.setBounds(cb.getX()+cb.getWidth()+10,cbSwitch.getY(),75,20);
+        JButton button=new JButton("Show");
+//        button.setBounds(cbShapelet.getX()+cbShapelet.getWidth()+10,cbSwitch.getY(),75,20);
+        button.setPreferredSize(new Dimension(75,20));
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setPreferredSize(new Dimension(300,100));
+        JPanel panelShapeletAndTimeseries = new JPanel();
+        panelShapeletAndTimeseries.setLayout(new BorderLayout());
+        panelShapeletAndTimeseries.setPreferredSize(new Dimension(200,200));
+
+        JPanel panelShapelet = new JPanel();
+        JPanel panelTimeseries = new JPanel();
+        JPanel panelButton = new JPanel();
+        panelShapelet.setPreferredSize(new Dimension(200,30));
+        panelTimeseries.setPreferredSize(new Dimension(200,30));
+        panelButton.setPreferredSize(new Dimension(100,40));
+        panelButton.setLayout(new BorderLayout());
+
+//        panel.add(cbSwitch);
+        panelShapelet.add(cbShapeletLabel);
+        panelShapelet.add(cbShapelet);
+        panelTimeseries.add(cbTimeseriesLabel);
+        panelTimeseries.add(cbTimeseries);
+        panelButton.add(label, BorderLayout.WEST);
+        panelButton.add(button, BorderLayout.EAST);
+
+        panelShapeletAndTimeseries.add(panelShapelet, BorderLayout.NORTH);
+        panelShapeletAndTimeseries.add(panelTimeseries, BorderLayout.SOUTH);
+        panel.add(panelShapeletAndTimeseries, BorderLayout.WEST);
+        panel.add(panelButton, BorderLayout.CENTER);
+
+        // Set the panel globally
+        setPanel(panel);
 
 //        f=new JFrame("ComboBox Example");
 //        f.add(cbLabel);
 //        f.add(cb);
 //        f.add(label);
-//        f.add(b);
+//        f.add(button);
 //        f.setLayout(null);
 //        f.setSize(350,350);
 //        f.setVisible(true);
 
-        JPanel panel = new JPanel();
-        panel.add(cbSwitch);
-        panel.add(cbLabel);
-        panel.add(cb);
-        panel.add(label);
-        panel.add(b);
-        panel.setPreferredSize(new Dimension(500,350));
-        // Set the panel globally
-        setPanel(panel);
-
-        b.addActionListener(new ActionListener() {
+        button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // -------- Set timeseries with specific label
                 // Switch: timeseries or shapelet
                 ArrayList<Double> localSwitchLabelArr;
-                ArrayList<Integer> switchIndexArr = new ArrayList<>();
-                String switchSelection = (String) cbSwitch.getItemAt(cbSwitch.getSelectedIndex());
+                ArrayList<Integer>[] switchIndexArr = new ArrayList[2];
+                final int shapeletIndex = 0;
+                final int timeseriesIndex = 1;
+                // count
                 int switchWithLabelCount = 0;
-                int selectedLabel = Integer.parseInt((String) cbLabel.getItemAt(cbLabel.getSelectedIndex()));
-                int selectedSwitch = 0;
-                int selectedShapelet = 0;
+                String[] switchSelection = new String[2];
+                int[] selectedSwitchLabel = new int[2];
+                int[] selectedSwitch = new int[2];
 
-                String data = switchSelection + " (label) selected: "
-                        + selectedLabel;
-                label.setText(data);
-
-                if (switchSelection == switchArr[0]) {
-                    localSwitchLabelArr = localShapeletLabelArr;
-                }else {
-                    localSwitchLabelArr = localTimeseriesLabelArr;
+                if (cbShapelet.getItemAt(cbShapelet.getSelectedIndex()) != null) {
+                    selectedSwitch[shapeletIndex] = Integer.parseInt((String) cbShapelet.getItemAt(cbShapelet.getSelectedIndex()));
+                } else {
+                    // Default value: 0
+                    selectedSwitch[shapeletIndex] = 0;
                 }
 
-                if ((selectedLabel != previousLabel[0]) || (switchSelection != previousSwitch[0])) {
-                    // Update label and switch if they are changed
-                    previousLabel[0] = selectedLabel;
-                    previousSwitch[0] = switchSelection;
+                if (cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()) != null) {
+                    selectedSwitch[timeseriesIndex] = Integer.parseInt((String) cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()));
+                } else {
+                    // Default value: 0
+                    selectedSwitch[timeseriesIndex] = 0;
+                }
 
-                    for (int i=0; i<localSwitchLabelArr.size(); i++) {
-                        double localLabel = localSwitchLabelArr.get(i);
-                        if (localLabel==selectedLabel) {
-                            switchIndexArr.add(i);
+                selectedSwitchLabel[shapeletIndex] = Integer.parseInt((String) cbShapeletLabel.getItemAt(cbShapeletLabel.getSelectedIndex()));
+                selectedSwitchLabel[timeseriesIndex] = Integer.parseInt((String) cbTimeseriesLabel.getItemAt(cbTimeseriesLabel.getSelectedIndex()));
+
+                String data = selectedSwitchLabel[shapeletIndex] + " (label) selected: "
+                        + selectedSwitchLabel[shapeletIndex] + ", shapeletSelection: " + selectedSwitch[shapeletIndex];
+                label.setText(data);
+
+//                if (switchSelection == switchArr[0]) {
+//                    // switchArr[0]: shapelet
+//                    localSwitchLabelArr = localShapeletLabelArr;
+//                }else {
+//                    // switchArr[1]: timeseries
+//                    localSwitchLabelArr = localTimeseriesLabelArr;
+//                }
+
+                // Shapelet
+                if ((selectedSwitchLabel[shapeletIndex] != previousSwitchLabel[shapeletIndex]) || (selectedSwitch[shapeletIndex] != previousSwitch[shapeletIndex])) {
+                    // Update label and switch if they are changed
+                    previousSwitchLabel[shapeletIndex] = selectedSwitchLabel[shapeletIndex];
+                    previousSwitch[shapeletIndex] = selectedSwitch[shapeletIndex];
+
+                    for (int i=0; i<localShapeletLabelArr.size(); i++) {
+                        double localLabel = localShapeletLabelArr.get(i);
+                        if (localLabel==selectedSwitchLabel[shapeletIndex]) {
+                            switchIndexArr[shapeletIndex].add(i);
                             switchWithLabelCount++;
                         }
                     }
 
                     String[] switchArr = new String[switchWithLabelCount];
-                    for (int i=0; i<switchIndexArr.size(); i++) {
-                        switchArr[i] = String.valueOf(switchIndexArr.get(i));
+                    for (int i=0; i<switchIndexArr[shapeletIndex].size(); i++) {
+                        switchArr[i] = String.valueOf(switchIndexArr[shapeletIndex].get(i));
                     }
 
                     DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(switchArr);
-                    cb.setModel( model );
+                    cbShapelet.setModel( model );
+
+                    lineChart.setShapeletInChart(selectedSwitch[shapeletIndex]);
                 }
 
-                // -------- Set timeseries
-                // Get the selectedSwitch after assignment
-                if (cb.getItemAt(cb.getSelectedIndex()) != null) {
-                    selectedSwitch = Integer.parseInt((String) cb.getItemAt(cb.getSelectedIndex()));
+                // Timeseries
+                if ((selectedSwitchLabel[timeseriesIndex] != previousSwitchLabel[timeseriesIndex]) || (selectedSwitch[timeseriesIndex] != previousSwitch[timeseriesIndex])) {
+                    // Update label and switch if they are changed
+                    previousSwitchLabel[timeseriesIndex] = selectedSwitchLabel[timeseriesIndex];
+                    previousSwitch[timeseriesIndex] = selectedSwitch[timeseriesIndex];
+
+                    for (int i=0; i<localShapeletLabelArr.size(); i++) {
+                        double localLabel = localShapeletLabelArr.get(i);
+                        if (localLabel==selectedSwitchLabel[timeseriesIndex]) {
+                            switchIndexArr[timeseriesIndex].add(i);
+                            switchWithLabelCount++;
+                        }
+                    }
+
+                    String[] switchArr = new String[switchWithLabelCount];
+                    for (int i=0; i<switchIndexArr[timeseriesIndex].size(); i++) {
+                        switchArr[i] = String.valueOf(switchIndexArr[timeseriesIndex].get(i));
+                    }
+
+                    DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(switchArr);
+                    cbTimeseries.setModel( model );
+
+                    dualAxischart.setTimeseriesInChart(selectedSwitch[timeseriesIndex]);
                 }
 
-                if (switchSelection == switchArr[0]) {
-                    lineChart.setShapeletInChart(selectedSwitch);
-                }else {
-                    dualAxischart.setTimeseriesInChart(selectedSwitch);
-                }
-
-                System.out.println("Number of timeseris/shapelet selected: " + selectedSwitch + " with label: " + selectedLabel);
+                // Get multi-dimension distance of one timeseries
+                ArrayList<Double> distanceArr = Dataset.getMultiDimensionDistance(localTimeseries, localShapelet, localTimeseriesLabelArr, localShapeletLabelArr, selectedSwitch[timeseriesIndex], selectedSwitch[shapeletIndex]);
+                System.out.println("Multi-dimension distance of timeseries " + selectedSwitch[timeseriesIndex] + ": " + distanceArr);
+                System.out.println("Number of shapelet selected: " + selectedSwitch[shapeletIndex] + " with label: " + selectedSwitchLabel[shapeletIndex] + "\nNumber of timeseris selected: " + selectedSwitch[timeseriesIndex] + " with label: " + selectedSwitchLabel[timeseriesIndex]);
             }
         });
     }

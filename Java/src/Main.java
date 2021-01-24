@@ -11,14 +11,6 @@ public class Main {
 
     public Main() {}
 
-    public void setFrame(JFrame frame) {
-        this.frame = frame;
-    }
-
-    public JFrame getFrame() {
-        return frame;
-    }
-
     public static void setDataset(Dataset aDataset) throws IOException {
         aDataset.loadShapelet();
         aDataset.loadTimeseries();
@@ -37,11 +29,11 @@ public class Main {
         Dataset aDataset = new Dataset();
         setDataset(aDataset);
         int maxWidth = 1500;
-        int maxLen = 1000;
+        int maxHeight = 1200;
         final JFrame frame = new JFrame("ShapeNet");
         final JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setPreferredSize(new Dimension(maxWidth, maxLen));
+        panel.setPreferredSize(new Dimension(maxWidth, maxHeight));
 
         JPanel EPanel = new JPanel();
         EPanel.setLayout(new BorderLayout());
@@ -69,23 +61,31 @@ public class Main {
         NEPanel.add(aHistogramChartPanel, BorderLayout.CENTER);
 
         // 2. Initialize lineChart and set panel for comboBox
-        JPanel SEEPanel = new JPanel();
-        SEEPanel.setLayout(new BorderLayout());
-        SWPanel.add(SEEPanel, BorderLayout.EAST);
+        JPanel SWEPanel = new JPanel();
+        SWEPanel.setLayout(new BorderLayout());
+        SWPanel.add(SWEPanel, BorderLayout.CENTER);
         LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
         ChartPanel aLineChartPanel = lineChart.getPanel();
-        SEEPanel.add(aLineChartPanel, BorderLayout.NORTH);
+        SWEPanel.add(aLineChartPanel, BorderLayout.NORTH);
 
         // 3. Initialize dualAxisChart and set panel for dualAxisChart
         final String title = "Score Bord";
         final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
         ChartPanel aDualAxisChartPanel = dualAxisChart.getPanel();
-        SEEPanel.add(aDualAxisChartPanel, BorderLayout.SOUTH);
+        SWEPanel.add(aDualAxisChartPanel, BorderLayout.SOUTH);
 
         // 4. Initialize comboBox and set panel for comboBox
-        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart);
+        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart);
         JPanel comboBoxPanel = comboBox.getPanel();
-        NWPanel.add(comboBoxPanel, BorderLayout.WEST);
+        NWPanel.add(comboBoxPanel, BorderLayout.NORTH);
+
+        // 5. Initialize labelBox and set panel for labelBox
+//        JPanel SEEPanel = new JPanel();
+//        SEEPanel.setLayout(new BorderLayout());
+//        SEPanel.add(SEEPanel, BorderLayout.CENTER);
+        LabeBoxExample labeBox = new LabeBoxExample();
+        JPanel labeBoxPanel = labeBox.getPanel();
+        SEPanel.add(labeBoxPanel, BorderLayout.NORTH);
 
         // n. Add the globalPanel to frame
         panel.add(EPanel, BorderLayout.EAST);
@@ -96,6 +96,14 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public void setFrame(JFrame frame) {
+        this.frame = frame;
     }
 }
 

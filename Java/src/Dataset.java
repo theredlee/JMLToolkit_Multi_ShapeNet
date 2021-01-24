@@ -22,7 +22,7 @@ public class Dataset {
 
     public void loadTimeseries() throws IOException {
         // 2576
-         System.out.println(System.getProperty("user.dir"));
+        // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
 //        String expected_value = "Hello, world!";
@@ -94,7 +94,7 @@ public class Dataset {
 
     public void loadShapelet() throws IOException {
         // 2576
-        System.out.println(System.getProperty("user.dir"));
+        // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
         String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
@@ -311,6 +311,79 @@ public class Dataset {
 
     public ArrayList<Double> getGlobalShapeletLabelArr() {
         return globalShapeletLabelArr;
+    }
+
+    public static ArrayList<Double> getMultiDimensionDistance(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, int timeseriesIndex, int shapeletIndex) {
+        ArrayList<Double> distanceArr = new ArrayList<>();
+        double aDistance;
+        ArrayList<Double> aTimeseries;
+        ArrayList<Double> aShapelet;
+        int dimension;
+
+
+        for (int j=0; j<localShapelet.size(); j++) {
+            dimension = (int)((double)localShapeletLabelArr.get(j));
+            aTimeseries = localTimeseries.get(timeseriesIndex).get(dimension);
+            // Only calculate the distance with the matched dimension
+            aShapelet = localShapelet.get(j);
+
+            System.out.println("dimension: " + dimension);
+            System.out.println("aTimeseries: " + aTimeseries);
+            System.out.println("aShapelet: " + aShapelet);
+            System.out.println();
+
+            aDistance = getDistance(aTimeseries, aShapelet);
+            distanceArr.add(aDistance);
+        }
+        return distanceArr;
+    }
+
+    public static double getDistance(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, int timeseriesIndex, int shapeletIndex) {
+        ArrayList<Double> distanceArr = new ArrayList<>();
+        double aDistance;
+        ArrayList<Double> aTimeseries;
+        ArrayList<Double> aShapelet;
+        int dimension;
+
+        dimension = (int)((double)localShapeletLabelArr.get(shapeletIndex));
+        // Only calculate the distance with the matched dimension
+        aTimeseries = localTimeseries.get(timeseriesIndex).get(dimension);
+        aShapelet = localShapelet.get(shapeletIndex);
+        aDistance = getDistance(aTimeseries, aShapelet);
+
+        double distanceSum = 0;
+        double distanceMin = Double.MAX_VALUE;;
+        for(int i=0; i<(aTimeseries.size()-(aShapelet.size())); i++) {
+            // index in indexcurrentShapelet
+            distanceSum = 0;
+            for(int j=0; j< aShapelet.size(); j++) {
+                // index in indexcurrentShapelet
+                distanceSum += Math.pow(aTimeseries.get(j+i) - aShapelet.get(j), 2.0);
+            }
+            distanceSum = Math.sqrt(distanceSum);
+            if(distanceSum < distanceMin){
+                distanceMin = distanceSum;
+            }
+        }
+        return distanceMin;
+    }
+
+    private static double getDistance(ArrayList<Double> timeseries, ArrayList<Double> shapelet) {
+        double distanceSum = 0;
+        double distanceMin = Double.MAX_VALUE;;
+        for(int i=0; i<(timeseries.size()-(shapelet.size())); i++) {
+            // index in indexcurrentShapelet
+            distanceSum = 0;
+            for(int j=0; j< shapelet.size(); j++) {
+                // index in indexcurrentShapelet
+                distanceSum += Math.pow(timeseries.get(j+i) - shapelet.get(j), 2.0);
+            }
+            distanceSum = Math.sqrt(distanceSum);
+            if(distanceSum < distanceMin){
+                distanceMin = distanceSum;
+            }
+        }
+        return distanceMin;
     }
 
     public static void main(String[] args) throws IOException {
