@@ -112,7 +112,7 @@ public class BarChartExample extends JFrame {
     public static void main(String[] args) throws Exception {
         SwingUtilities.invokeAndWait(()->{
             Dataset aDataset = new Dataset();
-            ArrayList<Double> valArr = aDataset.getGlobalMultArr();
+//            ArrayList<ArrayList<Double>> valArr = aDataset.getGlobalMulti0And1Arr();
 //            BarChartExample example=new BarChartExample("Bar Chart Window", valArr);
             BarChartExample example=new BarChartExample("Bar Chart Window");
             example.setSize(800, 400);

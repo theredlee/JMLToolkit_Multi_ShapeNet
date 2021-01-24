@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.lang.reflect.Member;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -45,6 +46,34 @@ public class PieChartExample extends JFrame {
         setContentPane(chartPanel);
     }
 
+    public PieChartExample(ArrayList<ArrayList<Double>> valPosAndNegArr, ArrayList<ArrayList<Double>> valTFArr, int count) {
+        super("Distance (SVM) Accuracy");
+
+        // Create dataset
+        // PieDataset dataset = createDataset();
+        PieDataset dataset = createDistance(valPosAndNegArr, valTFArr, count);
+
+        // Create chart
+        JFreeChart chart = ChartFactory.createPieChart(
+                "Pie Chart Example",
+                dataset,
+                true,
+                true,
+                false);
+
+        //Format Label
+        PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(
+                "Marks {0} : ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
+        ((PiePlot) chart.getPlot()).setLabelGenerator(labelGenerator);
+
+        // Create Panel
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(500, 300));
+        // Set the panel globally
+        setPanel(chartPanel);
+        setContentPane(chartPanel);
+    }
+
     private PieDataset createDataset() {
 
         DefaultPieDataset dataset=new DefaultPieDataset();
@@ -56,18 +85,27 @@ public class PieChartExample extends JFrame {
         return dataset;
     }
 
-    private PieDataset createDistance() {
+    private PieDataset createDistance(ArrayList<ArrayList<Double>> valPosAndNegArr, ArrayList<ArrayList<Double>> valTFArr, int count) {
+        final int posOrTindex = 0;
+        final int negOrFindex = 1;
+        int posCount = valPosAndNegArr.get(posOrTindex).size();
+        int negCount = valPosAndNegArr.get(negOrFindex).size();
+        int PosTCount = valTFArr.get(posOrTindex).size();
+        int NegFCount = valTFArr.get(negOrFindex).size();
+        int otherCount = count - (PosTCount+NegFCount);
+
+        System.out.println("posCount: " + posCount + ", negCount: " + negCount + ", PosTCount: " + PosTCount + ", NegFCount: " + NegFCount + ", otherCount: " + otherCount);
 
         DefaultPieDataset dataset=new DefaultPieDataset();
-        dataset.setValue("80-100", 120);
-        dataset.setValue("60-79", 80);
-        dataset.setValue("40-59", 20);
-        dataset.setValue("20-39", 7);
-        dataset.setValue("0-19", 3);
+//        dataset.setValue("posCount", posCount);
+//        dataset.setValue("negCount", negCount);
+        dataset.setValue("Others", otherCount);
+        dataset.setValue("PosTCount", PosTCount);
+        dataset.setValue("NegFCount", NegFCount);
         return dataset;
     }
 
-    private void setPanel (ChartPanel panel) {
+    private void setPanel(ChartPanel panel) {
         this.panel = panel;
     }
 

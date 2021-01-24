@@ -14,12 +14,14 @@ public class Dataset {
     public ArrayList<ArrayList<Double>> globalCoefArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalInterceptArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalFeaturesArr = new ArrayList<ArrayList<Double>>();
-    public ArrayList<Double> globalMultArr = new ArrayList<Double>();
+    public ArrayList<ArrayList<Double>> globalMulti0And1Arr = new ArrayList<ArrayList<Double>>();
+    public ArrayList<Double> globalMultiArr = new ArrayList<Double>();
 
     public ArrayList<ArrayList<Double>> globalMultPosAndNegArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalMultTFArr = new ArrayList<ArrayList<Double>>();
     public Dataset() {}
     public double accuracy;
+    public int count;
 
     public void loadTimeseries() throws IOException {
         // 2576
@@ -218,6 +220,8 @@ public class Dataset {
     }
 
     public void multiplication_PN_TF() {
+        final int label0Index=0;
+        final int label1Index=1;
         final int[] count = {0};
         final int[] accuracyCount = {0};
         System.out.println("-------------------");
@@ -228,10 +232,15 @@ public class Dataset {
         ArrayList<Double> arrF = new ArrayList<Double>();
 
         ArrayList<Double> arrPosT = new ArrayList<Double>();
-        ArrayList<Double> arrNegT = new ArrayList<Double>();
-
+        ArrayList<Double> arrNegF = new ArrayList<Double>();
 
         final int[] positiveCount = {0};
+
+        // Initialize globalMulti0And1Arr
+        for (int i=0; i<2; i++) {
+            ArrayList<Double> arr = new ArrayList<Double>();
+            globalMulti0And1Arr.add(arr);
+        }
 
         globalFeaturesArr.forEach((featureRow) -> {
             double rowSum = 0;
@@ -249,43 +258,58 @@ public class Dataset {
 
             if (rowSum>0) {
                 if (label==0) {
+                    // Label = 0
                     positiveCount[0]++;
                     accuracyCount[0]++;
 //                    arrT.add(rowSum);
                     arrPosT.add(rowSum);
+                    globalMulti0And1Arr.get(label0Index).add(rowSum);
                 }else{
+                    // Label = 1
 //                    arrF.add(rowSum);
+                    globalMulti0And1Arr.get(label1Index).add(rowSum);
                 }
                 arrPos.add(rowSum);
             }else {
                 if (label==1) {
+                    // Label = 1
                     accuracyCount[0]++;
 //                    arrT.add(rowSum);
-                    arrNegT.add(rowSum);
+                    arrNegF.add(rowSum);
+                    globalMulti0And1Arr.get(label1Index).add(rowSum);
                 }else{
+                    // Label = 0
 //                    arrF.add(rowSum);
+                    globalMulti0And1Arr.get(label0Index).add(rowSum);
                 }
                 arrNeg.add(rowSum);
             }
+
+            // Add each rowSum to globalMultiArr
+            globalMultiArr.add(rowSum);
 
             // Test the accuracy, see whether is close to 90%.
             count[0] += 1;
             // System.out.println('rowSum: ' + rowSum);
         });
 
+        // Set count gloally
+        setCount(count[0]);
+
         globalMultPosAndNegArr.add(arrPos);
         globalMultPosAndNegArr.add(arrNeg);
+        globalMultTFArr.add(arrPosT);
+        globalMultTFArr.add(arrNegF);
 //        globalMultTFArr.add(arrT);
 //        globalMultTFArr.add(arrF);
-        globalMultTFArr.add(arrPosT);
-        globalMultTFArr.add(arrNegT);
 
         accuracy = accuracyCount[0]*1.0/count[0];
 
         System.out.println("positiveCount: " + positiveCount[0] + ", negativeCount: " + (count[0]-positiveCount[0]));
         System.out.println("accuracyCount: " + accuracyCount[0]);
-        System.out.println("count: " + count[0]);
+//        System.out.println("globalMulti0And1Arr: " + globalMulti0And1Arr);
         System.out.println("accuracy: " + accuracy);
+        System.out.println("Total count: " + count[0]);
     }
 
     public ArrayList<ArrayList<Double>> getGlobalShapelet() {
@@ -296,9 +320,9 @@ public class Dataset {
         return globalTimeseries;
     }
 
-    public ArrayList<Double> getGlobalMultArr() {
-        return globalMultArr;
-    }
+    public ArrayList<ArrayList<Double>> getGlobalMulti0And1Arr() { return globalMulti0And1Arr; }
+
+    public ArrayList<Double> getGlobalMultiArr() { return globalMultiArr; }
 
     public ArrayList<ArrayList<Double>> getGlobalMultPosAndNegArr() {
         return globalMultPosAndNegArr;
@@ -312,12 +336,20 @@ public class Dataset {
         return globalTimeseriesLabelArr;
     }
 
+    public void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
+    }
+
     public double getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(double accuracy) {
-        this.accuracy = accuracy;
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
     }
 
     public ArrayList<Double> getGlobalShapeletLabelArr() {

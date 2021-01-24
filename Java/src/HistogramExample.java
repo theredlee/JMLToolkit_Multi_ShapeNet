@@ -89,7 +89,7 @@ public class HistogramExample extends JFrame {
         }
 
         // 0: arrT & 1: arrF
-        String[] TFlabelArr = {">0_True", "<0_True"};
+        String[] TFlabelArr = {">0_True", "<0_False"};
         for (int i=0; i<valTFArr.size(); i++) {
             ArrayList<Double> valArr = valTFArr.get(i);
             for (int j=0; j<valArr.size(); j++) {

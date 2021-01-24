@@ -4,6 +4,7 @@ import org.jfree.chart.JFreeChart;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -58,7 +59,6 @@ public class Main {
         4, 5, 6
         7, 8, 9
          */
-
         // ---------------------------------------------------------------------------------------------------------
 
         // 1. Initialize histogram and set panel for histogram
@@ -69,31 +69,37 @@ public class Main {
         // 2. Initialize lineChart and set panel for comboBox
         LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
         ChartPanel aLineChartPanel = lineChart.getPanel();
-        gridPanel4.add(aLineChartPanel, BorderLayout.NORTH);
+        gridPanel4.add(aLineChartPanel);
 
         // 3. Initialize dualAxisChart and set panel for dualAxisChart
         final String title = "Score Bord";
         final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
         ChartPanel aDualAxisChartPanel = dualAxisChart.getPanel();
-        gridPanel7.add(aDualAxisChartPanel, BorderLayout.SOUTH);
+        gridPanel7.add(aDualAxisChartPanel);
 
         // 4. Initialize labelBox and set panel for labelBox
-        // JPanel SEEPanel = new JPanel();
-        // SEEPanel.setLayout(new BorderLayout());
-        // SEPanel.add(SEEPanel, BorderLayout.CENTER);
         LabeBoxExample labelBox = new LabeBoxExample();
         JPanel labeBoxPanel = labelBox.getPanel();
-        gridPanel8.add(labeBoxPanel, BorderLayout.NORTH);
+        gridPanel4.add(labeBoxPanel);
 
         // 5. Initialize pieChart and set panel for pieChart
-        PieChartExample pieChart = new PieChartExample("Pie Chart Example");
+        PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
         ChartPanel pieChartPanel = pieChart.getPanel();
-        gridPanel6.add(pieChartPanel, BorderLayout.SOUTH);
+        gridPanel6.add(pieChartPanel);
+
+        // 6. Initialize PriceEstimator and set panel for PriceEstimator
+        int chartIndex0 = 0;
+        int chartIndex1 = 1;
+//        com.technobium.regression.PriceEstimator priceEstimator = new com.technobium.regression.PriceEstimator(aDataset.getGlobalMulti0And1Arr());
+        com.technobium.regression.PriceEstimator priceEstimator = new com.technobium.regression.PriceEstimator(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
+        ArrayList<ChartPanel> priceEstimatorPanelArr = priceEstimator.getPanelArr();
+        gridPanel8.add(priceEstimatorPanelArr.get(chartIndex0));
+        gridPanel9.add(priceEstimatorPanelArr.get(chartIndex1));
 
         // n-1. Initialize comboBox and set panel for comboBox
         ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, labelBox);
         JPanel comboBoxPanel = comboBox.getPanel();
-        gridPanel1.add(comboBoxPanel, BorderLayout.NORTH);
+        gridPanel1.add(comboBoxPanel);
 
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
