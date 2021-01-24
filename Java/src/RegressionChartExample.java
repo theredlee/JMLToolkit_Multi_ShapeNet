@@ -163,6 +163,7 @@ public class RegressionChartExample extends ApplicationFrame {
         int count = 0;
         int label;
         double distance;
+        int label1Count = 0;
 
         XYSeriesCollection dataset = new XYSeriesCollection();
         XYSeries series = new XYSeries("Real estate item");
@@ -176,8 +177,14 @@ public class RegressionChartExample extends ApplicationFrame {
             }else {
                 series.add(count, null);
             }
+            if ((label == index) && index == 1) {
+                label1Count++;
+            }
+
             count++;
         }
+
+        System.out.println("label1Count: " + label1Count);
 
         dataset.addSeries(series);
 
