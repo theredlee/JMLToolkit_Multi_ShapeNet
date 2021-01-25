@@ -9,11 +9,11 @@ public class LabeBoxExample extends Frame{
     LabeBoxExample() {
 //        tf.setBounds(50, 50, 150, 20);
         label = new JLabel("Distance");
-        label.setPreferredSize(new Dimension(300, 200));
+        label.setPreferredSize(new Dimension(200, 150));
 
         JPanel panel = new JPanel();
         panel.add(label);
-        panel.setPreferredSize(new Dimension(300, 200));
+        panel.setPreferredSize(new Dimension(200, 150));
         setPanel(panel);
 //        add(b);
 //        add(tf);

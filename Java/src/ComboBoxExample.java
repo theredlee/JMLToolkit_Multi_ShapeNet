@@ -88,8 +88,8 @@ public class ComboBoxExample {
         panelShapelet.add(cbShapelet);
         panelTimeseries.add(cbTimeseriesLabel);
         panelTimeseries.add(cbTimeseries);
-        panelButton.add(label, BorderLayout.WEST);
-        panelButton.add(button, BorderLayout.EAST);
+//        panelButton.add(label, BorderLayout.WEST);
+        panelButton.add(button, BorderLayout.CENTER);
 
         panelShapeletAndTimeseries.add(panelShapelet, BorderLayout.NORTH);
         panelShapeletAndTimeseries.add(panelTimeseries, BorderLayout.SOUTH);

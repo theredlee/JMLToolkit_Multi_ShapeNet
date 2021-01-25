@@ -28,10 +28,10 @@ public class Dataset {
         // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
-//        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
-        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
-        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
+        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
+        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
+//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
+//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -79,10 +79,10 @@ public class Dataset {
 //        String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-//        String file1 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-//        String file2 = "C:/Users/e9214294/Desktop/RedLee/JMLToolkit_Multi_ShapeNet-master/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-        String file1 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-        String file2 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        String file1 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+        String file2 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+//        String file1 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+//        String file2 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
 
         String[] fileArr = {file1, file2};
 
@@ -147,8 +147,8 @@ public class Dataset {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
         String expected_value = "Hello, world!";
 //        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/coef.txt";
-//        String file = "/Users/student/Desktop/RedLee/datasets/Distance/coef.txt";
-        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/coef.txt";
+        String file = "/Users/student/Desktop/RedLee/datasets/Distance/coef.txt";
+//        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/coef.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -171,8 +171,8 @@ public class Dataset {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
         String expected_value = "Hello, world!";
 //        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/intercept.txt";
-//        String file = "/Users/student/Desktop/RedLee/datasets/Distance/intercept.txt";
-        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/intercept.txt";
+        String file = "/Users/student/Desktop/RedLee/datasets/Distance/intercept.txt";
+//        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/intercept.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -196,10 +196,10 @@ public class Dataset {
         String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_train.txt";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_test.txt";
-//        String file1 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_train.txt";
-//        String file2 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_test.txt";
-        String file1 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_train.txt";
-        String file2 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_test.txt";
+        String file1 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_train.txt";
+        String file2 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_test.txt";
+//        String file1 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_train.txt";
+//        String file2 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_test.txt";
 
         String[] fileArr = {file1, file2};
 
