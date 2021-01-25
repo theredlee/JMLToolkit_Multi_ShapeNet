@@ -94,11 +94,11 @@ public class RegressionChartExample extends ApplicationFrame {
         chart1 = createChart(chartIndex1, inputData1);
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(500, 300));
+        chartPanel.setPreferredSize(new Dimension(400, 300));
         ChartPanel chartPanel0 = new ChartPanel(chart0);
-        chartPanel0.setPreferredSize(new Dimension(500, 300));
+        chartPanel0.setPreferredSize(new Dimension(400, 300));
         ChartPanel chartPanel1 = new ChartPanel(chart1);
-        chartPanel1.setPreferredSize(new Dimension(500, 300));
+        chartPanel1.setPreferredSize(new Dimension(400, 300));
 
         ArrayList<ChartPanel> aChartPanelArr = new ArrayList<>();
         aChartPanelArr.add(chartPanel);

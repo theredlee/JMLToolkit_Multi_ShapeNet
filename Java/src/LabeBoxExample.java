@@ -13,7 +13,7 @@ public class LabeBoxExample extends Frame{
 
         JPanel panel = new JPanel();
         panel.add(label);
-        panel.setPreferredSize(new Dimension(400, 200));
+        panel.setPreferredSize(new Dimension(300, 200));
         setPanel(panel);
 //        add(b);
 //        add(tf);
