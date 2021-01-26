@@ -23,15 +23,132 @@ public class Dataset {
     public double accuracy;
     public int count;
 
+    public void loadShapelet_testing() throws IOException {
+        // 2576
+        // System.out.println(System.getProperty("user.dir"));
+        // /Users/leone/ShapeNet
+        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
+//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
+//        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
+        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_03.txt";
+        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
+
+        // Read shapelet
+        BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
+        String line = reader.readLine();
+        String newline;
+        List<String> newStrList;
+        double label;
+        while (line != null) {
+            String[] arrOfStr = line.split(" ");
+
+            ArrayList<Double> valArr = new ArrayList<Double>();
+            for (int j=0; j<arrOfStr.length; j++) {
+                String str = arrOfStr[j];
+                valArr.add(Double.valueOf(str));
+            }
+            globalShapelet.add(valArr);
+
+            // read next line
+            line = reader.readLine();
+        }
+        reader.close();
+
+        // Read shapelet label
+        reader = new BufferedReader(new FileReader(file_dim));
+        line = reader.readLine();
+        while (line != null) {
+            ArrayList<Double> valArr = new ArrayList<Double>();
+            double val = Double.valueOf(line);
+            globalShapeletLabelArr.add(val);
+
+            // read next line
+            line = reader.readLine();
+        }
+        reader.close();
+
+//        System.out.println(globalShapelet);
+        System.out.println("globalShapelet: " + globalShapelet);
+        System.out.println("globalShapeletLabelArr: " + globalShapeletLabelArr);
+        System.out.println("globalShapeletLabelArr.size(): " + globalShapeletLabelArr.size());
+    }
+
+    public void loadTimeseries_testing() throws IOException {
+        // 2576
+        // System.out.println("System.getProperty(\"user.dir\"): " + System.getProperty("user.dir"));
+        // /Users/leone/ShapeNet
+        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
+//        String expected_value = "Hello, world!";
+//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+//        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+//        String file1 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+//        String file2 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
+
+        String[] fileArr = {file1};
+
+        int count = 0;
+        for (int i=0; i<fileArr.length; i++) {
+            String file = fileArr[i];
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            String newline;
+            List<String> newStrList;
+            double label;
+            while (line != null) {
+                if (line.contains("\\n")){
+                    // Get the label
+                    newline = line;
+                    // Regex has its own escape sequences, denoted with \\ (the escape sequence for \), since Java reserves \
+                    // To split by "\n", you'll need \\\\n instead, because \\n in regex represents an actual line break, just as \n represents one in Java.
+                    List<String> arrOfStr = Arrays.asList(newline.split("\\\\n"));
+
+                    ArrayList<ArrayList<Double>> timeseriesArr = new ArrayList<ArrayList<Double>>();
+                    // Initialize timeseriesArr with size 2
+                    int size = 2;
+                    for (int l=0; l<size; l++) {
+                        timeseriesArr.add(new ArrayList<Double>());
+                    }
+
+                    for (int j=0; j<arrOfStr.size(); j++) {
+                        String str = arrOfStr.get(j);
+                        newStrList = Arrays.asList(str.split(" "));
+
+                        for (int k=0; k<newStrList.size(); k++) {
+                            timeseriesArr.get(j).add(Double.valueOf(newStrList.get(k)));
+                        }
+                    }
+
+                    label = Double.valueOf(-1);
+                    globalTimeseriesLabelArr.add(label);
+
+                    globalTimeseries.add(timeseriesArr);
+                    count++;
+                }
+                // read next line
+                line = reader.readLine();
+            }
+            reader.close();
+            System.out.println("count: " + count);
+//            System.out.println("globalTimeseries: " + globalTimeseries);
+//            System.out.println("globalTimeseriesLabelArr: " + globalTimeseriesLabelArr);
+            System.out.println("globalLabelArr.size(): " + globalTimeseriesLabelArr.size());
+            System.out.println("globalLinesTimeseries.size(): " + globalTimeseries.size());
+        }
+//        System.out.println(globalLinesTimeseries);
+    }
+
+    // ------------------------------------------------------------------------------------------
+
     public void loadShapelet() throws IOException {
         // 2576
         // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
-        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
-//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
-//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
+//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
+//        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
+        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
+        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -432,12 +549,15 @@ public class Dataset {
 
     public static void main(String[] args) throws IOException {
         Dataset aDataset = new Dataset();
-        aDataset.loadShapelet();
-        aDataset.loadTimeseries();
-        aDataset.loadCoef();
-        aDataset.loadIntercept();
-        aDataset.loadFeatures();
-        aDataset.multiplication_PN_TF();
+//        aDataset.loadShapelet_testing();
+        aDataset.loadTimeseries_testing();
+        // -------------------------------
+//        aDataset.loadShapelet();
+//        aDataset.loadTimeseries();
+//        aDataset.loadCoef();
+//        aDataset.loadIntercept();
+//        aDataset.loadFeatures();
+//        aDataset.multiplication_PN_TF();
         //---------
     }
 }
