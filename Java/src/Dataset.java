@@ -28,10 +28,10 @@ public class Dataset {
         // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
-//        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
-        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_03.txt";
-        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
+        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_03.txt";
+        String file_dim = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
+//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_03.txt";
+//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -81,9 +81,8 @@ public class Dataset {
 //        String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-//        String file1 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-//        String file2 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
+        String file1 = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
+//        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
 
         String[] fileArr = {file1};
 
