@@ -8,7 +8,9 @@ import java.util.List;
 public class Dataset {
 
     public ArrayList<ArrayList<ArrayList<Double>>> globalTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
+    public ArrayList<ArrayList<ArrayList<Double>>> globalNormalizedTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     public ArrayList<ArrayList<Double>> globalShapelet = new ArrayList<ArrayList<Double>>();
+    public ArrayList<ArrayList<Double>> globalNormalizedShapelet = new ArrayList<ArrayList<Double>>();
     public ArrayList<Double> globalTimeseriesLabelArr = new ArrayList<Double>();
     public ArrayList<Double> globalShapeletLabelArr = new ArrayList<Double>();
     public ArrayList<ArrayList<Double>> globalCoefArr = new ArrayList<ArrayList<Double>>();
@@ -144,10 +146,10 @@ public class Dataset {
         // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
-//        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
-        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
-        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
+        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
+        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
+//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
+//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -480,11 +482,12 @@ public class Dataset {
 
     public static ArrayList<Double> getMultiDimensionDistance(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, int timeseriesIndex, int shapeletIndex) {
         ArrayList<Double> distanceArr = new ArrayList<>();
+        double[][] distanceAndIndex = {{},{}};
+        int aStartIndex;
         double aDistance;
         ArrayList<Double> aTimeseries;
         ArrayList<Double> aShapelet;
         int dimension;
-
 
         for (int j=0; j<localShapelet.size(); j++) {
             dimension = (int)((double)localShapeletLabelArr.get(j));
@@ -492,45 +495,25 @@ public class Dataset {
             // Only calculate the distance with the matched dimension
             aShapelet = localShapelet.get(j);
 
-            aDistance = getDistance(aTimeseries, aShapelet);
+            // distanceAndIndex[0][0]: startIndex;
+            // distanceAndIndex[1][0]: distanceMin;
+            distanceAndIndex = getDistance(aTimeseries, aShapelet);
+            aStartIndex = (int) distanceAndIndex[0][0];
+            aDistance = distanceAndIndex[1][0];
+
             distanceArr.add(aDistance);
         }
         return distanceArr;
     }
 
-    public static double getDistance(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, int timeseriesIndex, int shapeletIndex) {
-        ArrayList<Double> distanceArr = new ArrayList<>();
-        double aDistance;
-        ArrayList<Double> aTimeseries;
-        ArrayList<Double> aShapelet;
-        int dimension;
-
-        dimension = (int)((double)localShapeletLabelArr.get(shapeletIndex));
-        // Only calculate the distance with the matched dimension
-        aTimeseries = localTimeseries.get(timeseriesIndex).get(dimension);
-        aShapelet = localShapelet.get(shapeletIndex);
-        aDistance = getDistance(aTimeseries, aShapelet);
-
+    private static double[][] getDistance(ArrayList<Double> timeseries, ArrayList<Double> shapelet) {
+        // distanceAndIndex[0][0]: startIndex;
+        // distanceAndIndex[1][0]: distanceMin;
+        double[][] distanceAndIndex = {{-1},{-1}};
         double distanceSum = 0;
-        double distanceMin = Double.MAX_VALUE;;
-        for(int i=0; i<(aTimeseries.size()-(aShapelet.size())); i++) {
-            // index in indexcurrentShapelet
-            distanceSum = 0;
-            for(int j=0; j< aShapelet.size(); j++) {
-                // index in indexcurrentShapelet
-                distanceSum += Math.pow(aTimeseries.get(j+i) - aShapelet.get(j), 2.0);
-            }
-            distanceSum = Math.sqrt(distanceSum);
-            if(distanceSum < distanceMin){
-                distanceMin = distanceSum;
-            }
-        }
-        return distanceMin;
-    }
+        double distanceMin = Double.MAX_VALUE;
+        int startIndex = 0;
 
-    private static double getDistance(ArrayList<Double> timeseries, ArrayList<Double> shapelet) {
-        double distanceSum = 0;
-        double distanceMin = Double.MAX_VALUE;;
         for(int i=0; i<(timeseries.size()-(shapelet.size())); i++) {
             // index in indexcurrentShapelet
             distanceSum = 0;
@@ -541,9 +524,104 @@ public class Dataset {
             distanceSum = Math.sqrt(distanceSum);
             if(distanceSum < distanceMin){
                 distanceMin = distanceSum;
+                startIndex = i;
+                distanceAndIndex[0][0] = startIndex;
+                distanceAndIndex[1][0] = distanceMin;
             }
         }
-        return distanceMin;
+        return distanceAndIndex;
+    }
+
+    private ArrayList<ArrayList<ArrayList<Double>>> getNormalTimeseries(ArrayList<ArrayList<ArrayList<Double>>> timeseriesArr, int dimensionSize) {
+        ArrayList<ArrayList<Double>> dataArr = new ArrayList<>();
+        int dimensionLevelIndex;
+
+        // Initialize dataArr
+        for (int i=0; i<dimensionSize; i++) {
+            ArrayList<Double> arr = new ArrayList<>();
+            dataArr.add(arr);
+        }
+
+        ArrayList<ArrayList<Double>> normalizedDataArr = new ArrayList<ArrayList<Double>>();
+        // Initialize normalizedDataArr
+        for (int i=0; i<dimensionSize; i++) {
+            ArrayList<Double> arr = new ArrayList<>();
+            normalizedDataArr.add(arr);
+        }
+
+        for (int i=0; i<dimensionSize; i++) {
+            dataArr = new ArrayList<>();
+            dimensionLevelIndex = i;
+
+            for (int j=0; j<timeseriesArr.size(); j++) {
+                ArrayList<Double> timeseriesOneDimensionArr = timeseriesArr.get(j).get(dimensionLevelIndex);
+                for (int k=0; k<timeseriesOneDimensionArr.size(); k++) {
+                    dataArr.get(i).add(timeseriesOneDimensionArr.get(k));
+                }
+            }
+
+            // After get all values of one dimension, normalize them.
+            double[][] meanAndAStd = getNormalizationProperty(dataArr.get(i));
+            double mean = meanAndAStd[0][0];
+            double std = meanAndAStd[0][1];
+
+            double val;
+            for (int j=0; j<dataArr.size(); j++) {
+                ArrayList<Double> aDataset = dataArr.get(j);
+                for (int k=0; k<aDataset.size(); k++) {
+                    val = (aDataset.get(k) - mean)/std;
+                    normalizedDataArr.get(i).add(val);
+                }
+            }
+
+            // Add the normalized value arr of each dimension
+            globalNormalizedTimeseries.add(normalizedDataArr.get(i));
+        }
+
+        // After get the , put them int0
+        for (int i=0; i<dimensionSize; i++) {
+            ArrayList
+            ArrayList<Double> timeseriesOneDimensionArr = timeseriesArr.get(i).get(dimensionLevelIndex);
+            for (int j=0; j<timeseriesOneDimensionArr.size(); j++) {
+                dataArr.add(timeseriesOneDimensionArr.get(j));
+            }
+        }
+
+    }
+
+    private double[][] getNormalizationProperty(ArrayList<Double> dataArr) {
+        // meanAndAStd[0][0]: mean;
+        // meanAndAStd[0][1]: std;
+        double[][] meanAndAStd = {{-1}, {-1}};
+        double sum = 0;
+        double val;
+
+        for (int i=0; i<dataArr.size(); i++) {
+            val = dataArr.get(i);
+            sum = sum + val;
+        }
+
+        double abs;
+        double mean = sum/dataArr.size();
+        double squareSum = 0;
+
+        for (int i=0; i<dataArr.size(); i++) {
+            abs = Math.abs(mean-dataArr.get(i));
+            val = Math.pow(abs, 2);
+            squareSum = squareSum + val;
+        }
+
+        double variance = squareSum/dataArr.size();
+        double std = Math.sqrt(variance);
+
+        meanAndAStd[0][0] = mean;
+        meanAndAStd[0][1] = std;
+
+        return meanAndAStd;
+    }
+
+    private double getZvalue(double mean, double std, double val) {
+        return (val - mean)/std;
     }
 
     public static void main(String[] args) throws IOException {

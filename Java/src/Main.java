@@ -1,6 +1,5 @@
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,10 +35,10 @@ public class Main {
         Dataset aDataset = new Dataset();
 
         // -----------------------------------------
-        setDataset_testing(aDataset);
+        // setDataset_testing(aDataset);
         // -----------------------------------------
 
-//        setDataset(aDataset);
+        setDataset(aDataset);
         int maxWidth = 1500;
         int maxHeight = 1200;
         final JFrame frame = new JFrame("ShapeNet");
@@ -137,66 +136,66 @@ public class Main {
         */
         // ---------------------------------------------------------------------------------------------------------
 
-//        // 1. Initialize histogram and set panel for histogram
-//        HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
-//        ChartPanel aHistogramChartPanel = histogram.getChartPanel();
-//        panel2HolderRightHolder[0][0].add(aHistogramChartPanel);
+        // 1. Initialize histogram and set panel for histogram
+        HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
+        ChartPanel aHistogramChartPanel = histogram.getChartPanel();
+        panel2HolderRightHolder[0][0].add(aHistogramChartPanel);
+
+        // 2. Initialize lineChart and set panel for comboBox
+        LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
+        ChartPanel aLineChartPanel = lineChart.getPanel();
+//        groupPanel3.add(aLineChartPanel);
+
+        // 3. Initialize dualAxisChart and set panel for dualAxisChart
+//        // final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
+//        // ChartPanel aDualAxisChartPanel = dualAxisChart.getChartPanel();
+//        // gridPanel4.add(aDualAxisChartPanel);
+        final DualAxisChart dualAxisChart = new DualAxisChart(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+        JScrollPane aDualAxisScrollPane = dualAxisChart.getScrollPane();
+        panel2Holder[0][0].add(aDualAxisScrollPane);
+
+        // 4. Initialize textArea and set panel for textArea
+        JTextAreaExample textArea = new JTextAreaExample();
+        JScrollPane textAreaScrollPane = textArea.getScrollPane();
+        panel1HolderLeftHolder[1][0].add(textAreaScrollPane);
+
+        // 5. Initialize pieChart and set panel for pieChart
+        PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
+        ChartPanel pieChartPanel = pieChart.getPanel();
+        panel2HolderRightHolder[1][0].add(pieChartPanel);
+
+        // 6. Initialize PriceEstimator and set panel for PriceEstimator
+        int chartIndex0 = 0;
+        int chartIndex1 = 1;
+        int chartIndex2 = 2;
+//        com.technobium.regression.PriceEstimator priceEstimator = new com.technobium.regression.PriceEstimator(aDataset.getGlobalMulti0And1Arr());
+//        ChartPanel regressionChartPanel = priceEstimator.getPanel();
+//        gridPanel9.add(regressionChartPanel);
+        com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
+        ArrayList<ChartPanel> priceEstimatorPanelArr = regressionChart.getPanelArr();
+        JPanel regressionChartPanel = new JPanel();
+        regressionChartPanel.setPreferredSize(new Dimension(1350, 350));
+        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex0));
+        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex1));
+        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex2));
+        JScrollPane regressionChartScrollPane = new JScrollPane(regressionChartPanel);
+        regressionChartScrollPane.setPreferredSize(new Dimension(1000, 350));
+        panel1Holder[0][1].add(regressionChartScrollPane);
 //
-//        // 2. Initialize lineChart and set panel for comboBox
-//        LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
-//        ChartPanel aLineChartPanel = lineChart.getPanel();
-////        groupPanel3.add(aLineChartPanel);
-//
-//        // 3. Initialize dualAxisChart and set panel for dualAxisChart
-////        // final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
-////        // ChartPanel aDualAxisChartPanel = dualAxisChart.getChartPanel();
-////        // gridPanel4.add(aDualAxisChartPanel);
-//        final DualAxisChart dualAxisChart = new DualAxisChart(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
-//        JScrollPane aDualAxisScrollPane = dualAxisChart.getScrollPane();
-//        panel2Holder[0][0].add(aDualAxisScrollPane);
-//
-//        // 4. Initialize labelBox and set panel for labelBox
-//        LabeBoxExample labelBox = new LabeBoxExample();
-//        JPanel labeBoxPanel = labelBox.getPanel();
-//        panel1HolderLeftHolder[1][0].add(labeBoxPanel);
-//
-//        // 5. Initialize pieChart and set panel for pieChart
-//        PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
-//        ChartPanel pieChartPanel = pieChart.getPanel();
-//        panel2HolderRightHolder[1][0].add(pieChartPanel);
-//
-//        // 6. Initialize PriceEstimator and set panel for PriceEstimator
-//        int chartIndex0 = 0;
-//        int chartIndex1 = 1;
-//        int chartIndex2 = 2;
-////        com.technobium.regression.PriceEstimator priceEstimator = new com.technobium.regression.PriceEstimator(aDataset.getGlobalMulti0And1Arr());
-////        ChartPanel regressionChartPanel = priceEstimator.getPanel();
-////        gridPanel9.add(regressionChartPanel);
-//        com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
-//        ArrayList<ChartPanel> priceEstimatorPanelArr = regressionChart.getPanelArr();
-//        JPanel regressionChartPanel = new JPanel();
-//        regressionChartPanel.setPreferredSize(new Dimension(1350, 350));
-//        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex0));
-//        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex1));
-//        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex2));
-//        JScrollPane regressionChartScrollPane = new JScrollPane(regressionChartPanel);
-//        regressionChartScrollPane.setPreferredSize(new Dimension(1000, 350));
-//        panel1Holder[0][1].add(regressionChartScrollPane);
-////
-//        // n-1. Initialize comboBox and set panel for comboBox
-//        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, labelBox);
-//        JPanel comboBoxPanel = comboBox.getPanel();
-//        panel1HolderLeftHolder[0][0].add(comboBoxPanel);
-//
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.pack();
-//        frame.setVisible(true);
+        // n-1. Initialize comboBox and set panel for comboBox
+        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, textArea);
+        JPanel comboBoxPanel = comboBox.getPanel();
+        panel1HolderLeftHolder[0][0].add(comboBoxPanel);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
         // ------------------------------------------------------------------------------
-        final DualAxisChart dualAxisChart = new DualAxisChart(-1, aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
-        dualAxisChart.pack();
-        RefineryUtilities.centerFrameOnScreen(dualAxisChart);
-        dualAxisChart.setVisible(true);
+//        final DualAxisChart dualAxisChart = new DualAxisChart(-1, aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+//        dualAxisChart.pack();
+//        RefineryUtilities.centerFrameOnScreen(dualAxisChart);
+//        dualAxisChart.setVisible(true);
         // ------------------------------------------------------------------------------
     }
 

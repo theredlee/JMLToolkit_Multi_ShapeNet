@@ -36,7 +36,7 @@ public class ComboBoxExample {
         });
     }
 
-    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart dualAxischart, LineChartExample lineChart, LabeBoxExample labelBox){
+    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart dualAxischart, LineChartExample lineChart, JTextAreaExample labelBox){
 
         final JLabel label = new JLabel();
         final int[] previousSwitchLabel = {-1, -1};
@@ -214,7 +214,7 @@ public class ComboBoxExample {
 
                 // Get multi-dimension distance of one timeseries
                 ArrayList<Double> distanceArr = Dataset.getMultiDimensionDistance(localTimeseries, localShapelet, localTimeseriesLabelArr, localShapeletLabelArr, selectedSwitch[timeseriesIndex], selectedSwitch[shapeletIndex]);
-                labelBox.setLabel("Multi-dimension distance of timeseries " + selectedSwitch[timeseriesIndex] + ": " + distanceArr);
+                labelBox.setTextArea("Multi-dimension distance of timeseries " + selectedSwitch[timeseriesIndex] + ": " + distanceArr);
 //                System.out.println("Multi-dimension distance of timeseries " + selectedSwitch[timeseriesIndex] + ": " + distanceArr);
 //                System.out.println("Number of shapelet selected: " + selectedSwitch[shapeletIndex] + " with label: " + selectedSwitchLabel[shapeletIndex] + "\nNumber of timeseris selected: " + selectedSwitch[timeseriesIndex] + " with label: " + selectedSwitchLabel[timeseriesIndex]);
             }

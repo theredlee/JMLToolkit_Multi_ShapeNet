@@ -74,7 +74,6 @@ public class DualAxisChart extends ApplicationFrame {
         // setChartPanelArr(chartPanelArr);
     }
 
-
     private JFreeChart createChart_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension) {
         final String[] str = {"ALT", "AFP"};
         final int shapeletRenderIndex = 0;
@@ -198,13 +197,13 @@ public class DualAxisChart extends ApplicationFrame {
             final JFreeChart chart = createChart(index, timesriesDimension);
             final ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(
-                    new Dimension(750, 400));
+                    new Dimension(730, 700));
             chartPanelArr.add(chartPanel);
         }
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1));
-        panel.setPreferredSize(new Dimension(750, 400*5));
+        panel.setPreferredSize(new Dimension(730, 700*5));
         for (int i=0; i<chartPanelArr.size(); i++) {
             panel.add(chartPanelArr.get(i));
         }
@@ -328,7 +327,7 @@ public class DualAxisChart extends ApplicationFrame {
                 new CombinedDomainCategoryPlot(domainAxis);
 
         plot.add(subplotShapelet, 1);
-        plot.add(subplotTimeseriesAndShapelet, 1);
+        plot.add(subplotTimeseriesAndShapelet, 2);
 
         final JFreeChart chart = new JFreeChart(
                 "Score Bord", new Font("SansSerif", Font.BOLD, 8),
@@ -363,7 +362,7 @@ public class DualAxisChart extends ApplicationFrame {
         for (int i = 0; i < shapelet.size(); i++) {
             double val = shapelet.get(i);
             dataset.addValue(val,
-                    labelShapelet, "" + (i + 1));
+                    label1, "" + (i + 1));
         }
 
         // Timeseries
