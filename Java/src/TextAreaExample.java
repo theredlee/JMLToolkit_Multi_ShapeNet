@@ -1,12 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class JTextAreaExample extends Frame{
+public class TextAreaExample extends Frame{
     public JPanel panel;
     public JScrollPane scrollPane;
     private JTextArea textArea;
 
-    JTextAreaExample() {
+    TextAreaExample() {
 //        tf.setBounds(50, 50, 150, 20);
         JTextArea textArea = new JTextArea("Welcome to Shapenet");
         textArea.setPreferredSize(new Dimension(350, 200));
@@ -57,6 +57,6 @@ public class JTextAreaExample extends Frame{
     }
 
     public static void main(String[] args) {
-        new JTextAreaExample();
+        new TextAreaExample();
     }
 }

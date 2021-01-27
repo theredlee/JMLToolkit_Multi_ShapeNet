@@ -38,8 +38,8 @@ public class Dataset {
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
 //        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_03.txt";
 //        String file_dim = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
-        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_03.txt";
-        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
+        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_01.txt";
+        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_01.txt";
 
         ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
@@ -97,7 +97,7 @@ public class Dataset {
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
 //        String file1 = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
-        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
+        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_01.txt";
 
         String[] fileArr = {file1};
 
@@ -545,10 +545,12 @@ public class Dataset {
         return count;
     }
 
-    public static ArrayList<Double> getMultiDimensionDistance(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, int timeseriesIndex, int shapeletIndex) {
+    public static ArrayList<ArrayList<Double>> getMultiDimensionDistance(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, int timeseriesIndex, int shapeletIndex) {
+        ArrayList<ArrayList<Double>> distanceAndStartIndexArr = new ArrayList<>();
+        ArrayList<Double> startIndexArr = new ArrayList<>();
         ArrayList<Double> distanceArr = new ArrayList<>();
         double[][] distanceAndIndex = {{},{}};
-        int aStartIndex;
+        double aStartIndex;
         double aDistance;
         ArrayList<Double> aTimeseries;
         ArrayList<Double> aShapelet;
@@ -563,20 +565,24 @@ public class Dataset {
             // distanceAndIndex[0][0]: startIndex;
             // distanceAndIndex[1][0]: distanceMin;
             distanceAndIndex = getDistance(aTimeseries, aShapelet);
-            aStartIndex = (int) distanceAndIndex[0][0];
+            aStartIndex = distanceAndIndex[0][0];
             aDistance = distanceAndIndex[1][0];
 
+            startIndexArr.add(aStartIndex);
             distanceArr.add(aDistance);
         }
-        return distanceArr;
+
+        distanceAndStartIndexArr.add(startIndexArr);
+        distanceAndStartIndexArr.add(distanceArr);
+        return distanceAndStartIndexArr;
     }
 
-    private static double[][] getDistance(ArrayList<Double> timeseries, ArrayList<Double> shapelet) {
+    public static double[][] getDistance(ArrayList<Double> timeseries, ArrayList<Double> shapelet) {
         // distanceAndIndex[0][0]: startIndex;
-        // distanceAndIndex[1][0]: distanceMin;
+        // distanceAndIndex[1][0]: distanceSumMin;
         double[][] distanceAndIndex = {{-1},{-1}};
-        double distanceSum = 0;
-        double distanceMin = Double.MAX_VALUE;
+        double distanceSum;
+        double distanceSumMin = Double.MAX_VALUE;
         int startIndex = 0;
 
         for(int i=0; i<(timeseries.size()-(shapelet.size())); i++) {
@@ -587,11 +593,11 @@ public class Dataset {
                 distanceSum += Math.pow(timeseries.get(j+i) - shapelet.get(j), 2.0);
             }
             distanceSum = Math.sqrt(distanceSum);
-            if(distanceSum < distanceMin){
-                distanceMin = distanceSum;
+            if(distanceSum < distanceSumMin){
+                distanceSumMin = distanceSum;
                 startIndex = i;
                 distanceAndIndex[0][0] = startIndex;
-                distanceAndIndex[1][0] = distanceMin;
+                distanceAndIndex[1][0] = distanceSumMin;
             }
         }
         return distanceAndIndex;
