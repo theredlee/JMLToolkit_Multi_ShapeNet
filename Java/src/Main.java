@@ -183,7 +183,7 @@ public class Main {
         panel1Holder[0][1].add(regressionChartScrollPane);
 //
         // n-1. Initialize comboBox and set panel for comboBox
-        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, textArea);
+        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, textArea);
         JPanel comboBoxPanel = comboBox.getPanel();
         panel1HolderLeftHolder[0][0].add(comboBoxPanel);
 

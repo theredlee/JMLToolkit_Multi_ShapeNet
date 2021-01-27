@@ -8,6 +8,7 @@ import java.util.List;
 public class Dataset {
 
     public ArrayList<ArrayList<ArrayList<Double>>> globalTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
+    public ArrayList<ArrayList<ArrayList<Double>>> globalRawTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     public ArrayList<ArrayList<ArrayList<Double>>> globalNormalizedTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     public ArrayList<ArrayList<Double>> globalShapelet = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalNormalizedShapelet = new ArrayList<ArrayList<Double>>();
@@ -24,6 +25,8 @@ public class Dataset {
     public Dataset() {}
     public double accuracy;
     public int count;
+
+    private boolean normalization = true;
 
     public void loadShapelet_testing() throws IOException {
         // 2576
@@ -123,7 +126,7 @@ public class Dataset {
                     label = Double.valueOf(-1);
                     globalTimeseriesLabelArr.add(label);
 
-                    globalTimeseries.add(timeseriesArr);
+                    globalRawTimeseries.add(timeseriesArr);
                     count++;
                 }
                 // read next line
@@ -134,7 +137,7 @@ public class Dataset {
 //            System.out.println("globalTimeseries: " + globalTimeseries);
 //            System.out.println("globalTimeseriesLabelArr: " + globalTimeseriesLabelArr);
             System.out.println("globalLabelArr.size(): " + globalTimeseriesLabelArr.size());
-            System.out.println("globalLinesTimeseries.size(): " + globalTimeseries.size());
+            System.out.println("globalLinesTimeseries.size(): " + globalRawTimeseries.size());
         }
 //        System.out.println(globalLinesTimeseries);
     }
@@ -146,10 +149,13 @@ public class Dataset {
         // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
-        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
-//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
-//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
+//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet.txt";
+//        String file_dim = "/Users/student/Desktop/RedLee/datasets/shapeNet/shapelet_dim.txt";
+        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
+        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
+
+        ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
+        ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -165,7 +171,7 @@ public class Dataset {
                 String str = arrOfStr[j];
                 valArr.add(Double.valueOf(str));
             }
-            globalShapelet.add(valArr);
+            shapelet.add(valArr);
 
             // read next line
             line = reader.readLine();
@@ -178,15 +184,19 @@ public class Dataset {
         while (line != null) {
             ArrayList<Double> valArr = new ArrayList<Double>();
             double val = Double.valueOf(line);
-            globalShapeletLabelArr.add(val);
+            shapeletLabelArr.add(val);
 
             // read next line
             line = reader.readLine();
         }
         reader.close();
 
-//        System.out.println(globalShapelet);
-        System.out.println("globalShapeletLabelArr.size(): " + globalShapeletLabelArr.size());
+        // Set global shapelet and label
+        setGlobalShapelet(shapelet);
+        setGlobalShapeletLabelArr(shapeletLabelArr);
+
+//        System.out.println(shapelet);
+        System.out.println("shapeletLabelArr.size(): " + shapeletLabelArr.size());
     }
 
     public void loadTimeseries() throws IOException {
@@ -197,12 +207,15 @@ public class Dataset {
 //        String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-        String file1 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-        String file2 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-//        String file1 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-//        String file2 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+//        String file1 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+//        String file2 = "/Users/student/Desktop/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        String file1 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+        String file2 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
 
         String[] fileArr = {file1, file2};
+
+        ArrayList<ArrayList<ArrayList<Double>>> rawTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
+        ArrayList<Double> timeseriesLabelArr = new ArrayList<Double>();
 
         int count = 0;
         for (int i=0; i<fileArr.length; i++) {
@@ -240,14 +253,14 @@ public class Dataset {
                                 }else{
                                     // Get the labels
                                     label = Double.valueOf(newStrList.get(k));
-                                    globalTimeseriesLabelArr.add(label);
+                                    timeseriesLabelArr.add(label);
                                 }
                             }else{
                                 timeseriesArr.get(j).add(Double.valueOf(newStrList.get(k)));
                             }
                         }
                     }
-                    globalTimeseries.add(timeseriesArr);
+                    rawTimeseries.add(timeseriesArr);
                     count++;
                 }
                 // read next line
@@ -255,18 +268,29 @@ public class Dataset {
             }
             reader.close();
             System.out.println("count: " + count);
-            System.out.println("globalLabelArr.size(): " + globalTimeseriesLabelArr.size());
-            System.out.println("globalLinesTimeseries.size(): " + globalTimeseries.size());
+            System.out.println("globalLabelArr.size(): " + timeseriesLabelArr.size());
+            System.out.println("globalLinesTimeseries.size(): " + rawTimeseries.size());
         }
 //        System.out.println(globalLinesTimeseries);
+
+        // Set globalRawTimeseries
+        setGlobalRawTimeseries(rawTimeseries);
+        setGlobalTimeseriesLabelArr(timeseriesLabelArr);
+
+        // Set raw values or normalized value
+        if (normalization) {
+            int dimensionSize = 2;
+            switchToNormalTimeseries(dimensionSize);
+        } else {
+            setGlobalTimeseries(globalRawTimeseries);
+        }
     }
 
     public void loadCoef() throws IOException {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
-        String expected_value = "Hello, world!";
 //        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/coef.txt";
-        String file = "/Users/student/Desktop/RedLee/datasets/Distance/coef.txt";
-//        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/coef.txt";
+//        String file = "/Users/student/Desktop/RedLee/datasets/Distance/coef.txt";
+        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/coef.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -289,8 +313,8 @@ public class Dataset {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
         String expected_value = "Hello, world!";
 //        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/intercept.txt";
-        String file = "/Users/student/Desktop/RedLee/datasets/Distance/intercept.txt";
-//        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/intercept.txt";
+//        String file = "/Users/student/Desktop/RedLee/datasets/Distance/intercept.txt";
+        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/intercept.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -314,10 +338,10 @@ public class Dataset {
         String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_train.txt";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_test.txt";
-        String file1 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_train.txt";
-        String file2 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_test.txt";
-//        String file1 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_train.txt";
-//        String file2 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_test.txt";
+//        String file1 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_train.txt";
+//        String file2 = "/Users/student/Desktop/RedLee/datasets/Distance/feature_test.txt";
+        String file1 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_train.txt";
+        String file2 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_test.txt";
 
         String[] fileArr = {file1, file2};
 
@@ -436,8 +460,24 @@ public class Dataset {
         System.out.println("Total count: " + count[0]);
     }
 
+    private void setGlobalShapelet(ArrayList<ArrayList<Double>> shapelet) {
+        this.globalShapelet = shapelet;
+    }
+
     public ArrayList<ArrayList<Double>> getGlobalShapelet() {
         return globalShapelet;
+    }
+
+    private void setGlobalRawTimeseries(ArrayList<ArrayList<ArrayList<Double>>> rawTimeseries) {
+        this.globalRawTimeseries = rawTimeseries;
+    }
+
+    public ArrayList<ArrayList<ArrayList<Double>>> getGlobalRawTimeseries() {
+        return globalRawTimeseries;
+    }
+
+    private void setGlobalTimeseries(ArrayList<ArrayList<ArrayList<Double>>> timeseries) {
+        this.globalTimeseries = timeseries;
     }
 
     public ArrayList<ArrayList<ArrayList<Double>>> getGlobalTimeseries() {
@@ -454,6 +494,18 @@ public class Dataset {
 
     public ArrayList<ArrayList<Double>> getGlobalMultTFArr() {
         return globalMultTFArr;
+    }
+
+    private void setGlobalShapeletLabelArr(ArrayList<Double> shapeletLabelArr) {
+        this.globalShapeletLabelArr = shapeletLabelArr;
+    }
+
+    public ArrayList<Double> getGlobalShapeletLabelArr() {
+        return globalShapeletLabelArr;
+    }
+
+    private void setGlobalTimeseriesLabelArr(ArrayList<Double> timeseriesLabelArr) {
+        this.globalTimeseriesLabelArr = timeseriesLabelArr;
     }
 
     public ArrayList<Double> getGlobalTimeseriesLabelArr() {
@@ -474,10 +526,6 @@ public class Dataset {
 
     public int getCount() {
         return count;
-    }
-
-    public ArrayList<Double> getGlobalShapeletLabelArr() {
-        return globalShapeletLabelArr;
     }
 
     public static ArrayList<Double> getMultiDimensionDistance(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, int timeseriesIndex, int shapeletIndex) {
@@ -532,66 +580,74 @@ public class Dataset {
         return distanceAndIndex;
     }
 
+    public void switchToNormalTimeseries(int dimensionSize) {
+        ArrayList<ArrayList<ArrayList<Double>>> timeseries = getGlobalRawTimeseries();
+        ArrayList<ArrayList<ArrayList<Double>>> normalTimeseries = getNormalTimeseries(timeseries, dimensionSize);
+        setNormalTimeseries(normalTimeseries);
+        setGlobalTimeseries(normalTimeseries);
+    }
+
+    private void setNormalTimeseries(ArrayList<ArrayList<ArrayList<Double>>> normalizedTimeseries) {
+        this.globalNormalizedTimeseries = normalizedTimeseries;
+    }
+
     private ArrayList<ArrayList<ArrayList<Double>>> getNormalTimeseries(ArrayList<ArrayList<ArrayList<Double>>> timeseriesArr, int dimensionSize) {
         ArrayList<ArrayList<Double>> dataArr = new ArrayList<>();
         int dimensionLevelIndex;
-
-        // Initialize dataArr
-        for (int i=0; i<dimensionSize; i++) {
-            ArrayList<Double> arr = new ArrayList<>();
-            dataArr.add(arr);
-        }
-
-        ArrayList<ArrayList<Double>> normalizedDataArr = new ArrayList<ArrayList<Double>>();
-        // Initialize normalizedDataArr
-        for (int i=0; i<dimensionSize; i++) {
-            ArrayList<Double> arr = new ArrayList<>();
-            normalizedDataArr.add(arr);
-        }
+        double[][] meanAndAStd;
+        ArrayList<Double> meanArr = new ArrayList<>();
+        ArrayList<Double> stdArr = new ArrayList<>();
 
         for (int i=0; i<dimensionSize; i++) {
-            dataArr = new ArrayList<>();
             dimensionLevelIndex = i;
 
+            ArrayList<Double> arr = new ArrayList<>();
             for (int j=0; j<timeseriesArr.size(); j++) {
                 ArrayList<Double> timeseriesOneDimensionArr = timeseriesArr.get(j).get(dimensionLevelIndex);
                 for (int k=0; k<timeseriesOneDimensionArr.size(); k++) {
-                    dataArr.get(i).add(timeseriesOneDimensionArr.get(k));
+                    arr.add(timeseriesOneDimensionArr.get(k));
                 }
             }
+            dataArr.add(arr);
 
             // After get all values of one dimension, normalize them.
-            double[][] meanAndAStd = getNormalizationProperty(dataArr.get(i));
-            double mean = meanAndAStd[0][0];
-            double std = meanAndAStd[0][1];
+            meanAndAStd = getNormalizationProperty(dataArr.get(i));
+            // meanAndAStd[0][0]: mean;
+            // meanAndAStd[1][0]: std;
+            meanArr.add(meanAndAStd[0][0]);
+            stdArr.add(meanAndAStd[1][0]);
+        }
 
-            double val;
-            for (int j=0; j<dataArr.size(); j++) {
-                ArrayList<Double> aDataset = dataArr.get(j);
-                for (int k=0; k<aDataset.size(); k++) {
-                    val = (aDataset.get(k) - mean)/std;
-                    normalizedDataArr.get(i).add(val);
+        ArrayList<ArrayList<ArrayList<Double>>> normalizedTimeseriesArr = new ArrayList<ArrayList<ArrayList<Double>>>();
+        // Initialize normalizedDataArr by copy all values in timeseriesArr
+        double mean;
+        double std;
+        for (int i=0; i<timeseriesArr.size(); i++) {
+            ArrayList<ArrayList<Double>> arrArr = new ArrayList<ArrayList<Double>>();
+            for (int j=0; j<timeseriesArr.get(i).size(); j++) {
+                dimensionLevelIndex = j;
+                mean = meanArr.get(dimensionLevelIndex);
+                std = meanArr.get(dimensionLevelIndex);
+                ArrayList<Double> arr = new ArrayList<>();
+                double val, zVal;
+                for (int k=0; k<timeseriesArr.get(i).get(j).size(); k++) {
+                    val = timeseriesArr.get(i).get(j).get(k);
+                    zVal = getZvalue(mean, std, val);
+                    arr.add(zVal);
                 }
+                arrArr.add(arr);
             }
-
-            // Add the normalized value arr of each dimension
-            globalNormalizedTimeseries.add(normalizedDataArr.get(i));
+            normalizedTimeseriesArr.add(arrArr);
         }
 
-        // After get the , put them int0
-        for (int i=0; i<dimensionSize; i++) {
-            ArrayList
-            ArrayList<Double> timeseriesOneDimensionArr = timeseriesArr.get(i).get(dimensionLevelIndex);
-            for (int j=0; j<timeseriesOneDimensionArr.size(); j++) {
-                dataArr.add(timeseriesOneDimensionArr.get(j));
-            }
-        }
+        // System.out.println(normalizedTimeseriesArr);
 
+        return normalizedTimeseriesArr;
     }
 
     private double[][] getNormalizationProperty(ArrayList<Double> dataArr) {
         // meanAndAStd[0][0]: mean;
-        // meanAndAStd[0][1]: std;
+        // meanAndAStd[1][0]: std;
         double[][] meanAndAStd = {{-1}, {-1}};
         double sum = 0;
         double val;
@@ -615,7 +671,7 @@ public class Dataset {
         double std = Math.sqrt(variance);
 
         meanAndAStd[0][0] = mean;
-        meanAndAStd[0][1] = std;
+        meanAndAStd[1][0] = std;
 
         return meanAndAStd;
     }
@@ -627,8 +683,10 @@ public class Dataset {
     public static void main(String[] args) throws IOException {
         Dataset aDataset = new Dataset();
 //        aDataset.loadShapelet_testing();
-        aDataset.loadTimeseries_testing();
+//        aDataset.loadTimeseries_testing();
         // -------------------------------
+        aDataset.loadTimeseries();
+        aDataset.getNormalTimeseries(aDataset.getGlobalRawTimeseries(),2);
 //        aDataset.loadShapelet();
 //        aDataset.loadTimeseries();
 //        aDataset.loadCoef();
