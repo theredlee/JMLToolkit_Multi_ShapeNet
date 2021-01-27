@@ -22,21 +22,27 @@ public class Dataset {
 
     public ArrayList<ArrayList<Double>> globalMultPosAndNegArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalMultTFArr = new ArrayList<ArrayList<Double>>();
-    public Dataset() {}
     public double accuracy;
     public int count;
 
-    private boolean normalization = true;
+    private boolean normalization = false;
+
+    public Dataset(boolean normalization) {
+        this.normalization = normalization;
+    }
 
     public void loadShapelet_testing() throws IOException {
         // 2576
         // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_03.txt";
-        String file_dim = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
-//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_03.txt";
-//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
+//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_03.txt";
+//        String file_dim = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
+        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_03.txt";
+        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_03.txt";
+
+        ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
+        ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -52,7 +58,7 @@ public class Dataset {
                 String str = arrOfStr[j];
                 valArr.add(Double.valueOf(str));
             }
-            globalShapelet.add(valArr);
+            shapelet.add(valArr);
 
             // read next line
             line = reader.readLine();
@@ -65,17 +71,21 @@ public class Dataset {
         while (line != null) {
             ArrayList<Double> valArr = new ArrayList<Double>();
             double val = Double.valueOf(line);
-            globalShapeletLabelArr.add(val);
+            shapeletLabelArr.add(val);
 
             // read next line
             line = reader.readLine();
         }
         reader.close();
 
-//        System.out.println(globalShapelet);
-        System.out.println("globalShapelet: " + globalShapelet);
-        System.out.println("globalShapeletLabelArr: " + globalShapeletLabelArr);
-        System.out.println("globalShapeletLabelArr.size(): " + globalShapeletLabelArr.size());
+        // Set global shapelet and label
+        setGlobalShapelet(shapelet);
+        setGlobalShapeletLabelArr(shapeletLabelArr);
+
+//        System.out.println(shapelet);
+        System.out.println("shapelet: " + shapelet);
+        System.out.println("shapeletLabelArr: " + shapeletLabelArr);
+        System.out.println("shapeletLabelArr.size(): " + shapeletLabelArr.size());
     }
 
     public void loadTimeseries_testing() throws IOException {
@@ -86,10 +96,13 @@ public class Dataset {
 //        String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
 //        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-        String file1 = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
-//        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
+//        String file1 = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
+        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_03.txt";
 
         String[] fileArr = {file1};
+
+        ArrayList<ArrayList<ArrayList<Double>>> rawTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
+        ArrayList<Double> timeseriesLabelArr = new ArrayList<Double>();
 
         int count = 0;
         for (int i=0; i<fileArr.length; i++) {
@@ -124,9 +137,9 @@ public class Dataset {
                     }
 
                     label = Double.valueOf(-1);
-                    globalTimeseriesLabelArr.add(label);
+                    timeseriesLabelArr.add(label);
 
-                    globalRawTimeseries.add(timeseriesArr);
+                    rawTimeseries.add(timeseriesArr);
                     count++;
                 }
                 // read next line
@@ -135,11 +148,15 @@ public class Dataset {
             reader.close();
             System.out.println("count: " + count);
 //            System.out.println("globalTimeseries: " + globalTimeseries);
-//            System.out.println("globalTimeseriesLabelArr: " + globalTimeseriesLabelArr);
-            System.out.println("globalLabelArr.size(): " + globalTimeseriesLabelArr.size());
-            System.out.println("globalLinesTimeseries.size(): " + globalRawTimeseries.size());
+//            System.out.println("timeseriesLabelArr: " + timeseriesLabelArr);
+            System.out.println("globalLabelArr.size(): " + timeseriesLabelArr.size());
+            System.out.println("globalLinesTimeseries.size(): " + rawTimeseries.size());
         }
 //        System.out.println(globalLinesTimeseries);
+
+        // Set rawTimeseries
+        setGlobalRawTimeseries(rawTimeseries);
+        setGlobalTimeseriesLabelArr(timeseriesLabelArr);
     }
 
     // ------------------------------------------------------------------------------------------
@@ -681,7 +698,7 @@ public class Dataset {
     }
 
     public static void main(String[] args) throws IOException {
-        Dataset aDataset = new Dataset();
+        Dataset aDataset = new Dataset(false);
 //        aDataset.loadShapelet_testing();
 //        aDataset.loadTimeseries_testing();
         // -------------------------------
