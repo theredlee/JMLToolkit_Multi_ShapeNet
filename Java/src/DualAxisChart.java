@@ -66,12 +66,12 @@ public class DualAxisChart extends ApplicationFrame {
                 if (j==0) {
                     // j=0: shapelet chart
                     chartPanel.setPreferredSize(
-                            new Dimension(900, 500));
+                            new Dimension(850, 300));
 
                 } else {
                     // j=1: timeseries chart
                     chartPanel.setPreferredSize(
-                            new Dimension(900, 1000));
+                            new Dimension(850, 500));
                 }
                 chartPanelArr.add(chartPanel);
             }
@@ -79,7 +79,7 @@ public class DualAxisChart extends ApplicationFrame {
 
         JPanel panel = new JPanel();
 //        panel.setLayout(new GridLayout(4, 1));
-        panel.setPreferredSize(new Dimension(900, 4000));
+        panel.setPreferredSize(new Dimension(850, 1800));
         for (int i=0; i<chartPanelArr.size(); i++) {
             panel.add(chartPanelArr.get(i));
         }
