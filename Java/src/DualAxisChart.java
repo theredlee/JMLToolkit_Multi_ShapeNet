@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import org.jfree.chart.ChartPanel;
@@ -6,10 +8,12 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CombinedDomainCategoryPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYDotRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
@@ -321,6 +325,7 @@ public class DualAxisChart extends ApplicationFrame {
         final int shapeletRenderIndex = 0;
         final int timeseriesRenderIndex = 0;
         final int defaultTimeseriesInex = 0;
+        final int seriesNo = 0;
 
         // Shapelet
         final CategoryDataset shapelet = createShapelet(shapeletIndex);
@@ -328,17 +333,41 @@ public class DualAxisChart extends ApplicationFrame {
         rangeAxisShapelet.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
-        final CategoryItemRenderer rendererShapelet = new LineAndShapeRenderer();
-        rendererShapelet.setSeriesPaint(0, Color.red);
-        rendererShapelet.setBaseToolTipGenerator(
-                new StandardCategoryToolTipGenerator());
-        final CategoryPlot subplotShapelet =
-                new CategoryPlot(shapelet, null,
-                        rangeAxisShapelet, rendererShapelet);
-        subplotShapelet.setDomainGridlinesVisible(true);;
+//        final CategoryItemRenderer rendererShapelet = new LineAndShapeRenderer();
+//        rendererShapelet.setSeriesPaint(seriesNo, Color.red);
+//        rendererShapelet.setBaseToolTipGenerator(
+//                new StandardCategoryToolTipGenerator());
+//
+//        final CategoryPlot subplotShapelet =
+//                new CategoryPlot(shapelet, null,
+//                        rangeAxisShapelet, rendererShapelet);
+//        subplotShapelet.setDomainGridlinesVisible(true);;
+//
+//        subplotShapelet.setForegroundAlpha(0.7f);
+//        subplotShapelet.setRenderer(shapeletRenderIndex, rendererShapelet);
 
-        subplotShapelet.setForegroundAlpha(0.7f);
-        subplotShapelet.setRenderer(shapeletRenderIndex, rendererShapelet);
+        // Problem - smooth line: https://www.jfree.org/forum/viewtopic.php?t=29120
+
+
+        // Testing XYDotRenderer ----------------
+        CategoryAxis xAxis = new CategoryAxis("Categories");
+
+        LineAndShapeRenderer renderer = new LineAndShapeRenderer();
+        renderer.setDrawOutlines(true);
+        renderer.setUseOutlinePaint(true);
+        renderer.setSeriesPaint(0, Color.YELLOW);
+        renderer.setSeriesOutlinePaint(0, Color.BLACK);
+        renderer.setSeriesPaint(1, Color.GREEN);
+        renderer.setSeriesOutlinePaint(1, Color.BLACK);
+        renderer.setSeriesShape(0, new Ellipse2D.Double(-5, -5, 10, 10));
+        renderer.setSeriesShape(1, new Rectangle2D.Double(-5, -5, 10, 10));
+
+        final CategoryPlot subplotShapelet =
+                new CategoryPlot(shapelet, xAxis,
+                        rangeAxisShapelet, renderer);
+        subplotShapelet.setDomainGridlinesVisible(true);;
+        // ----------------
+        
 
         // ---------------------------------------------------------------
         // ---------------------------------------------------------------
@@ -350,7 +379,7 @@ public class DualAxisChart extends ApplicationFrame {
                 NumberAxis.createIntegerTickUnits());
         // Line render
         final CategoryItemRenderer rendererTimeseriesAndShapelet = new LineAndShapeRenderer();
-        rendererTimeseriesAndShapelet.setSeriesPaint(0, Color.red);
+        rendererTimeseriesAndShapelet.setSeriesPaint(seriesNo, Color.red);
         rendererTimeseriesAndShapelet.setBaseToolTipGenerator(
                 new StandardCategoryToolTipGenerator());
         final CategoryPlot subplotTimeseriesAndShapelet =
