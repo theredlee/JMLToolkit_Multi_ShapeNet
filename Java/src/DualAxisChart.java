@@ -1,6 +1,4 @@
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import org.jfree.chart.ChartPanel;
@@ -11,11 +9,14 @@ import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CombinedDomainCategoryPlot;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYDotRenderer;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 
 import javax.swing.*;
@@ -55,11 +56,14 @@ public class DualAxisChart extends ApplicationFrame {
             int index = i;
             int dimension = i;
 
-            final JFreeChart chart = createChart_testing(index, timesriesIndexSize, dimension);
-            final ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(
-                    new Dimension(900, 2000));
-            chartPanelArr.add(chartPanel);
+            final ArrayList<JFreeChart> chartArr = createChartArr_testing(index, timesriesIndexSize, dimension);
+            for (int j=0; j<chartArr.size(); j++) {
+                JFreeChart chart = chartArr.get(j);
+                final ChartPanel chartPanel = new ChartPanel(chart);
+                chartPanel.setPreferredSize(
+                        new Dimension(900, 2000));
+                chartPanelArr.add(chartPanel);
+            }
         }
 
         JPanel panel = new JPanel();
@@ -78,78 +82,79 @@ public class DualAxisChart extends ApplicationFrame {
         // setChartPanelArr(chartPanelArr);
     }
 
-    private JFreeChart createChart_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension) {
+    private ArrayList<JFreeChart> createChartArr_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension) {
         final String[] str = {"ALT", "AFP"};
         final int shapeletRenderIndex = 0;
         final int timeseriesRenderIndex = 0;
 
+        // index 0: shapelet Chart
+        // index 1: timeseries Chart
+        int shapeletChartIndex = 0;
+        int timeseriesChartIndex = 1;
+        ArrayList<XYSeriesCollection> timeseriseAndShapelet = createTimeseriseAndShapet_testing(shapeletIndex, timeseriesIndexSize, timesriesDimension);
+
         // Shapelet
-        final CategoryDataset shapelet = createShapelet(shapeletIndex);
+        final XYSeriesCollection shapelet = timeseriseAndShapelet.get(shapeletChartIndex);
+        final NumberAxis xax = new NumberAxis("Aligned by the best match position of the shapelet");
         final NumberAxis rangeAxisShapelet = new NumberAxis("Shapelet " + str[timesriesDimension]);
-        rangeAxisShapelet.setStandardTickUnits(
-                NumberAxis.createIntegerTickUnits());
+        rangeAxisShapelet.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         // Line render
-        final CategoryItemRenderer rendererShapelet = new LineAndShapeRenderer();
-        rendererShapelet.setSeriesPaint(0, Color.red);
-        rendererShapelet.setBaseToolTipGenerator(
-                new StandardCategoryToolTipGenerator());
-        final CategoryPlot subplotShapelet =
-                new CategoryPlot(shapelet, null,
+        final XYSplineRenderer rendererShapelet = new XYSplineRenderer();
+        rendererShapelet.setBaseStroke(new BasicStroke(2.0f));
+        rendererShapelet.setAutoPopulateSeriesStroke(false);
+        final XYPlot xyPlotShapelet =
+                new XYPlot (shapelet, xax,
                         rangeAxisShapelet, rendererShapelet);
-        subplotShapelet.setDomainGridlinesVisible(true);;
+        xyPlotShapelet.setDomainGridlinesVisible(true);;
+//        xyPlotShapelet.setForegroundAlpha(0.7f);
 
-        subplotShapelet.setForegroundAlpha(0.7f);
-        subplotShapelet.setRenderer(shapeletRenderIndex, rendererShapelet);
+        final JFreeChart chartShapelet = new JFreeChart(
+                "Score Bord", new Font("SansSerif", Font.BOLD, 8),
+                xyPlotShapelet, true);
 
         // ---------------------------------------------------------------
         // ---------------------------------------------------------------
 
-        // TimeseriseAndShapelet
-        final CategoryDataset timeseriseAndShapelet = createTimeseriseAndShapelet_testing(shapeletIndex, timeseriesIndexSize, timesriesDimension);
+        // Timeserise
+
+        final XYSeriesCollection timeserise = timeseriseAndShapelet.get(timeseriesChartIndex);
         final NumberAxis rangeAxisTimeseries = new NumberAxis("Dimension " + str[timesriesDimension]);
         rangeAxisTimeseries.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
-        final CategoryItemRenderer rendererTimeseriesAndShapelet = new LineAndShapeRenderer();
-        rendererTimeseriesAndShapelet.setSeriesPaint(0, Color.red);
-        rendererTimeseriesAndShapelet.setBaseToolTipGenerator(
-                new StandardCategoryToolTipGenerator());
-        final CategoryPlot subplotTimeseriesAndShapelet =
-                new CategoryPlot(timeseriseAndShapelet, null,
-                        rangeAxisTimeseries, rendererTimeseriesAndShapelet);
-        subplotTimeseriesAndShapelet.setDomainGridlinesVisible(true);;
+        final XYSplineRenderer rendererTimeseries = new XYSplineRenderer();
+        rendererTimeseries.setBaseStroke(new BasicStroke(2.0f));
+        rendererTimeseries.setAutoPopulateSeriesStroke(false);
+        rendererTimeseries.setSeriesPaint(0, Color.red);
+        rendererTimeseries.setBaseToolTipGenerator(
+                new StandardXYToolTipGenerator());
 
-        subplotTimeseriesAndShapelet.setForegroundAlpha(0.7f);
-        // Add timeseries into timeseries chart
-        subplotTimeseriesAndShapelet.setRenderer(timeseriesRenderIndex, rendererTimeseriesAndShapelet);
+        final XYPlot xyPlotTimeseries =
+                new XYPlot(timeserise, xax,
+                        rangeAxisTimeseries, rendererTimeseries);
+        xyPlotTimeseries.setDomainGridlinesVisible(true);
 
-        // -----------------------------------------------
-
-        final CategoryAxis domainAxis = new CategoryAxis("Over");
-
-        final CombinedDomainCategoryPlot plot =
-                new CombinedDomainCategoryPlot(domainAxis);
-
-        plot.add(subplotShapelet, 1);
-        plot.add(subplotTimeseriesAndShapelet, 2);
-
-        final JFreeChart chart = new JFreeChart(
+        final JFreeChart chartTimeserise = new JFreeChart(
                 "Score Bord", new Font("SansSerif", Font.BOLD, 8),
-                plot, true);
+                xyPlotTimeseries, true);
 
-        setPlot(plot);
-        return chart;
+        // Add chartShapelet and chartTimeserise into a chart array
+        ArrayList<JFreeChart> chartArr = new ArrayList<>();
+        chartArr.add(chartShapelet);
+        chartArr.add(chartTimeserise);
+
+        return chartArr;
     }
 
-    private CategoryDataset createTimeseriseAndShapelet_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion) {
+    private ArrayList<XYSeriesCollection> createTimeseriseAndShapet_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion) {
 
-        final DefaultCategoryDataset dataset
-                = new DefaultCategoryDataset();
+        final XYSeriesCollection dataset
+                = new XYSeriesCollection();
 
         // Shapelet
         ArrayList<Double> shapelet = localShapelet.get(shapeletIndex);
 
-        // Timeseries
+        // Get distances and start position between each pair of timeseries and shapelet
         ArrayList<Double> timeserise;
         double[][] distanceAndIndex = {{},{}};
         int xAxisStartIndex;
@@ -176,38 +181,72 @@ public class DualAxisChart extends ApplicationFrame {
         System.out.println("shiftLenBeforeShapeletArr: " + shiftLenBeforeShapeletArr);
         System.out.println("maxShiftLen: " + maxShiftLen);
 
-        // Shapelet Plot Dataset -----
+        // Create shapelet and corresponding timeseries
+        ArrayList<XYSeriesCollection> timeseriseAndShapelet = new ArrayList<>();
+        timeseriseAndShapelet.add(
+                shapelet_testing(shapeletIndex, maxShiftLen));
+        timeseriseAndShapelet.add(timeserise_testing(shapeletIndex, timeseriesIndexSize, dimemsion, shiftLenBeforeShapeletArr, maxShiftLen));
+
+        return timeseriseAndShapelet;
+    }
+
+    private XYSeriesCollection shapelet_testing(int shapeletIndex, int maxShiftLen) {
+        ArrayList<Double> shapelet = localShapelet.get(shapeletIndex);
+
+        final XYSeriesCollection dataset
+                = new XYSeriesCollection();
+
+        XYSeries series = new XYSeries("Series Shapelet");
+
         for (int i = 0; i < shapelet.size() + maxShiftLen; i++) {
-            int index = i-maxShiftLen;
             if (i+1 > maxShiftLen) {
+                int index = i-maxShiftLen;
                 double val = shapelet.get(index);
-                dataset.addValue(val,
-                        labelShapelet_testing, "" + (i + 1));
+                series.add((i + 1), val);
             } else {
-                dataset.addValue(null,
-                        labelShapelet_testing, "" + (i + 1));
+                series.add((i + 1), null);
             }
         }
+
+        dataset.addSeries(series);
+
+        return dataset;
+    }
+
+    private XYSeriesCollection timeserise_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion, ArrayList<Integer> shiftLenBeforeShapeletArr, int maxShiftLen) {
+
+        final XYSeriesCollection dataset
+                = new XYSeriesCollection();
+
+        // Shapelet
+        ArrayList<Double> shapelet = localShapelet.get(shapeletIndex);
+
+        // Get distances and start position between each pair of timeseries and shapelet
+        ArrayList<Double> timeserise;
 
         // Timeseries Plot Dataset ----- Plot timeseries by using globsal start index
         int xAxisShiftLen;
         for (int i=0; i<timeseriesIndexSize; i++){
+            // Create a series to store the values
+            XYSeries series = new XYSeries("Series Timeserise " + (i+1));
+
             int timeseriesIndex = i;
             // Timeseries
             timeserise = localTimeseries.get(timeseriesIndex).get(dimemsion);
             xAxisShiftLen = maxShiftLen - shiftLenBeforeShapeletArr.get(i);
 
             for (int j = 0; j < timeserise.size() + xAxisShiftLen; j++) {
-                int index = j-xAxisShiftLen;
                 if (j+1 > xAxisShiftLen) {
+                    int index = j-xAxisShiftLen;
                     double val = timeserise.get(index);
-                    dataset.addValue(val,
-                            labelTimeseries_testing + "_" + (i+1), "" + (j + 1));
+                    series.add((j + 1), val);
                 } else {
-                    dataset.addValue(null,
-                            labelTimeseries_testing + "_" + (i+1), "" + (j + 1));
+                    series.add((j + 1), null);
                 }
             }
+
+            // Add the series into dataset
+            dataset.addSeries(series);
         }
 
         return dataset;
@@ -333,41 +372,18 @@ public class DualAxisChart extends ApplicationFrame {
         rangeAxisShapelet.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
-//        final CategoryItemRenderer rendererShapelet = new LineAndShapeRenderer();
-//        rendererShapelet.setSeriesPaint(seriesNo, Color.red);
-//        rendererShapelet.setBaseToolTipGenerator(
-//                new StandardCategoryToolTipGenerator());
-//
-//        final CategoryPlot subplotShapelet =
-//                new CategoryPlot(shapelet, null,
-//                        rangeAxisShapelet, rendererShapelet);
-//        subplotShapelet.setDomainGridlinesVisible(true);;
-//
-//        subplotShapelet.setForegroundAlpha(0.7f);
-//        subplotShapelet.setRenderer(shapeletRenderIndex, rendererShapelet);
-
-        // Problem - smooth line: https://www.jfree.org/forum/viewtopic.php?t=29120
-
-
-        // Testing XYDotRenderer ----------------
-        CategoryAxis xAxis = new CategoryAxis("Categories");
-
-        LineAndShapeRenderer renderer = new LineAndShapeRenderer();
-        renderer.setDrawOutlines(true);
-        renderer.setUseOutlinePaint(true);
-        renderer.setSeriesPaint(0, Color.YELLOW);
-        renderer.setSeriesOutlinePaint(0, Color.BLACK);
-        renderer.setSeriesPaint(1, Color.GREEN);
-        renderer.setSeriesOutlinePaint(1, Color.BLACK);
-        renderer.setSeriesShape(0, new Ellipse2D.Double(-5, -5, 10, 10));
-        renderer.setSeriesShape(1, new Rectangle2D.Double(-5, -5, 10, 10));
+        final CategoryItemRenderer rendererShapelet = new LineAndShapeRenderer();
+        rendererShapelet.setSeriesPaint(seriesNo, Color.red);
+        rendererShapelet.setBaseToolTipGenerator(
+                new StandardCategoryToolTipGenerator());
 
         final CategoryPlot subplotShapelet =
-                new CategoryPlot(shapelet, xAxis,
-                        rangeAxisShapelet, renderer);
+                new CategoryPlot(shapelet, null,
+                        rangeAxisShapelet, rendererShapelet);
         subplotShapelet.setDomainGridlinesVisible(true);;
-        // ----------------
-        
+
+        subplotShapelet.setForegroundAlpha(0.7f);
+        subplotShapelet.setRenderer(shapeletRenderIndex, rendererShapelet);
 
         // ---------------------------------------------------------------
         // ---------------------------------------------------------------
