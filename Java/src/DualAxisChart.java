@@ -1,10 +1,13 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
@@ -37,7 +40,7 @@ public class DualAxisChart extends ApplicationFrame {
     // ---------------------------
     final String label_Shapelet_testing = "Shapelet only ";
     final String labelTimeseries_testing = "Timeseries No ";
-    final String labelShapelet_testing = "Shapelet  ";
+    final String labelShapelet_testing = "Shapelet ";
 
     private ArrayList<ArrayList<ArrayList<Double>>> localTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     private ArrayList<ArrayList<Double>> localShapelet = new ArrayList<ArrayList<Double>>();
@@ -59,16 +62,24 @@ public class DualAxisChart extends ApplicationFrame {
             final ArrayList<JFreeChart> chartArr = createChartArr_testing(index, timesriesIndexSize, dimension);
             for (int j=0; j<chartArr.size(); j++) {
                 JFreeChart chart = chartArr.get(j);
-                final ChartPanel chartPanel = new ChartPanel(chart);
-                chartPanel.setPreferredSize(
-                        new Dimension(900, 2000));
+                ChartPanel chartPanel = new ChartPanel(chart);
+                if (j==0) {
+                    // j=0: shapelet chart
+                    chartPanel.setPreferredSize(
+                            new Dimension(900, 500));
+
+                } else {
+                    // j=1: timeseries chart
+                    chartPanel.setPreferredSize(
+                            new Dimension(900, 1000));
+                }
                 chartPanelArr.add(chartPanel);
             }
         }
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1));
-        panel.setPreferredSize(new Dimension(900, 2000*2));
+//        panel.setLayout(new GridLayout(4, 1));
+        panel.setPreferredSize(new Dimension(900, 4000));
         for (int i=0; i<chartPanelArr.size(); i++) {
             panel.add(chartPanelArr.get(i));
         }
@@ -84,8 +95,6 @@ public class DualAxisChart extends ApplicationFrame {
 
     private ArrayList<JFreeChart> createChartArr_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension) {
         final String[] str = {"ALT", "AFP"};
-        final int shapeletRenderIndex = 0;
-        final int timeseriesRenderIndex = 0;
 
         // index 0: shapelet Chart
         // index 1: timeseries Chart
@@ -96,7 +105,8 @@ public class DualAxisChart extends ApplicationFrame {
         // Shapelet
         final XYSeriesCollection shapelet = timeseriseAndShapelet.get(shapeletChartIndex);
         final NumberAxis xax = new NumberAxis("Aligned by the best match position of the shapelet");
-        final NumberAxis rangeAxisShapelet = new NumberAxis("Shapelet " + str[timesriesDimension]);
+        xax.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        final NumberAxis rangeAxisShapelet = new NumberAxis("" + str[timesriesDimension]);
         rangeAxisShapelet.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         // Line render
         final XYSplineRenderer rendererShapelet = new XYSplineRenderer();
@@ -106,6 +116,13 @@ public class DualAxisChart extends ApplicationFrame {
                 new XYPlot (shapelet, xax,
                         rangeAxisShapelet, rendererShapelet);
         xyPlotShapelet.setDomainGridlinesVisible(true);;
+
+        // Get min and max of the shapelet
+        // Index 0: min
+        // Index 1: max
+//        ArrayList<Double> minMaxShapeletArr = getMinMaxShapelet(shapeletIndex);
+//        xyPlotShapelet.getRangeAxis().setLowerBound(minMaxShapeletArr.get(0)-1);
+//        xyPlotShapelet.getRangeAxis().setUpperBound(minMaxShapeletArr.get(1)+1);
 //        xyPlotShapelet.setForegroundAlpha(0.7f);
 
         final JFreeChart chartShapelet = new JFreeChart(
@@ -118,7 +135,7 @@ public class DualAxisChart extends ApplicationFrame {
         // Timeserise
 
         final XYSeriesCollection timeserise = timeseriseAndShapelet.get(timeseriesChartIndex);
-        final NumberAxis rangeAxisTimeseries = new NumberAxis("Dimension " + str[timesriesDimension]);
+        final NumberAxis rangeAxisTimeseries = new NumberAxis("" + str[timesriesDimension]);
         rangeAxisTimeseries.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
@@ -134,14 +151,30 @@ public class DualAxisChart extends ApplicationFrame {
                         rangeAxisTimeseries, rendererTimeseries);
         xyPlotTimeseries.setDomainGridlinesVisible(true);
 
+        // Get min and max of the timeseries
+        // Index 0: min
+        // Index 1: max
+//        ArrayList<Double> minMaxTimeseriesArr = getMinMaxTimeseries(timeseriesIndexSize, timesriesDimension);
+//        xyPlotTimeseries.getRangeAxis().setLowerBound(minMaxTimeseriesArr.get(0)-5);
+//        xyPlotTimeseries.getRangeAxis().setUpperBound(minMaxTimeseriesArr.get(1)+5);
+
         final JFreeChart chartTimeserise = new JFreeChart(
-                "Score Bord", new Font("SansSerif", Font.BOLD, 8),
+                "", new Font("SansSerif", Font.BOLD, 8),
                 xyPlotTimeseries, true);
+
+//
+//        XYPlot xyPlot = chartShapelet.getXYPlot();
+//        ValueAxis domainAxis = xyPlot.getDomainAxis();
+//        ValueAxis rangeAxis = xyPlot.getRangeAxis();
+//
+//        domainAxis.setRange(0.0, 1.0);
+//        rangeAxis.setRange(0.0, 1.0);
 
         // Add chartShapelet and chartTimeserise into a chart array
         ArrayList<JFreeChart> chartArr = new ArrayList<>();
         chartArr.add(chartShapelet);
         chartArr.add(chartTimeserise);
+
 
         return chartArr;
     }
@@ -178,8 +211,8 @@ public class DualAxisChart extends ApplicationFrame {
             }
         }
 
-        System.out.println("shiftLenBeforeShapeletArr: " + shiftLenBeforeShapeletArr);
-        System.out.println("maxShiftLen: " + maxShiftLen);
+//        System.out.println("shiftLenBeforeShapeletArr: " + shiftLenBeforeShapeletArr);
+//        System.out.println("maxShiftLen: " + maxShiftLen);
 
         // Create shapelet and corresponding timeseries
         ArrayList<XYSeriesCollection> timeseriseAndShapelet = new ArrayList<>();
@@ -250,6 +283,50 @@ public class DualAxisChart extends ApplicationFrame {
         }
 
         return dataset;
+    }
+
+    private ArrayList<Double> getMinMaxShapelet (int shapeletIndex) {
+        ArrayList<Double> shapelet = localShapelet.get(shapeletIndex);
+        double min = Collections.min(shapelet);
+        double max = Collections.max(shapelet);
+
+        ArrayList<Double> minMaxArr = new ArrayList<>();
+        // Index 0: min
+        // Index 1: max
+        minMaxArr.add(min);
+        minMaxArr.add(max);
+        
+        return minMaxArr;
+    }
+
+    private ArrayList<Double> getMinMaxTimeseries (int timeseriesIndexSize, int dimemsion) {
+        ArrayList<Double> timeserise;
+        ArrayList<Double> minArr = new ArrayList<>();
+        ArrayList<Double> maxArr = new ArrayList<>();
+        ArrayList<Double> globalMinMaxArr = new ArrayList<>();
+
+        double min;
+        double max;
+        for (int i=0; i<timeseriesIndexSize; i++){
+            int timeseriesIndex = i;
+            // Timeseries
+            timeserise = localTimeseries.get(timeseriesIndex).get(dimemsion);
+
+            min = Collections.min(timeserise);
+            max = Collections.max(timeserise);
+            minArr.add(min);
+            maxArr.add(max);
+        }
+
+        double globalMin = Collections.min(minArr);
+        double globalMax = Collections.max(maxArr);
+
+        // Index 0: min
+        // Index 1: max
+        globalMinMaxArr.add(globalMin);
+        globalMinMaxArr.add(globalMax);
+
+        return globalMinMaxArr;
     }
 
     // ---------------------------------------------------------
