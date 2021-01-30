@@ -26,7 +26,7 @@ public class Dataset {
     public int count;
 
     private boolean normalization = false;
-    private int testFileNo = 5;
+    private int testFileNo = 3;
 
     public Dataset(boolean normalization) {
         this.normalization = false;

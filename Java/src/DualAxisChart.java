@@ -108,7 +108,7 @@ public class DualAxisChart extends ApplicationFrame {
         final NumberAxis rangeAxisShapelet = new NumberAxis("" + str[timesriesDimension]);
         rangeAxisShapelet.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         // Line render
-        final XYSplineRenderer rendererShapelet = new XYSplineRenderer();
+        final XYSplineRenderer rendererShapelet = new XYSplineRenderer(1);
         rendererShapelet.setBaseStroke(new BasicStroke(2.0f));
         rendererShapelet.setAutoPopulateSeriesStroke(false);
         final XYPlot xyPlotShapelet =
@@ -138,7 +138,7 @@ public class DualAxisChart extends ApplicationFrame {
         rangeAxisTimeseries.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
-        final XYSplineRenderer rendererTimeseries = new XYSplineRenderer();
+        final XYSplineRenderer rendererTimeseries = new XYSplineRenderer(1);
         rendererTimeseries.setBaseStroke(new BasicStroke(2.0f));
         rendererTimeseries.setAutoPopulateSeriesStroke(false);
         rendererTimeseries.setSeriesPaint(0, Color.red);
