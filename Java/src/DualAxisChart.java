@@ -1,6 +1,5 @@
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -189,12 +188,15 @@ public class DualAxisChart extends ApplicationFrame {
 
         // Get distances and start position between each pair of timeseries and shapelet
         ArrayList<Double> timeserise;
+        double[][] distanceSortingArr = new double[timeseriesIndexSize][];
         double[][] distanceAndIndex = {{},{}};
         int xAxisStartIndex;
+        double distance;
         ArrayList<Integer> shiftLenBeforeShapeletArr = new ArrayList<>();
         int maxShiftLen = (int) Double.NEGATIVE_INFINITY;
         // Get the global start index for all timesries
         for (int i=0; i<timeseriesIndexSize; i++){
+            double[] distanceSorting = {-1, -1};
             int timeseriesIndex = i;
             // Timeseries
             timeserise = localTimeseries.get(timeseriesIndex).get(dimemsion);
@@ -203,13 +205,38 @@ public class DualAxisChart extends ApplicationFrame {
             // distanceAndIndex[1][0]: distanceMin;
             distanceAndIndex = Dataset.getDistance(timeserise, shapelet);
             xAxisStartIndex = (int) distanceAndIndex[0][0];
+            distance = distanceAndIndex[1][0];
             // Record each xAxisStartIndex between each pair of timeseries and shapelet
             shiftLenBeforeShapeletArr.add(xAxisStartIndex);
             // Set/update the maximum xAxisStartIndex
             if (xAxisStartIndex>maxShiftLen) {
                 maxShiftLen = xAxisStartIndex;
             }
+
+            distanceSorting[0] = timeseriesIndex;
+            distanceSorting[1] = distance;
+            distanceSortingArr[i] = distanceSorting;
         }
+
+        java.util.Arrays.sort(distanceSortingArr, new java.util.Comparator<double[]>() {
+            public int compare(double[] a, double[] b) {
+                return Double.compare(a[1], b[1]);
+            }
+        });
+
+        ArrayList<ArrayList<Double>> timeseriesArrList = twoDArrayToList(distanceSortingArr);
+
+        Set<Double> timeseriesIndexSet = new HashSet<Double>();
+        int topK = 5;
+        for (int i=0; i<topK; i++) {
+            ArrayList<Double> arr = timeseriesArrList.get(i);
+            // Use add() method to add elements into the Set
+            // arr index 0: timeseries index
+            // arr index 1: timeseries distance
+            timeseriesIndexSet.add(arr.get(0));
+        }
+
+        System.out.println("timeseriesIndexSet: " + timeseriesIndexSet);
 
 //        System.out.println("shiftLenBeforeShapeletArr: " + shiftLenBeforeShapeletArr);
 //        System.out.println("maxShiftLen: " + maxShiftLen);
@@ -218,9 +245,26 @@ public class DualAxisChart extends ApplicationFrame {
         ArrayList<XYSeriesCollection> timeseriseAndShapelet = new ArrayList<>();
         timeseriseAndShapelet.add(
                 shapelet_testing(shapeletIndex, maxShiftLen));
-        timeseriseAndShapelet.add(timeserise_testing(shapeletIndex, timeseriesIndexSize, dimemsion, shiftLenBeforeShapeletArr, maxShiftLen));
+        timeseriseAndShapelet.add(timeserise_testing(shapeletIndex, timeseriesIndexSize, dimemsion, timeseriesIndexSet, shiftLenBeforeShapeletArr, maxShiftLen));
 
         return timeseriseAndShapelet;
+    }
+
+    private ArrayList<ArrayList<Double>> twoDArrayToList(double[][] twoDArray) {
+        ArrayList<ArrayList<Double>> arrayList = new ArrayList<>();
+        int m = twoDArray.length;
+
+        ArrayList<Double> arr;
+        for(int i=0;i<m;i++) {
+            arr = new ArrayList<>();
+            int n = twoDArray[i].length;
+            for(int j=0;j<n;j++) {
+                arr.add(twoDArray[i][j]);
+            }
+            arrayList.add(arr);
+        }
+
+        return arrayList;
     }
 
     private XYSeriesCollection shapelet_testing(int shapeletIndex, int maxShiftLen) {
@@ -246,13 +290,10 @@ public class DualAxisChart extends ApplicationFrame {
         return dataset;
     }
 
-    private XYSeriesCollection timeserise_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion, ArrayList<Integer> shiftLenBeforeShapeletArr, int maxShiftLen) {
+    private XYSeriesCollection timeserise_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion, Set<Double> timeseriesIndexSet, ArrayList<Integer> shiftLenBeforeShapeletArr, int maxShiftLen) {
 
         final XYSeriesCollection dataset
                 = new XYSeriesCollection();
-
-        // Shapelet
-        ArrayList<Double> shapelet = localShapelet.get(shapeletIndex);
 
         // Get distances and start position between each pair of timeseries and shapelet
         ArrayList<Double> timeserise;
@@ -264,22 +305,25 @@ public class DualAxisChart extends ApplicationFrame {
             XYSeries series = new XYSeries("Series Timeserise " + (i+1));
 
             int timeseriesIndex = i;
+
             // Timeseries
-            timeserise = localTimeseries.get(timeseriesIndex).get(dimemsion);
-            xAxisShiftLen = maxShiftLen - shiftLenBeforeShapeletArr.get(i);
+            if (timeseriesIndexSet.contains((double) timeseriesIndex)) {
+                timeserise = localTimeseries.get(timeseriesIndex).get(dimemsion);
+                xAxisShiftLen = maxShiftLen - shiftLenBeforeShapeletArr.get(i);
 
-            for (int j = 0; j < timeserise.size() + xAxisShiftLen; j++) {
-                if (j+1 > xAxisShiftLen) {
-                    int index = j-xAxisShiftLen;
-                    double val = timeserise.get(index);
-                    series.add((j + 1), val);
-                } else {
-                    series.add((j + 1), null);
+                for (int j = 0; j < timeserise.size() + xAxisShiftLen; j++) {
+                    if (j+1 > xAxisShiftLen) {
+                        int index = j-xAxisShiftLen;
+                        double val = timeserise.get(index);
+                        series.add((j + 1), val);
+                    } else {
+                        series.add((j + 1), null);
+                    }
                 }
-            }
 
-            // Add the series into dataset
-            dataset.addSeries(series);
+                // Add the series into dataset
+                dataset.addSeries(series);
+            }
         }
 
         return dataset;
