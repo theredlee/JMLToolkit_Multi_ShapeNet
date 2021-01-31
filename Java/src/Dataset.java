@@ -37,10 +37,10 @@ public class Dataset {
         // System.out.println(System.getProperty("user.dir"));
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\rJava
-        String file_shapelet = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
-        String file_dim = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
-//        String file_shapelet = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
-//        String file_dim = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
+//        String file_shapelet = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
+//        String file_dim = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
+        String file_shapelet = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
+        String file_dim = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
 //        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
 //        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
 
@@ -97,8 +97,8 @@ public class Dataset {
         // /Users/leone/ShapeNet
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
 //        String expected_value = "Hello, world!";
-        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
-//        String file1 = "/Users/student/Desktop/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
+//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
+        String file1 = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
 //        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
 
         String[] fileArr = {file1};
@@ -587,12 +587,12 @@ public class Dataset {
         double distanceSumMin = Double.MAX_VALUE;
         int startIndex = 0;
 
-        for(int i=0; i<(timeseries.size()-(shapelet.size())); i++) {
+        for(int i=0; i<(timeseries.size()-(shapelet.size()))+1; i++) {
             // index in indexcurrentShapelet
             distanceSum = 0;
             for(int j=0; j< shapelet.size(); j++) {
                 // index in indexcurrentShapelet
-                distanceSum += Math.pow(timeseries.get(j+i) - shapelet.get(j), 2.0);
+                distanceSum += Math.pow((timeseries.get(j+i) - shapelet.get(j)), 2.0);
             }
             distanceSum = Math.sqrt(distanceSum);
             if(distanceSum < distanceSumMin){

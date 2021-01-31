@@ -43,6 +43,7 @@ public class DualAxisChart extends ApplicationFrame {
 
     private ArrayList<ArrayList<ArrayList<Double>>> localTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     private ArrayList<ArrayList<Double>> localShapelet = new ArrayList<ArrayList<Double>>();
+    final int topK = 10;
 
     public DualAxisChart(int testingCode, ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localShapeletLabelArr) {
         super("DualAxisChart");
@@ -93,7 +94,7 @@ public class DualAxisChart extends ApplicationFrame {
     }
 
     private ArrayList<JFreeChart> createChartArr_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension) {
-        final String[] str = {"ALT", "AFP"};
+        final String[] str = {"AFP", "ALT"};
 
         // index 0: shapelet Chart
         // index 1: timeseries Chart
@@ -103,8 +104,10 @@ public class DualAxisChart extends ApplicationFrame {
 
         // Shapelet
         final XYSeriesCollection shapelet = timeseriseAndShapelet.get(shapeletChartIndex);
-        final NumberAxis xax = new NumberAxis("Aligned by the best match position of the shapelet");
-        xax.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        final NumberAxis xaxShapelet = new NumberAxis("Shapelet for ALT");
+        final NumberAxis xaxTimeseries = new NumberAxis("Shapelet for ALT");
+//        final NumberAxis xaxTimeseries = new NumberAxis("(Top 10 minimum-distance timeseries) Aligned by the best match position of the shapelet");
+        xaxTimeseries.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         final NumberAxis rangeAxisShapelet = new NumberAxis("" + str[timesriesDimension]);
         rangeAxisShapelet.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         // Line render
@@ -112,7 +115,7 @@ public class DualAxisChart extends ApplicationFrame {
         rendererShapelet.setBaseStroke(new BasicStroke(2.0f));
         rendererShapelet.setAutoPopulateSeriesStroke(false);
         final XYPlot xyPlotShapelet =
-                new XYPlot (shapelet, xax,
+                new XYPlot (shapelet, xaxTimeseries,
                         rangeAxisShapelet, rendererShapelet);
         xyPlotShapelet.setDomainGridlinesVisible(true);;
 
@@ -141,12 +144,12 @@ public class DualAxisChart extends ApplicationFrame {
         final XYSplineRenderer rendererTimeseries = new XYSplineRenderer(1);
         rendererTimeseries.setBaseStroke(new BasicStroke(2.0f));
         rendererTimeseries.setAutoPopulateSeriesStroke(false);
-        rendererTimeseries.setSeriesPaint(0, Color.red);
+//        rendererTimeseries.setSeriesPaint(0, Color.red);
         rendererTimeseries.setBaseToolTipGenerator(
                 new StandardXYToolTipGenerator());
 
         final XYPlot xyPlotTimeseries =
-                new XYPlot(timeserise, xax,
+                new XYPlot(timeserise, xaxTimeseries,
                         rangeAxisTimeseries, rendererTimeseries);
         xyPlotTimeseries.setDomainGridlinesVisible(true);
 
@@ -227,7 +230,6 @@ public class DualAxisChart extends ApplicationFrame {
         ArrayList<ArrayList<Double>> timeseriesArrList = twoDArrayToList(distanceSortingArr);
 
         Set<Double> timeseriesIndexSet = new HashSet<Double>();
-        int topK = 5;
         for (int i=0; i<topK; i++) {
             ArrayList<Double> arr = timeseriesArrList.get(i);
             // Use add() method to add elements into the Set
