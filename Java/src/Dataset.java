@@ -39,10 +39,10 @@ public class Dataset {
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\rJava
 //        String file_shapelet = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
 //        String file_dim = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
-//        String file_shapelet = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
-//        String file_dim = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
-        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
-        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
+        String file_shapelet = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
+        String file_dim = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
+//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
+//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
 
         ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
@@ -98,8 +98,8 @@ public class Dataset {
         // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
 //        String expected_value = "Hello, world!";
 //        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
-//        String file1 = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
-        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
+        String file1 = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
+//        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
 
         String[] fileArr = {file1};
 

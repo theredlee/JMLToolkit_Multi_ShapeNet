@@ -106,7 +106,7 @@ public class DualAxisChart extends ApplicationFrame {
         // Shapelet
         final XYSeriesCollection shapelet = timeseriseAndShapelet.get(shapeletChartIndex);
         final NumberAxis xaxShapelet = new NumberAxis("Shapelet for ALT");
-        final NumberAxis xaxTimeseries = new NumberAxis("Shapelet for ALT");
+        final NumberAxis xaxTimeseries = new NumberAxis("Shapelet for AFP");
 //        final NumberAxis xaxTimeseries = new NumberAxis("(Top 10 minimum-distance timeseries) Aligned by the best match position of the shapelet");
         xaxTimeseries.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         final NumberAxis rangeAxisShapelet = new NumberAxis("" + str[timesriesDimension]);
