@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.*;
 
+import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -94,7 +95,7 @@ public class DualAxisChart extends ApplicationFrame {
     }
 
     private ArrayList<JFreeChart> createChartArr_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension) {
-        final String[] str = {"AFP", "ALT"};
+        final String[] str = {"AFP(μg/L)", "ALT(U/L)"};
 
         // index 0: shapelet Chart
         // index 1: timeseries Chart
@@ -144,9 +145,20 @@ public class DualAxisChart extends ApplicationFrame {
         final XYSplineRenderer rendererTimeseries = new XYSplineRenderer(1);
         rendererTimeseries.setBaseStroke(new BasicStroke(2.0f));
         rendererTimeseries.setAutoPopulateSeriesStroke(false);
-//        rendererTimeseries.setSeriesPaint(0, Color.red);
         rendererTimeseries.setBaseToolTipGenerator(
                 new StandardXYToolTipGenerator());
+
+        // Set color manually
+        rendererTimeseries.setSeriesPaint(0, Color.RED);
+        rendererTimeseries.setSeriesPaint(1, Color.BLUE);
+        rendererTimeseries.setSeriesPaint(2, Color.GREEN);
+        rendererTimeseries.setSeriesPaint(3, ChartColor.ORANGE);
+        rendererTimeseries.setSeriesPaint(4, Color.MAGENTA);
+        rendererTimeseries.setSeriesPaint(6, Color.CYAN);
+        rendererTimeseries.setSeriesPaint(7, Color.PINK);
+        rendererTimeseries.setSeriesPaint(8, Color.GRAY);
+        rendererTimeseries.setSeriesPaint(9, ChartColor.DARK_RED);
+        rendererTimeseries.setSeriesPaint(10, ChartColor.DARK_BLUE);
 
         final XYPlot xyPlotTimeseries =
                 new XYPlot(timeserise, xaxTimeseries,
