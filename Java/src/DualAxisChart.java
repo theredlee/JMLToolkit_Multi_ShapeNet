@@ -44,9 +44,9 @@ public class DualAxisChart extends ApplicationFrame {
 
     private ArrayList<ArrayList<ArrayList<Double>>> localTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     private ArrayList<ArrayList<Double>> localShapelet = new ArrayList<ArrayList<Double>>();
-    final int topK = 10;
+    final int topK = 16;
 
-    public DualAxisChart(int testingCode, ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localShapeletLabelArr) {
+    public DualAxisChart(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localShapeletLabelArr, ArrayList<ArrayList<ArrayList<Double>>> startEndPoints_ALT_AND_AFP) {
         super("DualAxisChart");
 
         // set localTimeseries and localShapelet
@@ -60,7 +60,7 @@ public class DualAxisChart extends ApplicationFrame {
             int index = i;
             int dimension = i;
 
-            final ArrayList<JFreeChart> chartArr = createChartArr_testing(index, timesriesIndexSize, dimension);
+            final ArrayList<JFreeChart> chartArr = createChartArr_testing(index, timesriesIndexSize, dimension, startEndPoints_ALT_AND_AFP);
             for (int j=0; j<chartArr.size(); j++) {
                 JFreeChart chart = chartArr.get(j);
                 ChartPanel chartPanel = new ChartPanel(chart);
@@ -94,22 +94,24 @@ public class DualAxisChart extends ApplicationFrame {
         // setChartPanelArr(chartPanelArr);
     }
 
-    private ArrayList<JFreeChart> createChartArr_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension) {
-        final String[] str = {"AFP(μg/L)", "ALT(U/L)"};
+    private ArrayList<JFreeChart> createChartArr_testing(int shapeletIndex, int timeseriesIndexSize, int timesriesDimension, ArrayList<ArrayList<ArrayList<Double>>> startEndPoints_ALT_AND_AFP) {
+        final String[] strShapelet = {"Z-normalized AFP(μg/L)", "Z-normalized ALT(U/L)"};
+        final String[] strTimeseries = {"AFP(μg/L)", "ALT(U/L)"};
 
+//        System.out.println("startEndPoints_ALT_AND_AFP: " + startEndPoints_ALT_AND_AFP);
         // index 0: shapelet Chart
         // index 1: timeseries Chart
         int shapeletChartIndex = 0;
         int timeseriesChartIndex = 1;
-        ArrayList<XYSeriesCollection> timeseriseAndShapelet = createTimeseriseAndShapet_testing(shapeletIndex, timeseriesIndexSize, timesriesDimension);
+        ArrayList<XYSeriesCollection> timeseriseAndShapelet = createTimeseriseAndShapet_testing(shapeletIndex, timeseriesIndexSize, timesriesDimension, startEndPoints_ALT_AND_AFP);
 
         // Shapelet
         final XYSeriesCollection shapelet = timeseriseAndShapelet.get(shapeletChartIndex);
         final NumberAxis xaxShapelet = new NumberAxis("Shapelet for ALT");
-        final NumberAxis xaxTimeseries = new NumberAxis("Shapelet for AFP");
-//        final NumberAxis xaxTimeseries = new NumberAxis("(Top 10 minimum-distance timeseries) Aligned by the best match position of the shapelet");
+        final NumberAxis xaxTimeseries = new NumberAxis("Time points");
+//        final NumberAxis xaxTimeseries = new NumberAxis("Top 16 timeseries having the minimum distance from the shapelet (aligned with the best matching position)");
         xaxTimeseries.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        final NumberAxis rangeAxisShapelet = new NumberAxis("" + str[timesriesDimension]);
+        final NumberAxis rangeAxisShapelet = new NumberAxis("" + strShapelet [timesriesDimension]);
         rangeAxisShapelet.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         // Line render
         final XYSplineRenderer rendererShapelet = new XYSplineRenderer(1);
@@ -138,7 +140,7 @@ public class DualAxisChart extends ApplicationFrame {
         // Timeserise
 
         final XYSeriesCollection timeserise = timeseriseAndShapelet.get(timeseriesChartIndex);
-        final NumberAxis rangeAxisTimeseries = new NumberAxis("" + str[timesriesDimension]);
+        final NumberAxis rangeAxisTimeseries = new NumberAxis("" + strTimeseries[timesriesDimension]);
         rangeAxisTimeseries.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
@@ -159,6 +161,11 @@ public class DualAxisChart extends ApplicationFrame {
         rendererTimeseries.setSeriesPaint(8, Color.GRAY);
         rendererTimeseries.setSeriesPaint(9, ChartColor.DARK_RED);
         rendererTimeseries.setSeriesPaint(10, ChartColor.DARK_BLUE);
+        rendererTimeseries.setSeriesPaint(11, ChartColor.VERY_DARK_YELLOW);
+        rendererTimeseries.setSeriesPaint(12, ChartColor.DARK_YELLOW);
+        rendererTimeseries.setSeriesPaint(13, ChartColor.GRAY);
+        rendererTimeseries.setSeriesPaint(14, ChartColor.DARK_MAGENTA);
+        rendererTimeseries.setSeriesPaint(15, ChartColor.DARK_GREEN);
 
         final XYPlot xyPlotTimeseries =
                 new XYPlot(timeserise, xaxTimeseries,
@@ -193,7 +200,7 @@ public class DualAxisChart extends ApplicationFrame {
         return chartArr;
     }
 
-    private ArrayList<XYSeriesCollection> createTimeseriseAndShapet_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion) {
+    private ArrayList<XYSeriesCollection> createTimeseriseAndShapet_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion, ArrayList<ArrayList<ArrayList<Double>>> startEndPoints_ALT_AND_AFP) {
 
         final XYSeriesCollection dataset
                 = new XYSeriesCollection();
@@ -219,18 +226,23 @@ public class DualAxisChart extends ApplicationFrame {
             // distanceAndIndex[0][0]: startIndex;
             // distanceAndIndex[1][0]: distanceMin;
             distanceAndIndex = Dataset.getDistance(timeserise, shapelet);
-            xAxisStartIndex = (int) distanceAndIndex[0][0];
             distance = distanceAndIndex[1][0];
+
+            distanceSorting[0] = timeseriesIndex;
+            distanceSorting[1] = distance;
+            distanceSortingArr[i] = distanceSorting;
+        }
+
+        ArrayList<ArrayList<Double>> startEndPoints_ALT_OR_AFP = startEndPoints_ALT_AND_AFP.get(shapeletIndex);
+        int startPointIndex = 0;
+        for (int i=0; i<startEndPoints_ALT_OR_AFP.size(); i++){
+            xAxisStartIndex = (int) ((double) startEndPoints_ALT_OR_AFP.get(i).get(startPointIndex));
             // Record each xAxisStartIndex between each pair of timeseries and shapelet
             shiftLenBeforeShapeletArr.add(xAxisStartIndex);
             // Set/update the maximum xAxisStartIndex
             if (xAxisStartIndex>maxShiftLen) {
                 maxShiftLen = xAxisStartIndex;
             }
-
-            distanceSorting[0] = timeseriesIndex;
-            distanceSorting[1] = distance;
-            distanceSortingArr[i] = distanceSorting;
         }
 
         java.util.Arrays.sort(distanceSortingArr, new java.util.Comparator<double[]>() {
@@ -239,21 +251,19 @@ public class DualAxisChart extends ApplicationFrame {
             }
         });
 
+        // Timeseries
         ArrayList<ArrayList<Double>> timeseriesArrList = twoDArrayToList(distanceSortingArr);
 
-        Set<Double> timeseriesIndexSet = new HashSet<Double>();
+        Set<Integer> timeseriesIndexSet = new HashSet<Integer>();
         for (int i=0; i<topK; i++) {
-            ArrayList<Double> arr = timeseriesArrList.get(i);
+//            ArrayList<Double> arr = timeseriesArrList.get(i);
             // Use add() method to add elements into the Set
             // arr index 0: timeseries index
             // arr index 1: timeseries distance
-            timeseriesIndexSet.add(arr.get(0));
+            timeseriesIndexSet.add(i);
         }
 
         System.out.println("timeseriesIndexSet: " + timeseriesIndexSet);
-
-//        System.out.println("shiftLenBeforeShapeletArr: " + shiftLenBeforeShapeletArr);
-//        System.out.println("maxShiftLen: " + maxShiftLen);
 
         // Create shapelet and corresponding timeseries
         ArrayList<XYSeriesCollection> timeseriseAndShapelet = new ArrayList<>();
@@ -262,23 +272,6 @@ public class DualAxisChart extends ApplicationFrame {
         timeseriseAndShapelet.add(timeserise_testing(shapeletIndex, timeseriesIndexSize, dimemsion, timeseriesIndexSet, shiftLenBeforeShapeletArr, maxShiftLen));
 
         return timeseriseAndShapelet;
-    }
-
-    private ArrayList<ArrayList<Double>> twoDArrayToList(double[][] twoDArray) {
-        ArrayList<ArrayList<Double>> arrayList = new ArrayList<>();
-        int m = twoDArray.length;
-
-        ArrayList<Double> arr;
-        for(int i=0;i<m;i++) {
-            arr = new ArrayList<>();
-            int n = twoDArray[i].length;
-            for(int j=0;j<n;j++) {
-                arr.add(twoDArray[i][j]);
-            }
-            arrayList.add(arr);
-        }
-
-        return arrayList;
     }
 
     private XYSeriesCollection shapelet_testing(int shapeletIndex, int maxShiftLen) {
@@ -304,7 +297,7 @@ public class DualAxisChart extends ApplicationFrame {
         return dataset;
     }
 
-    private XYSeriesCollection timeserise_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion, Set<Double> timeseriesIndexSet, ArrayList<Integer> shiftLenBeforeShapeletArr, int maxShiftLen) {
+    private XYSeriesCollection timeserise_testing(int shapeletIndex, int timeseriesIndexSize, int dimemsion, Set<Integer> timeseriesIndexSet, ArrayList<Integer> shiftLenBeforeShapeletArr, int maxShiftLen) {
 
         final XYSeriesCollection dataset
                 = new XYSeriesCollection();
@@ -321,7 +314,7 @@ public class DualAxisChart extends ApplicationFrame {
             int timeseriesIndex = i;
 
             // Timeseries
-            if (timeseriesIndexSet.contains((double) timeseriesIndex)) {
+            if (timeseriesIndexSet.contains(timeseriesIndex)) {
                 timeserise = localTimeseries.get(timeseriesIndex).get(dimemsion);
                 xAxisShiftLen = maxShiftLen - shiftLenBeforeShapeletArr.get(i);
 
@@ -341,6 +334,23 @@ public class DualAxisChart extends ApplicationFrame {
         }
 
         return dataset;
+    }
+
+    private ArrayList<ArrayList<Double>> twoDArrayToList(double[][] twoDArray) {
+        ArrayList<ArrayList<Double>> arrayList = new ArrayList<>();
+        int m = twoDArray.length;
+
+        ArrayList<Double> arr;
+        for(int i=0;i<m;i++) {
+            arr = new ArrayList<>();
+            int n = twoDArray[i].length;
+            for(int j=0;j<n;j++) {
+                arr.add(twoDArray[i][j]);
+            }
+            arrayList.add(arr);
+        }
+
+        return arrayList;
     }
 
     private ArrayList<Double> getMinMaxShapelet (int shapeletIndex) {

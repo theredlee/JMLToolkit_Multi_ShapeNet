@@ -22,6 +22,7 @@ public class Dataset {
 
     public ArrayList<ArrayList<Double>> globalMultPosAndNegArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalMultTFArr = new ArrayList<ArrayList<Double>>();
+    public ArrayList<ArrayList<ArrayList<Double>>> globalStartEndPoints_ALT_AND_AFP = new ArrayList<ArrayList<ArrayList<Double>>>();
     public double accuracy;
     public int count;
 
@@ -159,6 +160,93 @@ public class Dataset {
         // Set rawTimeseries
         setGlobalRawTimeseries(rawTimeseries);
         setGlobalTimeseriesLabelArr(timeseriesLabelArr);
+    }
+
+    public void loadStartEndPoints_testing() throws IOException {
+        // 2576
+        // System.out.println("System.getProperty(\"user.dir\"): " + System.getProperty("user.dir"));
+        // /Users/leone/ShapeNet
+        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
+//        String expected_value = "Hello, world!";
+//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
+        String file1 = "/Users/student/Desktop/Red/RedLee/datasets/raw-alt-afp-raw/StartEndPoints0" + testFileNo + ".txt";
+
+        String[] fileArr = {file1};
+
+        ArrayList<ArrayList<ArrayList<Double>>> startEndPoints_ALT_AND_AFP = new ArrayList<ArrayList<ArrayList<Double>>>();
+        int count = 0;
+        for (int i=0; i<fileArr.length; i++) {
+            String file = fileArr[i];
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            String newline;
+            List<String> newStrList;
+            double label;
+            while (line != null) {
+                if (line.contains("\\n")){
+                    // Get the label
+                    newline = line;
+                    // Regex has its own escape sequences, denoted with \\ (the escape sequence for \), since Java reserves \
+                    // To split by "\n", you'll need \\\\n instead, because \\n in regex represents an actual line break, just as \n represents one in Java.
+                    List<String> arrOfStr = Arrays.asList(newline.split("\\\\n"));
+
+                    ArrayList<ArrayList<Double>> startEndPointArr = new ArrayList<ArrayList<Double>>();
+                    // Initialize startEndPointArr with size 2
+                    int size = 2;
+                    for (int l=0; l<size; l++) {
+                        startEndPointArr.add(new ArrayList<Double>());
+                    }
+
+                    for (int j=arrOfStr.size()-1; j>=0; j--) {
+                        String str = arrOfStr.get(j);
+                        newStrList = Arrays.asList(str.split(","));
+
+                        for (int k=0; k<newStrList.size(); k++) {
+                            startEndPointArr.get(j).add(Double.valueOf(newStrList.get(k)));
+                        }
+                    }
+                    startEndPoints_ALT_AND_AFP.add(startEndPointArr);
+//
+//                    label = Double.valueOf(-1);
+//                    timeseriesLabelArr.add(label);
+//
+//                    rawTimeseries.add(startEndPointArr);
+                    count++;
+                }
+                // read next line
+                line = reader.readLine();
+            }
+
+            reader.close();
+            System.out.println("count: " + count);
+            System.out.println("startEndPoints_ALT_AND_AFP: " + startEndPoints_ALT_AND_AFP);
+            System.out.println("startEndPoints_ALT_AND_AFP.size(): " + startEndPoints_ALT_AND_AFP.size());
+        }
+        // Reformat startEndPoints_ALT_AND_AFP
+        int startPointIndex = 0;
+        ArrayList<ArrayList<ArrayList<Double>>> newStartEndPoints_ALT_AND_AFP = new ArrayList<>();
+//        for (int k=1; k>=0; k--) {
+        for (int k=0; k<2; k++) {
+            ArrayList<ArrayList<Double>> arr = new ArrayList<>();
+            for (int i=0; i<startEndPoints_ALT_AND_AFP.size(); i++) {
+                ArrayList<ArrayList<Double>> aArr = startEndPoints_ALT_AND_AFP.get(i);
+
+                ArrayList<Double> valArr = aArr.get(k);
+                arr.add(valArr);
+            }
+            newStartEndPoints_ALT_AND_AFP.add(arr);
+        }
+//        System.out.println("newStartEndPoints_ALT_AND_AFP: " + newStartEndPoints_ALT_AND_AFP);
+        // Set abc globally
+        setGlobalStartEndPoints_ALT_AND_AFP(newStartEndPoints_ALT_AND_AFP);
+    }
+
+    private void setGlobalStartEndPoints_ALT_AND_AFP(ArrayList<ArrayList<ArrayList<Double>>> startEndPoints_03_06) {
+        this.globalStartEndPoints_ALT_AND_AFP = startEndPoints_03_06;
+    }
+
+    public ArrayList<ArrayList<ArrayList<Double>>> getGlobalStartEndPoints_ALT_AND_AFP() {
+        return globalStartEndPoints_ALT_AND_AFP;
     }
 
     // ------------------------------------------------------------------------------------------

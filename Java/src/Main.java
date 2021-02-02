@@ -1,11 +1,8 @@
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Main {
 
@@ -25,6 +22,7 @@ public class Main {
     public static void setDataset_testing(Dataset aDataset) throws IOException {
         aDataset.loadShapelet_testing();
         aDataset.loadTimeseries_testing();
+        aDataset.loadStartEndPoints_testing();
     }
 
     public static void setHistogram(HistogramExample histogram) throws IOException {
@@ -192,7 +190,7 @@ public class Main {
         Dataset aDataset = new Dataset(false);
         setDataset_testing(aDataset);
 
-        final DualAxisChart dualAxisChart = new DualAxisChart(-1, aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+        final DualAxisChart dualAxisChart = new DualAxisChart(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr(), aDataset.getGlobalStartEndPoints_ALT_AND_AFP());
         dualAxisChart.pack();
         RefineryUtilities.centerFrameOnScreen(dualAxisChart);
         dualAxisChart.setVisible(true);
