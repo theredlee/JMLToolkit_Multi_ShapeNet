@@ -120,13 +120,13 @@ public class HistogramExample extends JFrame {
 //        setHistogramChart(histogram);
 
         int width = 400;
-        int height = 300;
+        int height = 500;
         ChartPanel aChartPanel = new ChartPanel(histogram);
         aChartPanel.setPreferredSize(new Dimension(width, height));
 //        aChartPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
         // Set the panel globally
         setChartPanel(aChartPanel);
-//
+
 //        JFrame frame = new JFrame();
 //        frame.add(chartPanel, BorderLayout.CENTER);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

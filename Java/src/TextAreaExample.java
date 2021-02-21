@@ -8,7 +8,7 @@ public class TextAreaExample extends Frame{
 
     TextAreaExample() {
 //        tf.setBounds(50, 50, 150, 20);
-        JTextArea textArea = new JTextArea("Welcome to Shapenet");
+        JTextArea textArea = new JTextArea("Welcome to ShapeNet");
         textArea.setPreferredSize(new Dimension(350, 200));
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);

@@ -68,7 +68,7 @@ public class PieChartExample extends JFrame {
 
         // Create Panel
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(500, 300));
+        chartPanel.setPreferredSize(new Dimension(300, 300));
         // Set the panel globally
         setPanel(chartPanel);
         setContentPane(chartPanel);

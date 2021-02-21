@@ -397,8 +397,9 @@ public class DualAxisChart extends ApplicationFrame {
         return globalMinMaxArr;
     }
 
-    // ---------------------------------------------------------
-    // --------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
+
     public DualAxisChart(String titel, ArrayList<ArrayList<ArrayList<Double>>> localTimeseries) {
         super(titel);
 
@@ -428,19 +429,19 @@ public class DualAxisChart extends ApplicationFrame {
             final JFreeChart chart = createChart(index, timesriesDimension);
             final ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(
-                    new Dimension(730, 700));
+                    new Dimension(400, 700));
             chartPanelArr.add(chartPanel);
         }
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1));
-        panel.setPreferredSize(new Dimension(730, 700*5));
+        panel.setPreferredSize(new Dimension(400, 700*5));
         for (int i=0; i<chartPanelArr.size(); i++) {
             panel.add(chartPanelArr.get(i));
         }
 
         JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setPreferredSize(new Dimension(750,800));
+        scrollPane.setPreferredSize(new Dimension(400,800));
         // setContentPane(scrollPane);
         // Set the panel globally
         setScrollPane(scrollPane);

@@ -1,5 +1,6 @@
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.YisSymbolic;
 import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
@@ -32,10 +33,11 @@ public class Main {
         JFreeChart histogramChart = histogram.getHistogramChart();
     }
 
-    public static void testing_main() throws IOException {
+    private static void testing_main() throws IOException {
         // ------------------------------------------------------------------------------
         Dataset aDataset = new Dataset(false);
         setDataset_testing(aDataset);
+//        setDataset(aDataset);
 
         final DualAxisChart dualAxisChart = new DualAxisChart(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr(), aDataset.getGlobalStartEndPoints_ALT_AND_AFP());
         dualAxisChart.pack();
@@ -44,144 +46,65 @@ public class Main {
         // ------------------------------------------------------------------------------
     }
 
-    public static void main(String[] args) throws IOException {
-        // 0. Initialize the frame and the global panel
+    private static void formal_main() throws IOException {
+
         Dataset aDataset = new Dataset(true);
         setDataset(aDataset);
+
+        // -----------------------------------------------
 
         int maxWidth = 1500;
         int maxHeight = 1200;
         final JFrame frame = new JFrame("ShapeNet");
-        final JPanel panel = new JPanel();
-        GroupLayout groupLayout = new GroupLayout(panel);
-        panel.setLayout(groupLayout);
-        panel.setPreferredSize(new Dimension(maxWidth, maxHeight));
-        frame.add(panel);
+        frame.setSize(maxWidth, maxHeight);
 
-        // groupPanel1 ----------
-        int row = 1;
-        int col = 2;
-        JPanel groupPanel1 = new JPanel();
-        groupPanel1.setLayout(new GridLayout(row, col));
-        JPanel[][] panel1Holder = new JPanel[row][col];
-        for(int m = 0; m < row; m++) {
-            for(int n = 0; n < col; n++) {
-                panel1Holder[m][n] = new JPanel();
-                groupPanel1.add(panel1Holder[m][n]);
-            }
-        }
-        GroupLayout groupLayout1 = new GroupLayout(groupPanel1);
-        groupPanel1.setLayout(groupLayout1);
-        groupLayout1.setHorizontalGroup(groupLayout1.createSequentialGroup()
-                .addGroup(groupLayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(panel1Holder[0][0]))
-                .addGroup(groupLayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(panel1Holder[0][1]))
-        );
+        //------------------------
+        // Canvas pane
+        JPanel panel_1 = new JPanel();
 
-        groupLayout1.setVerticalGroup(groupLayout1.createSequentialGroup()
-                .addGroup(groupLayout1.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(panel1Holder[0][0]).addComponent(panel1Holder[0][1])));
+        JPanel panel_2 = new JPanel();
 
-        // For comBox and label on the left-hand side
-        row = 2;
-        col = 1;
-        JPanel[][] panel1HolderLeftHolder = new JPanel[row][col];
-        panel1Holder[0][0].setPreferredSize(new Dimension(300, 350));
-        for(int m = 0; m < row; m++) {
-            for(int n = 0; n < col; n++) {
-                panel1HolderLeftHolder[m][n] = new JPanel();
-                panel1Holder[0][0].add(panel1HolderLeftHolder[m][n]);
-            }
-        }
+        JPanel panel_2_1 = new JPanel();
 
-        // groupPanel2 ----------
-        row = 1;
-        col = 2;
-        JPanel groupPanel2 = new JPanel();
-        JPanel[][] panel2Holder = new JPanel[row][col];
-        for(int m = 0; m < row; m++) {
-            for(int n = 0; n < col; n++) {
-                panel2Holder[m][n] = new JPanel();
-                groupPanel2.add(panel2Holder[m][n]);
-            }
-        }
+        JPanel panel_2_2 = new JPanel();
 
-        // For Histogram and piechart on the right-hand side
-        panel2Holder[0][1].setPreferredSize(new Dimension(400,800));
-        panel2Holder[0][1].setLayout(new GridLayout(2,1));
-        row = 2;
-        col = 1;
-        JPanel[][] panel2HolderRightHolder = new JPanel[row][col];
-        for(int m = 0; m < row; m++) {
-            for(int n = 0; n < col; n++) {
-                panel2HolderRightHolder[m][n] = new JPanel();
-                panel2Holder[0][1].add(panel2HolderRightHolder[m][n]);
-            }
-        }
+        JPanel panel_2_2_1 = new JPanel();
 
-        GroupLayout groupLayout2 = new GroupLayout(groupPanel2);
-        groupPanel2.setLayout(groupLayout2);
-        groupLayout2.setHorizontalGroup(groupLayout2.createSequentialGroup()
-                .addGroup(groupLayout2.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(panel2Holder[0][0]))
-                .addGroup(groupLayout2.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(panel2Holder[0][1])));
+        JPanel panel_2_2_2 = new JPanel();
+        //------------------------
 
-        groupLayout2.setVerticalGroup(groupLayout2.createSequentialGroup()
-                .addGroup(groupLayout2.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(panel2Holder[0][0]).addComponent(panel2Holder[0][1])));
-
-        // groupPanel3 ----------
-        JPanel groupPanel3 = new JPanel();
-        groupPanel3.setLayout(new GridLayout(1,3));
-
-        groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-                .addGroup(groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(groupPanel1).addComponent(groupPanel2).addComponent(groupPanel3))
-        );
-
-        groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
-                .addGroup(groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(groupPanel1))
-                .addGroup(groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(groupPanel2))
-                .addGroup(groupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(groupPanel3)));
-
-        /*
-        1, 2, 3
-        4, 5, 6
-        7, 8, 9
-        */
         // ---------------------------------------------------------------------------------------------------------
-
         // 1. Initialize histogram and set panel for histogram
-        HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
-        ChartPanel aHistogramChartPanel = histogram.getChartPanel();
-        panel2HolderRightHolder[0][0].add(aHistogramChartPanel);
+        final HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
+        final LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
+        final DualAxisChart dualAxisChart = new DualAxisChart(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+        final DualAxisChart_2 dualAxisChart_2 = new DualAxisChart_2(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+        final TextAreaExample textArea = new TextAreaExample();
+        final PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
+        final com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
+        final ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, textArea);
 
-        // 2. Initialize lineChart and set panel for comboBox
-        LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
-        ChartPanel aLineChartPanel = lineChart.getPanel();
-//        groupPanel3.add(aLineChartPanel);
+        // --------------------------------------------------------
+        // 1. Initialize comboBox and set panel for comboBox
+        JPanel comboBoxPanel = comboBox.getPanel();
+        panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+        panel_1.setPreferredSize(new Dimension(300+20, frame.getHeight()));
+        panel_1.add(comboBoxPanel);
+        panel_1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        frame.add(panel_1, BorderLayout.WEST);
+
+        // 2. Initialize textArea and set panel for textArea
+        JScrollPane textAreaScrollPane = textArea.getScrollPane();
+        panel_1.add(textAreaScrollPane);
 
         // 3. Initialize dualAxisChart and set panel for dualAxisChart
-//        // final DualAxisChart dualAxisChart = new DualAxisChart(title, aDataset.getGlobalTimeseries());
-//        // ChartPanel aDualAxisChartPanel = dualAxisChart.getChartPanel();
-//        // gridPanel4.add(aDualAxisChartPanel);
-        final DualAxisChart dualAxisChart = new DualAxisChart(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
         JScrollPane aDualAxisScrollPane = dualAxisChart.getScrollPane();
-        panel2Holder[0][0].add(aDualAxisScrollPane);
+        panel_1.add(aDualAxisScrollPane);
 
-        // 4. Initialize textArea and set panel for textArea
-        TextAreaExample textArea = new TextAreaExample();
-        JScrollPane textAreaScrollPane = textArea.getScrollPane();
-        panel1HolderLeftHolder[1][0].add(textAreaScrollPane);
-
-        // 5. Initialize pieChart and set panel for pieChart
-        PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
-        ChartPanel pieChartPanel = pieChart.getPanel();
-        panel2HolderRightHolder[1][0].add(pieChartPanel);
-
-        // 6. Initialize PriceEstimator and set panel for PriceEstimator
+        // 4. Initialize PriceEstimator and set panel for PriceEstimator
         int chartIndex0 = 0;
         int chartIndex1 = 1;
         int chartIndex2 = 2;
-//        com.technobium.regression.PriceEstimator priceEstimator = new com.technobium.regression.PriceEstimator(aDataset.getGlobalMulti0And1Arr());
-//        ChartPanel regressionChartPanel = priceEstimator.getPanel();
-//        gridPanel9.add(regressionChartPanel);
-        com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
         ArrayList<ChartPanel> priceEstimatorPanelArr = regressionChart.getPanelArr();
         JPanel regressionChartPanel = new JPanel();
         regressionChartPanel.setPreferredSize(new Dimension(1350, 350));
@@ -189,17 +112,51 @@ public class Main {
         regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex1));
         regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex2));
         JScrollPane regressionChartScrollPane = new JScrollPane(regressionChartPanel);
-        regressionChartScrollPane.setPreferredSize(new Dimension(1000, 350));
-        panel1Holder[0][1].add(regressionChartScrollPane);
-//
-        // n-1. Initialize comboBox and set panel for comboBox
-        ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart, lineChart, textArea);
-        JPanel comboBoxPanel = comboBox.getPanel();
-        panel1HolderLeftHolder[0][0].add(comboBoxPanel);
+        regressionChartScrollPane.setPreferredSize(new Dimension(1000, 300));
+        panel_2_1.setLayout(new BoxLayout(panel_2_1, BoxLayout.X_AXIS));
+        panel_2_1.add(regressionChartScrollPane);
+        panel_2_1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel_2.setLayout (new BoxLayout(panel_2, BoxLayout.Y_AXIS));
+        panel_2.add(panel_2_1);
+        frame.add(panel_2, BorderLayout.EAST);
 
+        // 5. Initialize lineChart and set panel for comboBox
+        ChartPanel aLineChartPanel = lineChart.getPanel();
+        panel_2_1.add(aLineChartPanel);
+
+        // 6. Initialize dualAxisChart_2
+        JScrollPane aDualAxisScrollPane_2 = dualAxisChart_2.getScrollPane();
+        panel_2_2_1.add(aDualAxisScrollPane_2, BorderLayout.CENTER);
+        panel_2_2_1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel_2_2_1.setMinimumSize(new Dimension(aDualAxisScrollPane.getWidth(), aDualAxisScrollPane.getHeight()));
+        panel_2_2.setLayout(new BoxLayout(panel_2_2, BoxLayout.X_AXIS));
+        panel_2_2.add(panel_2_2_1);
+        panel_2.add(panel_2_2);
+
+        // 6. Initialize pieChart and set panel for pieChart
+        ChartPanel pieChartPanel = pieChart.getPanel();
+        panel_2_2_2.setLayout(new BoxLayout(panel_2_2_2, BoxLayout.Y_AXIS));
+        panel_2_2_2.add(pieChartPanel);
+        panel_2_2_2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel_2_2_2.setMinimumSize(new Dimension(pieChartPanel.getWidth(),panel_2_2_1.getHeight()));
+        panel_2_2.setLayout(new BoxLayout(panel_2_2, BoxLayout.X_AXIS));
+        panel_2_2.add(panel_2_2_2);
+//        panel_2.add(panel_2_2);
+
+        // 7. Initialize histogram and set panel for histogram
+        ChartPanel aHistogramChartPanel = histogram.getChartPanel();
+        panel_2_2_2.add(aHistogramChartPanel);
+
+        // Frame setting
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public static void main(String[] args) throws IOException {
+        // 0. Initialize the frame and the global panel
+        formal_main();
+//        testing_main();
     }
 
     public JFrame getFrame() {

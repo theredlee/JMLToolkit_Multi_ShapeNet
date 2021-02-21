@@ -181,10 +181,8 @@ public class Dataset {
             String line = reader.readLine();
             String newline;
             List<String> newStrList;
-            double label;
             while (line != null) {
                 if (line.contains("\\n")){
-                    // Get the label
                     newline = line;
                     // Regex has its own escape sequences, denoted with \\ (the escape sequence for \), since Java reserves \
                     // To split by "\n", you'll need \\\\n instead, because \\n in regex represents an actual line break, just as \n represents one in Java.
@@ -223,9 +221,8 @@ public class Dataset {
             System.out.println("startEndPoints_ALT_AND_AFP.size(): " + startEndPoints_ALT_AND_AFP.size());
         }
         // Reformat startEndPoints_ALT_AND_AFP
-        int startPointIndex = 0;
+
         ArrayList<ArrayList<ArrayList<Double>>> newStartEndPoints_ALT_AND_AFP = new ArrayList<>();
-//        for (int k=1; k>=0; k--) {
         for (int k=0; k<2; k++) {
             ArrayList<ArrayList<Double>> arr = new ArrayList<>();
             for (int i=0; i<startEndPoints_ALT_AND_AFP.size(); i++) {

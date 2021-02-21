@@ -1,3 +1,5 @@
+import org.jfree.ui.ApplicationFrame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -5,13 +7,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ComboBoxExample {
+public class ComboBoxExample  extends ApplicationFrame {
     JFrame f;
     public JPanel panel;
     boolean shapeletInit = false;
     boolean timeseriesInit = false;
 
     ComboBoxExample(){
+        super("ComboBox");
         f=new JFrame("ComboBox Example");
         final JLabel label = new JLabel();
         label.setHorizontalAlignment(JLabel.CENTER);
@@ -37,6 +40,7 @@ public class ComboBoxExample {
     }
 
     ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart dualAxischart, LineChartExample lineChart, TextAreaExample labelBox){
+        super("ComboBox");
 
         final JLabel label = new JLabel();
         final int[] previousSwitchLabel = {-1, -1};
@@ -70,7 +74,7 @@ public class ComboBoxExample {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setPreferredSize(new Dimension(300,100));
+        panel.setMinimumSize(new Dimension(300,100));
         JPanel panelShapeletAndTimeseries = new JPanel();
         panelShapeletAndTimeseries.setLayout(new BorderLayout());
         panelShapeletAndTimeseries.setPreferredSize(new Dimension(200,200));
@@ -98,6 +102,7 @@ public class ComboBoxExample {
 
         // Set the panel globally
         setPanel(panel);
+
 //        f=new JFrame("ComboBox Example");
 //        f.add(cbLabel);
 //        f.add(cb);
