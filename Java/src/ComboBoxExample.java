@@ -98,7 +98,6 @@ public class ComboBoxExample {
 
         // Set the panel globally
         setPanel(panel);
-
 //        f=new JFrame("ComboBox Example");
 //        f.add(cbLabel);
 //        f.add(cb);
