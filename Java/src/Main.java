@@ -105,12 +105,13 @@ public class Main {
         int chartIndex0 = 0;
         int chartIndex1 = 1;
         int chartIndex2 = 2;
-        ArrayList<ChartPanel> priceEstimatorPanelArr = regressionChart.getPanelArr();
+        ArrayList<ChartPanel> estimatorPanelArr = regressionChart.getPanelArr();
         JPanel regressionChartPanel = new JPanel();
-        regressionChartPanel.setPreferredSize(new Dimension(1350, 350));
-        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex0));
-        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex1));
-        regressionChartPanel.add(priceEstimatorPanelArr.get(chartIndex2));
+        regressionChartPanel.setLayout(new BoxLayout(regressionChartPanel, BoxLayout.X_AXIS));
+        regressionChartPanel.setPreferredSize(new Dimension(1500, 350));
+        regressionChartPanel.add(estimatorPanelArr.get(chartIndex0));
+        regressionChartPanel.add(estimatorPanelArr.get(chartIndex1));
+        regressionChartPanel.add(estimatorPanelArr.get(chartIndex2));
         JScrollPane regressionChartScrollPane = new JScrollPane(regressionChartPanel);
         regressionChartScrollPane.setPreferredSize(new Dimension(1000, 300));
         panel_2_1.setLayout(new BoxLayout(panel_2_1, BoxLayout.X_AXIS));

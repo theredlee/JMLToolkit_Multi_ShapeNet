@@ -34,13 +34,6 @@ public class RegressionChartExample extends ApplicationFrame {
     JFreeChart chart0;
     JFreeChart chart1;
 
-    public static void main(String[] args) throws IOException {
-        com.technobium.regression.RegressionChartExample demo = new com.technobium.regression.RegressionChartExample("prices.txt");
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
-    }
-
     public RegressionChartExample(String inputFileName) throws IOException {
         super("Technobium - Linear Regression");
 
@@ -51,29 +44,29 @@ public class RegressionChartExample extends ApplicationFrame {
         chart = createChart(inputData);
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 220));
         setContentPane(chartPanel);
     }
 
-    public RegressionChartExample(ArrayList<ArrayList<Double>> localMultArr) {
-        super("Technobium - Linear Regression");
-
-        // Read sample data from prices.txt file
-        int chartIndex = 0;
-        inputData = createDataset(chartIndex, localMultArr);
-
-        // Create the chart using the sample data
-        chart = createChart(inputData);
-
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(500, 300));
-        // Set the panel globally
-        setPanel(chartPanel);
-        setContentPane(chartPanel);
-
-        // Draw chart
-        drawRegressionLine();
-    }
+//    public RegressionChartExample(ArrayList<ArrayList<Double>> localMultArr) {
+//        super("Technobium - Linear Regression");
+//
+//        // Read sample data from prices.txt file
+//        int chartIndex = 0;
+//        inputData = createDataset(chartIndex, localMultArr);
+//
+//        // Create the chart using the sample data
+//        chart = createChart(inputData);
+//
+//        ChartPanel chartPanel = new ChartPanel(chart);
+//        chartPanel.setPreferredSize(new Dimension(500, 300));
+//        // Set the panel globally
+//        setPanel(chartPanel);
+//        setContentPane(chartPanel);
+//
+//        // Draw chart
+//        drawRegressionLine();
+//    }
 
     public RegressionChartExample(ArrayList<Double> localMultArr, ArrayList<Double> localTimeseriesLabelArr) {
         super("Technobium - Linear Regression");
@@ -111,7 +104,7 @@ public class RegressionChartExample extends ApplicationFrame {
         setContentPane(chartPanel);
 
         // Draw chart
-        drawRegressionLine();
+        drawRegressionLine(chart);
     }
 
     public XYDataset createDatasetFromFile(String fileName) throws IOException {
@@ -131,6 +124,7 @@ public class RegressionChartExample extends ApplicationFrame {
             }
         }
         scanner.close();
+
         dataset.addSeries(series);
 
         return dataset;
@@ -166,7 +160,7 @@ public class RegressionChartExample extends ApplicationFrame {
         int label1Count = 0;
 
         XYSeriesCollection dataset = new XYSeriesCollection();
-        XYSeries series = new XYSeries("Real estate item");
+        XYSeries series = new XYSeries("Label " + index + " timeseries's distance to hyperplane");
 
         // Read the price and the living area
         for (int i=0; i<localMultArr.size(); i++) {
@@ -197,7 +191,7 @@ public class RegressionChartExample extends ApplicationFrame {
         double distance;
 
         XYSeriesCollection dataset = new XYSeriesCollection();
-        XYSeries series = new XYSeries("Real estate item");
+        XYSeries series = new XYSeries("Two-label timeseries's distance to hyperplane");
 
         // Read the price and the living area
         for (int i=0; i<localMultArr.size(); i++) {
@@ -211,7 +205,7 @@ public class RegressionChartExample extends ApplicationFrame {
         return dataset;
     }
 
-    private void drawRegressionLine() {
+    private void drawRegressionLine(JFreeChart chart) {
         // Get the parameters 'a' and 'b' for an equation y = a + b * x,
         // fitted to the inputData using ordinary least squares regression.
         // a - regressionParameters[0], b - regressionParameters[1]
@@ -238,7 +232,7 @@ public class RegressionChartExample extends ApplicationFrame {
     private JFreeChart createChart(XYDataset inputData) {
         // Create the chart using the data read from the prices.txt file
         JFreeChart chart = ChartFactory.createScatterPlot(
-                "Price for living area", "Price", "Living area", inputData,
+                "SVM presenter", "Number of timeseries", "Distance to hyperplane", inputData,
                 PlotOrientation.VERTICAL, true, true, false);
 
         XYPlot plot = chart.getXYPlot();
@@ -247,23 +241,27 @@ public class RegressionChartExample extends ApplicationFrame {
     }
 
     private JFreeChart createChart(int index, XYDataset inputData) {
+
         // Create the chart using the data read from the prices.txt file
         JFreeChart chart = ChartFactory.createScatterPlot(
-                "Price for living area", "Price", "Living area", inputData,
+                "SVM presenter", "Number of timeseries", "Distance to hyperplane", inputData,
                 PlotOrientation.VERTICAL, true, true, false);
 
         XYPlot plot = chart.getXYPlot();
 
         Color color;
         if (index==-1) {
-            color = Color.blue;
+
+            color = Color.ORANGE;
+            plot.getRenderer().setSeriesPaint(0, color);
         }else if (index==0) {
-            color = Color.RED;
+            color = Color.BLUE;
+            plot.getRenderer().setSeriesPaint(0, color);
         }else {
-            color = Color.orange;
+            color = Color.RED;
+            plot.getRenderer().setSeriesPaint(0, color);
         }
 
-        plot.getRenderer().setSeriesPaint(0, color);
         return chart;
     }
 
@@ -281,5 +279,12 @@ public class RegressionChartExample extends ApplicationFrame {
 
     public ArrayList<ChartPanel> getPanelArr() {
         return panelArr;
+    }
+
+    public static void main(String[] args) throws IOException {
+        com.technobium.regression.RegressionChartExample demo = new com.technobium.regression.RegressionChartExample("prices.txt");
+        demo.pack();
+        RefineryUtilities.centerFrameOnScreen(demo);
+        demo.setVisible(true);
     }
 }
