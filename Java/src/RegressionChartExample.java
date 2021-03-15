@@ -33,6 +33,8 @@ public class RegressionChartExample extends ApplicationFrame {
     JFreeChart chart;
     JFreeChart chart0;
     JFreeChart chart1;
+    final int width = 300;
+    final int height = 220;
 
     public RegressionChartExample(String inputFileName) throws IOException {
         super("Technobium - Linear Regression");
@@ -44,29 +46,9 @@ public class RegressionChartExample extends ApplicationFrame {
         chart = createChart(inputData);
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 220));
+        chartPanel.setPreferredSize(new java.awt.Dimension(width, height));
         setContentPane(chartPanel);
     }
-
-//    public RegressionChartExample(ArrayList<ArrayList<Double>> localMultArr) {
-//        super("Technobium - Linear Regression");
-//
-//        // Read sample data from prices.txt file
-//        int chartIndex = 0;
-//        inputData = createDataset(chartIndex, localMultArr);
-//
-//        // Create the chart using the sample data
-//        chart = createChart(inputData);
-//
-//        ChartPanel chartPanel = new ChartPanel(chart);
-//        chartPanel.setPreferredSize(new Dimension(500, 300));
-//        // Set the panel globally
-//        setPanel(chartPanel);
-//        setContentPane(chartPanel);
-//
-//        // Draw chart
-//        drawRegressionLine();
-//    }
 
     public RegressionChartExample(ArrayList<Double> localMultArr, ArrayList<Double> localTimeseriesLabelArr) {
         super("Technobium - Linear Regression");
@@ -87,11 +69,11 @@ public class RegressionChartExample extends ApplicationFrame {
         chart1 = createChart(chartIndex1, inputData1);
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(400, 300));
+        chartPanel.setPreferredSize(new Dimension(width, height));
         ChartPanel chartPanel0 = new ChartPanel(chart0);
-        chartPanel0.setPreferredSize(new Dimension(400, 300));
+        chartPanel0.setPreferredSize(new Dimension(width, height));
         ChartPanel chartPanel1 = new ChartPanel(chart1);
-        chartPanel1.setPreferredSize(new Dimension(400, 300));
+        chartPanel1.setPreferredSize(new Dimension(width, height));
 
         ArrayList<ChartPanel> aChartPanelArr = new ArrayList<>();
         aChartPanelArr.add(chartPanel);

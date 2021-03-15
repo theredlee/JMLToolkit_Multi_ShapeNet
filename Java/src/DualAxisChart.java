@@ -45,6 +45,9 @@ public class DualAxisChart extends ApplicationFrame {
     private ArrayList<ArrayList<ArrayList<Double>>> localTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     private ArrayList<ArrayList<Double>> localShapelet = new ArrayList<ArrayList<Double>>();
     final int topK = 16;
+    final int width = 500;
+    final int height = 300;
+    final int dim_cnt = 2;
 
     public DualAxisChart(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localShapeletLabelArr, ArrayList<ArrayList<ArrayList<Double>>> startEndPoints_ALT_AND_AFP) {
         super("DualAxisChart");
@@ -64,29 +67,23 @@ public class DualAxisChart extends ApplicationFrame {
             for (int j=0; j<chartArr.size(); j++) {
                 JFreeChart chart = chartArr.get(j);
                 ChartPanel chartPanel = new ChartPanel(chart);
-                if (j==0) {
-                    // j=0: shapelet chart
-                    chartPanel.setPreferredSize(
-                            new Dimension(850, 300));
 
-                } else {
-                    // j=1: timeseries chart
-                    chartPanel.setPreferredSize(
-                            new Dimension(850, 500));
-                }
+                chartPanel.setPreferredSize(
+                        new Dimension(width, height));
+
                 chartPanelArr.add(chartPanel);
             }
         }
 
         JPanel panel = new JPanel();
 //        panel.setLayout(new GridLayout(4, 1));
-        panel.setPreferredSize(new Dimension(850, 1800));
+        panel.setPreferredSize(new Dimension(width, height*5));
         for (int i=0; i<chartPanelArr.size(); i++) {
             panel.add(chartPanelArr.get(i));
         }
 
         JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setPreferredSize(new Dimension(900,1100));
+        scrollPane.setPreferredSize(new Dimension(width,height*5));
          setContentPane(scrollPane);
         // Set the panel globally
 //        setScrollPane(scrollPane);
@@ -363,7 +360,7 @@ public class DualAxisChart extends ApplicationFrame {
         // Index 1: max
         minMaxArr.add(min);
         minMaxArr.add(max);
-        
+
         return minMaxArr;
     }
 
@@ -400,21 +397,6 @@ public class DualAxisChart extends ApplicationFrame {
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------
 
-    public DualAxisChart(String titel, ArrayList<ArrayList<ArrayList<Double>>> localTimeseries) {
-        super(titel);
-
-        // set localTimeseries
-        setLocalTimeseries(localTimeseries);
-
-        final JFreeChart chart = createChart();
-        final ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(
-                new Dimension(400, 300));
-        setContentPane(chartPanel);
-        // Set the panel globally
-        setChartPanel(chartPanel);
-    }
-
     public DualAxisChart(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localShapeletLabelArr) {
         super("DualAxisChart");
 
@@ -429,19 +411,19 @@ public class DualAxisChart extends ApplicationFrame {
             final JFreeChart chart = createChart(index, timesriesDimension);
             final ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(
-                    new Dimension(400, 700));
+                    new Dimension(width, height));
             chartPanelArr.add(chartPanel);
         }
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1));
-        panel.setPreferredSize(new Dimension(400, 700*5));
+        panel.setLayout(new GridLayout(dim_cnt, 1));
+        panel.setPreferredSize(new Dimension(width, height*dim_cnt));
         for (int i=0; i<chartPanelArr.size(); i++) {
             panel.add(chartPanelArr.get(i));
         }
 
         JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setPreferredSize(new Dimension(400,800));
+        scrollPane.setPreferredSize(new Dimension(width,height*dim_cnt));
         // setContentPane(scrollPane);
         // Set the panel globally
         setScrollPane(scrollPane);
@@ -473,22 +455,22 @@ public class DualAxisChart extends ApplicationFrame {
 
         // -----------------------------------------------
 
-        final CategoryDataset timeserise2 = createTimeserise(defaultInex, defaultDimension1);
-        final NumberAxis rangeAxis2 = new NumberAxis("Timeserise D2");
-        rangeAxis2.setStandardTickUnits(
-                NumberAxis.createIntegerTickUnits());
-        // Line render
-        final CategoryItemRenderer renderer2 = new LineAndShapeRenderer();
-        renderer2.setSeriesPaint(0, Color.blue);
-        renderer2.setBaseToolTipGenerator(
-                new StandardCategoryToolTipGenerator());
-        final CategoryPlot subplot2 =
-                new CategoryPlot(timeserise2, null,
-                        rangeAxis2, renderer2);
-        subplot2.setDomainGridlinesVisible(true);
-
-        subplot2.setForegroundAlpha(0.7f);
-        subplot2.setRenderer(0, renderer2);
+//        final CategoryDataset timeserise2 = createTimeserise(defaultInex, defaultDimension1);
+//        final NumberAxis rangeAxis2 = new NumberAxis("Timeserise D2");
+//        rangeAxis2.setStandardTickUnits(
+//                NumberAxis.createIntegerTickUnits());
+//        // Line render
+//        final CategoryItemRenderer renderer2 = new LineAndShapeRenderer();
+//        renderer2.setSeriesPaint(0, Color.blue);
+//        renderer2.setBaseToolTipGenerator(
+//                new StandardCategoryToolTipGenerator());
+//        final CategoryPlot subplot2 =
+//                new CategoryPlot(timeserise2, null,
+//                        rangeAxis2, renderer2);
+//        subplot2.setDomainGridlinesVisible(true);
+//
+//        subplot2.setForegroundAlpha(0.7f);
+//        subplot2.setRenderer(0, renderer2);
 
         final CategoryAxis domainAxis = new CategoryAxis("Over");
 
@@ -496,7 +478,7 @@ public class DualAxisChart extends ApplicationFrame {
                 new CombinedDomainCategoryPlot(domainAxis);
 
         plot.add(subplot1, 1);
-        plot.add(subplot2, 1);
+//        plot.add(subplot2, 1);
 
         final JFreeChart chart = new JFreeChart(
                 "Score Bord", new Font("SansSerif", Font.BOLD, 12),
@@ -535,23 +517,23 @@ public class DualAxisChart extends ApplicationFrame {
         // ---------------------------------------------------------------
 
         // TimeseriseAndShapelet
-        final CategoryDataset timeseriseAndShapelet = createTimeseriseAndShapelet(shapeletIndex, defaultTimeseriesInex, timesriesDimension);
-        final NumberAxis rangeAxisTimeseries = new NumberAxis("Timeserise D" + timesriesDimension);
-        rangeAxisTimeseries.setStandardTickUnits(
-                NumberAxis.createIntegerTickUnits());
-        // Line render
-        final CategoryItemRenderer rendererTimeseriesAndShapelet = new LineAndShapeRenderer();
-        rendererTimeseriesAndShapelet.setSeriesPaint(seriesNo, Color.red);
-        rendererTimeseriesAndShapelet.setBaseToolTipGenerator(
-                new StandardCategoryToolTipGenerator());
-        final CategoryPlot subplotTimeseriesAndShapelet =
-                new CategoryPlot(timeseriseAndShapelet, null,
-                        rangeAxisTimeseries, rendererTimeseriesAndShapelet);
-        subplotTimeseriesAndShapelet.setDomainGridlinesVisible(true);;
-
-        subplotTimeseriesAndShapelet.setForegroundAlpha(0.7f);
-        // Add timeseries into timeseries chart
-        subplotTimeseriesAndShapelet.setRenderer(timeseriesRenderIndex, rendererTimeseriesAndShapelet);
+//        final CategoryDataset timeseriseAndShapelet = createTimeseriseAndShapelet(shapeletIndex, defaultTimeseriesInex, timesriesDimension);
+//        final NumberAxis rangeAxisTimeseries = new NumberAxis("Timeserise D" + timesriesDimension);
+//        rangeAxisTimeseries.setStandardTickUnits(
+//                NumberAxis.createIntegerTickUnits());
+//        // Line render
+//        final CategoryItemRenderer rendererTimeseriesAndShapelet = new LineAndShapeRenderer();
+//        rendererTimeseriesAndShapelet.setSeriesPaint(seriesNo, Color.red);
+//        rendererTimeseriesAndShapelet.setBaseToolTipGenerator(
+//                new StandardCategoryToolTipGenerator());
+//        final CategoryPlot subplotTimeseriesAndShapelet =
+//                new CategoryPlot(timeseriseAndShapelet, null,
+//                        rangeAxisTimeseries, rendererTimeseriesAndShapelet);
+//        subplotTimeseriesAndShapelet.setDomainGridlinesVisible(true);;
+//
+//        subplotTimeseriesAndShapelet.setForegroundAlpha(0.7f);
+//        // Add timeseries into timeseries chart
+//        subplotTimeseriesAndShapelet.setRenderer(timeseriesRenderIndex, rendererTimeseriesAndShapelet);
 
         // -----------------------------------------------
 
@@ -561,7 +543,7 @@ public class DualAxisChart extends ApplicationFrame {
                 new CombinedDomainCategoryPlot(domainAxis);
 
         plot.add(subplotShapelet, 1);
-        plot.add(subplotTimeseriesAndShapelet, 2);
+//        plot.add(subplotTimeseriesAndShapelet, 2);
 
         final JFreeChart chart = new JFreeChart(
                 "Score Bord", new Font("SansSerif", Font.BOLD, 8),
@@ -726,156 +708,3 @@ public class DualAxisChart extends ApplicationFrame {
 //        chart.setVisible(true);
     }
 }
-
-//    public DualAxisChart(String titel) {
-//        super(titel);
-//
-//        final JFreeChart chart = createChart();
-//        final ChartPanel chartPanel = new ChartPanel(chart);
-//        chartPanel.setPreferredSize(
-//                new java.awt.Dimension(600, 450));
-//        setContentPane(chartPanel);
-//    }
-//
-//        private CategoryDataset createRunDataset1() {
-//        final DefaultCategoryDataset dataset =
-//                new DefaultCategoryDataset();
-//
-//        double[] run = run()[0];
-//
-//        for (int i = 0; i < run.length; i++) {
-//            dataset.addValue(run[i], team1+
-//                    " Run", "" + (i + 1));
-//        }
-//        return dataset;
-//    }
-//
-//    private CategoryDataset createRunDataset2() {
-//        final DefaultCategoryDataset dataset =
-//                new DefaultCategoryDataset();
-//
-//        double[] run = run()[1];
-//
-//        for (int i = 0; i < run.length; i++) {
-//            dataset.addValue(run[i], team2+
-//                    " Run", "" + (i + 1));
-//        }
-//        return dataset;
-//    }
-//
-//    private CategoryDataset createRunRateDataset1() {
-////         ----------------------------------------------
-//        final DefaultCategoryDataset dataset
-//                = new DefaultCategoryDataset();
-//
-//        double[] run = run()[0];
-//        float num = 0;
-//
-//        for (int i = 0; i < run.length; i++) {
-//            num += run[i];
-//            dataset.addValue(num / (i + 1),
-//                    team1+" Runrate", "" + (i + 1));
-//        }
-//        return dataset;
-////         ----------------------------------------------
-//    }
-//
-//    private CategoryDataset createRunRateDataset2() {
-//        final DefaultCategoryDataset dataset =
-//                new DefaultCategoryDataset();
-//
-//        double[] run = run()[1];
-//        float num = 0;
-//
-//        for (int i = 0; i < run.length; i++) {
-//            num += run[i];
-//            dataset.addValue(num / (i + 1),
-//                    team2+" Runrate", "" + (i + 1));
-//        }
-//        return dataset;
-//    }
-//
-//    // For reference
-//    private JFreeChart createChart_Initial() {
-//        final int defaultInex = 0;
-//
-//        final CategoryDataset dataset1 = createRunDataset1();
-//        final NumberAxis rangeAxis1 = new NumberAxis("Run");
-//        rangeAxis1.setStandardTickUnits(
-//                NumberAxis.createIntegerTickUnits());
-//        // Bar render
-//        final BarRenderer renderer1 = new BarRenderer();
-//        renderer1.setSeriesPaint(0, Color.red);
-//        renderer1.setBaseToolTipGenerator(
-//                new StandardCategoryToolTipGenerator());
-//        final CategoryPlot subplot1 =
-//                new CategoryPlot(dataset1, null,
-//                        rangeAxis1, renderer1);
-//        subplot1.setDomainGridlinesVisible(true);
-//
-////        final CategoryDataset runrateDataset1
-////                = createRunRateDataset1();
-//        final CategoryDataset timeserise1
-//                = createTimeserise0(defaultInex);
-//        final ValueAxis axis2 = new NumberAxis("Run Rate");
-//        subplot1.setRangeAxis(1, axis2);
-////        subplot1.setDataset(1, runrateDataset1);
-//        subplot1.setDataset(1, timeserise1);
-//        subplot1.mapDatasetToRangeAxis(1, 1);
-//        // Line render
-//        final CategoryItemRenderer runrateRenderer1
-//                = new LineAndShapeRenderer();
-//        runrateRenderer1.setSeriesPaint(0, Color.red);
-//
-//        subplot1.setForegroundAlpha(0.7f);
-//        subplot1.setRenderer(0, renderer1);
-//        subplot1.setRenderer(1, runrateRenderer1);
-//
-//        // -----------------------------------------------
-//
-//        final CategoryDataset dataset2 = createRunDataset2();
-//        final NumberAxis rangeAxis2 = new NumberAxis("Run");
-//        rangeAxis2.setStandardTickUnits(
-//                NumberAxis.createIntegerTickUnits());
-//        // Bar render
-//        final BarRenderer renderer2 = new BarRenderer();
-//        renderer2.setSeriesPaint(0, Color.blue);
-//        renderer2.setBaseToolTipGenerator(
-//                new StandardCategoryToolTipGenerator());
-//        final CategoryPlot subplot2 =
-//                new CategoryPlot(dataset2, null,
-//                        rangeAxis2, renderer2);
-//        subplot2.setDomainGridlinesVisible(true);
-//
-////        final CategoryDataset runrateDataset2 =
-////                createRunRateDataset2();
-//
-//        final CategoryDataset timeserise2 =
-//                createTimeserise1(defaultInex);
-//
-//        final ValueAxis axis3 = new NumberAxis("Run Rate");
-//        subplot2.setRangeAxis(1, axis3);
-////        subplot2.setDataset(1, runrateDataset2);
-//        subplot2.setDataset(1, timeserise2);
-//        subplot2.mapDatasetToRangeAxis(1, 1);
-//        // Line render
-//        final CategoryItemRenderer runrateRenderer2 =
-//                new LineAndShapeRenderer();
-//        runrateRenderer2.setSeriesPaint(0, Color.blue);
-//
-//        subplot2.setForegroundAlpha(0.7f);
-////        subplot2.setRenderer(0, renderer2);
-//        subplot2.setRenderer(1, runrateRenderer2);
-//
-//        final CategoryAxis domainAxis = new CategoryAxis("Over");
-//        final CombinedDomainCategoryPlot plot =
-//                new CombinedDomainCategoryPlot(domainAxis);
-//
-//        plot.add(subplot1, 1);
-//        plot.add(subplot2, 1);
-//
-//        final JFreeChart chart = new JFreeChart(
-//                "Score Bord", new Font("SansSerif", Font.BOLD, 12),
-//                plot, true);
-//        return chart;
-//    }

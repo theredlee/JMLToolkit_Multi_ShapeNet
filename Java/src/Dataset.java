@@ -29,21 +29,19 @@ public class Dataset {
     private boolean normalization = false;
     private int testFileNo = 3;
 
+    final String win = "M:\\JMLToolkit_Multi_ShapeNet-master\\datasets\\";
+    final String mac = "/Users/student/Documents/RL_Folder/RedLee/datasets/";
+    final String sys = mac;
+
     public Dataset(boolean normalization) {
         this.normalization = false;
     }
-
+// Testing part------->
     public void loadShapelet_testing() throws IOException {
         // 2576
         // System.out.println(System.getProperty("user.dir"));
-        // /Users/leone/ShapeNet
-        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\rJava
-//        String file_shapelet = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
-//        String file_dim = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
-        String file_shapelet = "/Users/student/Documents/RL_Folder/RedLee/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
-        String file_dim = "/Users/student/Documents/RL_Folder/RedLee/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
-//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
-//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
+        String file_shapelet = sys + "raw-alt-afp-raw/shapelet_0" + testFileNo + ".txt";
+        String file_dim = sys + "raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
 
         ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
@@ -95,12 +93,8 @@ public class Dataset {
     public void loadTimeseries_testing() throws IOException {
         // 2576
         // System.out.println("System.getProperty(\"user.dir\"): " + System.getProperty("user.dir"));
-        // /Users/leone/ShapeNet
-        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-//        String expected_value = "Hello, world!";
-//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
-        String file1 = "/Users/student/Documents/RL_Folder/RedLee/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
-//        String file1 = "M:\\Redlee\\ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
+
+        String file1 = sys + "raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
 
         String[] fileArr = {file1};
 
@@ -165,11 +159,8 @@ public class Dataset {
     public void loadStartEndPoints_testing() throws IOException {
         // 2576
         // System.out.println("System.getProperty(\"user.dir\"): " + System.getProperty("user.dir"));
-        // /Users/leone/ShapeNet
-        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-//        String expected_value = "Hello, world!";
-//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/raw-alt-afp-raw/ALT_AND_AFP_0" + testFileNo + ".txt";
-        String file1 = "/Users/student/Documents/RL_Folder/RedLee/datasets/raw-alt-afp-raw/StartEndPoints0" + testFileNo + ".txt";
+
+        String file1 = sys + "raw-alt-afp-raw/StartEndPoints0" + testFileNo + ".txt";
 
         String[] fileArr = {file1};
 
@@ -245,18 +236,14 @@ public class Dataset {
     public ArrayList<ArrayList<ArrayList<Double>>> getGlobalStartEndPoints_ALT_AND_AFP() {
         return globalStartEndPoints_ALT_AND_AFP;
     }
-
+// End testing part------->
     // ------------------------------------------------------------------------------------------
 
     public void loadShapelet() throws IOException {
         // 2576
         // System.out.println(System.getProperty("user.dir"));
-        // /Users/leone/ShapeNet
-        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-        String file_shapelet = "/Users/student/Documents/RL_Folder/RedLee/datasets/shapeNet/shapelet.txt";
-        String file_dim = "/Users/student/Documents/RL_Folder/RedLee/datasets/shapeNet/shapelet_dim.txt";
-//        String file_shapelet = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet.txt";
-//        String file_dim = "M:\\Redlee\\ShapeNet/datasets/shapeNet/shapelet_dim.txt";
+        String file_shapelet = sys + "ALT_AFP_ShapeNet/ALT_AFP/shapelet.txt";
+        String file_dim = sys + "ALT_AFP_ShapeNet/ALT_AFP/shapelet_dim.txt";
 
         ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
         ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
@@ -287,6 +274,7 @@ public class Dataset {
         line = reader.readLine();
         while (line != null) {
             ArrayList<Double> valArr = new ArrayList<Double>();
+            // Only one value per line
             double val = Double.valueOf(line);
             shapeletLabelArr.add(val);
 
@@ -306,15 +294,8 @@ public class Dataset {
     public void loadTimeseries() throws IOException {
         // 2576
         // System.out.println("System.getProperty(\"user.dir\"): " + System.getProperty("user.dir"));
-        // /Users/leone/ShapeNet
-        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-//        String expected_value = "Hello, world!";
-//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-//        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-        String file1 = "/Users/student/Documents/RL_Folder/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-        String file2 = "/Users/student/Documents/RL_Folder/RedLee/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-//        String file1 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-//        String file2 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        String file1 = sys + "ALT_AFP_ShapeNet/ALT_AFP/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
+        String file2 = sys + "ALT_AFP_ShapeNet/ALT_AFP/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
 
         String[] fileArr = {file1, file2};
 
@@ -392,9 +373,7 @@ public class Dataset {
 
     public void loadCoef() throws IOException {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
-//        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/coef.txt";
-        String file = "/Users/student/Documents/RL_Folder/RedLee/datasets/Distance/coef.txt";
-//        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/coef.txt";
+        String file = sys + "Distance/coef.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -415,10 +394,7 @@ public class Dataset {
 
     public void loadIntercept() throws IOException {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
-        String expected_value = "Hello, world!";
-//        String file ="/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/intercept.txt";
-        String file = "/Users/student/Documents/RL_Folder/RedLee/datasets/Distance/intercept.txt";
-//        String file = "M:\\Redlee\\ShapeNet/datasets/Distance/intercept.txt";
+        String file = sys + "Distance/intercept.txt";
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
@@ -439,13 +415,8 @@ public class Dataset {
 
     public void loadFeatures() throws IOException {
         // System.getProperty("user.dir"): /Users/leone/ShapeNet
-        String expected_value = "Hello, world!";
-//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_train.txt";
-//        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/Distance/feature_test.txt";
-        String file1 = "/Users/student/Documents/RL_Folder/RedLee/datasets/Distance/feature_train.txt";
-        String file2 = "/Users/student/Documents/RL_Folder/RedLee/datasets/Distance/feature_test.txt";
-//        String file1 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_train.txt";
-//        String file2 = "M:\\Redlee\\ShapeNet/datasets/Distance/feature_test.txt";
+        String file1 = sys + "Distance/feature_train.txt";
+        String file2 = sys + "Distance/feature_test.txt";
 
         String[] fileArr = {file1, file2};
 
@@ -474,15 +445,8 @@ public class Dataset {
     public void loadTimeseries_5Dim() throws IOException {
         // 2576
         // System.out.println("System.getProperty(\"user.dir\"): " + System.getProperty("user.dir"));
-        // /Users/leone/ShapeNet
-        // C:\Users\e9214294\Desktop\RedLee\JMLToolkit_Multi_ShapeNet-master\Java
-//        String expected_value = "Hello, world!";
-//        String file1 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-//        String file2 = "/Users/leone/Documents/*Summer_research/*ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
-        String file1 = "/Users/student/Documents/RL_Folder/RedLee/datasets/5Dim/train.txt";
-        String file2 = "/Users/student/Documents/RL_Folder/RedLee/datasets/5Dim/test.txt";
-//        String file1 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TRAIN.arff";
-//        String file2 = "M:\\Redlee\\ShapeNet/datasets/ALT_AND_AFP_ARFF/ALT_AND_AFP_TEST.arff";
+        String file1 = sys + "5Dim/train.txt";
+        String file2 = sys + "5Dim/test.txt";
 
         String[] fileArr = {file1, file2};
 
@@ -867,18 +831,6 @@ public class Dataset {
 
     public static void main(String[] args) throws IOException {
         Dataset aDataset = new Dataset(false);
-//        aDataset.loadShapelet_testing();
-//        aDataset.loadTimeseries_testing();
-        // -------------------------------
-//        aDataset.loadTimeseries();
-//        aDataset.getNormalTimeseries(aDataset.getGlobalRawTimeseries(),2);
-//        aDataset.loadShapelet();
-//        aDataset.loadTimeseries();
-//        aDataset.loadCoef();
-//        aDataset.loadIntercept();
-//        aDataset.loadFeatures();
-//        aDataset.multiplication_PN_TF();
-        //---------
         aDataset.loadTimeseries_5Dim();
     }
 }

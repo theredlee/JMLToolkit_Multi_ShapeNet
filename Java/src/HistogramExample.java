@@ -16,6 +16,8 @@ public class HistogramExample extends JFrame {
 
     public JFreeChart histogramChart;
     public ChartPanel chartPanel;
+    final int width = 220;
+    final int height = 220;
 
     public HistogramExample() {
         HistogramDataset dataset = new HistogramDataset();
@@ -50,7 +52,7 @@ public class HistogramExample extends JFrame {
         renderer.setSeriesPaint(2, new Color(0, 1, 0, 0.8f));
 
         ChartPanel aChartPanel = new ChartPanel(histogram);
-        aChartPanel.setBounds(0, 0, 905-540, 350);
+        aChartPanel.setBounds(0, 0, width, height);
 
         JFrame frame = new JFrame();
 

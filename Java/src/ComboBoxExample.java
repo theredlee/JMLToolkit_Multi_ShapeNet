@@ -39,7 +39,7 @@ public class ComboBoxExample  extends ApplicationFrame {
         });
     }
 
-    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart dualAxischart, LineChartExample lineChart, TextAreaExample labelBox){
+    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart_4 dualAxischart, TextAreaExample labelBox){
         super("ComboBox");
 
         final JLabel label = new JLabel();
@@ -178,7 +178,6 @@ public class ComboBoxExample  extends ApplicationFrame {
                     previousSwitchLabel[shapeletIndex] = selectedSwitchLabel[shapeletIndex];
                     selectedSwitch[shapeletIndex] = Integer.parseInt((String) cbShapelet.getItemAt(cbShapelet.getSelectedIndex()));
                     previousSwitch[shapeletIndex] = selectedSwitch[shapeletIndex];
-                    lineChart.setShapeletInChart(selectedSwitch[shapeletIndex]);
                 }
 
                 // System.out.println("previousSwitch[timeseriesIndex]: " + previousSwitch[timeseriesIndex] + ", selectedSwitch[timeseriesIndex]: " + selectedSwitch[timeseriesIndex]);
@@ -209,9 +208,6 @@ public class ComboBoxExample  extends ApplicationFrame {
                     dualAxischart.setTimeseriesInChart(selectedSwitch[timeseriesIndex]);
                 }
 
-                if (selectedSwitch[shapeletIndex] != previousSwitch[shapeletIndex]) {
-                    lineChart.setShapeletInChart(selectedSwitch[shapeletIndex]);
-                }
                 if (selectedSwitch[timeseriesIndex] != previousSwitch[timeseriesIndex]) {
                     dualAxischart.setTimeseriesInChart(selectedSwitch[timeseriesIndex]);
                 }

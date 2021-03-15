@@ -72,8 +72,8 @@ public class LineChartExample extends JFrame {
         // Set localShapelet
         setLocalShapelet(localShapelet);
 
-        final int defaultInex = 2;
-        final CategoryDataset shapelet1 = createShapelet(defaultInex);
+        final int defaultIndex = 0;
+        final CategoryDataset shapelet1 = createShapelet(defaultIndex);
 
         // ---------------------------------------------------------
 

@@ -14,7 +14,7 @@ import org.jfree.ui.ApplicationFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-
+// MultiShapelet and Multiple Timeseries
 public class DualAxisChart_2 extends ApplicationFrame {
 
     public ArrayList<ChartPanel> chartPanelArr = new ArrayList<>();
@@ -36,6 +36,9 @@ public class DualAxisChart_2 extends ApplicationFrame {
     private ArrayList<ArrayList<ArrayList<Double>>> localTimeseries = new ArrayList<ArrayList<ArrayList<Double>>>();
     private ArrayList<ArrayList<Double>> localShapelet = new ArrayList<ArrayList<Double>>();
     final int topK = 16;
+    final int width = 350;
+    final int height = 450;
+    final int dim_cnt = 2;
 
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------
@@ -54,19 +57,19 @@ public class DualAxisChart_2 extends ApplicationFrame {
             final JFreeChart chart = createChart(index, timesriesDimension);
             final ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(
-                    new Dimension(800, 700));
+                    new Dimension(width, height));
             chartPanelArr.add(chartPanel);
         }
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1));
-        panel.setPreferredSize(new Dimension(800, 700*5));
+        panel.setLayout(new GridLayout(dim_cnt, 1));
+        panel.setPreferredSize(new Dimension(width, height*dim_cnt));
         for (int i=0; i<chartPanelArr.size(); i++) {
             panel.add(chartPanelArr.get(i));
         }
 
         JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setPreferredSize(new Dimension(800,800));
+        scrollPane.setPreferredSize(new Dimension(width,height*dim_cnt));
         // setContentPane(scrollPane);
         // Set the panel globally
         setScrollPane(scrollPane);

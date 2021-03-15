@@ -18,6 +18,8 @@ import org.jfree.data.general.PieDataset;
 public class PieChartExample extends JFrame {
     private static final long serialVersionUID = 6294689542092367723L;
     public ChartPanel panel;
+    final int width = 220;
+    final int height = 220;
 
     public PieChartExample(String title) {
         super(title);
@@ -40,7 +42,7 @@ public class PieChartExample extends JFrame {
 
         // Create Panel
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(400, 300));
+        chartPanel.setPreferredSize(new Dimension(width, height));
         // Set the panel globally
         setPanel(chartPanel);
         setContentPane(chartPanel);
@@ -68,7 +70,7 @@ public class PieChartExample extends JFrame {
 
         // Create Panel
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(300, 300));
+        chartPanel.setPreferredSize(new Dimension(width, height));
         // Set the panel globally
         setPanel(chartPanel);
         setContentPane(chartPanel);
