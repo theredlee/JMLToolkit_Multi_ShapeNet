@@ -87,7 +87,7 @@ public class Main {
         // 1. Initialize comboBox and set panel for comboBox
         JPanel comboBoxPanel = comboBox.getPanel();
         panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
-        panel_1.setPreferredSize(new Dimension(300+20, frame.getHeight()));
+        panel_1.setPreferredSize(new Dimension(250+20, frame.getHeight()));
         panel_1.add(comboBoxPanel);
         panel_1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         frame.add(panel_1, BorderLayout.WEST);
@@ -107,8 +107,8 @@ public class Main {
         ArrayList<ChartPanel> estimatorPanelArr = regressionChart.getPanelArr();
         JPanel regressionChartPanel = new JPanel();
         regressionChartPanel.setLayout(new BoxLayout(regressionChartPanel, BoxLayout.X_AXIS));
-        int regress_width = 500;
-        int regress_height = 220;
+        int regress_width = 250;
+        int regress_height = 200;
         regressionChartPanel.setPreferredSize(new Dimension(regress_width, regress_height));
         regressionChartPanel.add(estimatorPanelArr.get(chartIndex0));
         regressionChartPanel.add(estimatorPanelArr.get(chartIndex1));

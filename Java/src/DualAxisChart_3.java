@@ -42,12 +42,12 @@ public class DualAxisChart_3 extends ApplicationFrame {
     final int dim_cnt = 2;
 
     Color[] ten_colors = {new Color(255,0,0), new Color(255,204,51), new Color(0,204,0), new Color(51,153,255), new Color(255,102,0), new Color(153,153,153), new Color(153,102,0), new Color(102,51,0), new Color(102,0,153), new Color(0,0,0)};
-
+    Color timeseries_color = new Color(153,0,0);
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------
 
     public DualAxisChart_3(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localShapeletLabelArr) {
-        super("DualAxisChart");
+        super("DualAxisChart_3");
 
         // set localTimeseries and localShapelet
         setLocalTimeseries(localTimeseries);
@@ -84,16 +84,16 @@ public class DualAxisChart_3 extends ApplicationFrame {
         final int shapeletRenderIndex = 0;
         final int timeseriesRenderIndex = 0;
         final int defaultTimeseriesFirstK = 10;
-        final int seriesNo = 0;
+        final int seriesNo_shapelet = 0;
 
         // Shapelet
         final CategoryDataset shapelet = createShapelet(shapeletIndex);
-        final NumberAxis rangeAxisShapelet = new NumberAxis("Shapelet D" + shapeletIndex);
+        final NumberAxis rangeAxisShapelet = new NumberAxis("Shapelet " + shapeletIndex + " - D" + classDimension);
         rangeAxisShapelet.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
         final CategoryItemRenderer rendererShapelet = new LineAndShapeRenderer();
-        rendererShapelet.setSeriesPaint(seriesNo, ten_colors[classDimension%10]);
+        rendererShapelet.setSeriesPaint(seriesNo_shapelet, ten_colors[classDimension%10]);
         rendererShapelet.setBaseToolTipGenerator(
                 new StandardCategoryToolTipGenerator());
 
@@ -110,12 +110,11 @@ public class DualAxisChart_3 extends ApplicationFrame {
 
         // TimeseriseAndShapelet
         final CategoryDataset timeserise = createTimeserise(shapeletIndex, defaultTimeseriesFirstK, classDimension);
-        final NumberAxis rangeAxisTimeseries = new NumberAxis("Timeserise D" + classDimension);
+        final NumberAxis rangeAxisTimeseries = new NumberAxis("Multi-Timeserise D" + classDimension);
         rangeAxisTimeseries.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
         final CategoryItemRenderer rendererTimeseries = new LineAndShapeRenderer();
-        rendererTimeseries.setSeriesPaint(seriesNo, ten_colors[classDimension%10]);
         rendererTimeseries.setBaseToolTipGenerator(
                 new StandardCategoryToolTipGenerator());
         final CategoryPlot subplotTimeseries =

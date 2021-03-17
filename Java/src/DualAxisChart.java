@@ -59,11 +59,14 @@ public class DualAxisChart extends ApplicationFrame {
         setLocalTimeseries(localTimeseries);
         setLocalShapelet(localShapelet);
 
+        // Get the maximum size of shapelets
+        int shapeletMaxLen = maxLen(localShapelet);
+
         // Set charts according to the shapelets
         for (int i=0; i<localShapelet.size(); i++) {
             int index = i;
             int classDimension = (int) ((double) localShapeletLabelArr.get(i));
-            final JFreeChart chart = createChart(index, classDimension);
+            final JFreeChart chart = createChart(index, classDimension, shapeletMaxLen);
             final ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(
                     new Dimension(width, height));
@@ -86,18 +89,18 @@ public class DualAxisChart extends ApplicationFrame {
         // setChartPanelArr(chartPanelArr);
     }
 
-    private JFreeChart createChart(int shapeletIndex, int classDimension) {
+    private JFreeChart createChart(int shapeletIndex, int classDimension, int shapeletMaxLen) {
         final int shapeletRenderIndex = 0;
-        final int seriesNo = 0;
+        final int seriesNo_shapelet = 0;
 
         // Shapelet
-        final CategoryDataset shapelet = createShapelet(shapeletIndex);
-        final NumberAxis rangeAxisShapelet = new NumberAxis("Shapelet D" + shapeletIndex);
+        final CategoryDataset shapelet = createShapelet(shapeletIndex, shapeletMaxLen);
+        final NumberAxis rangeAxisShapelet = new NumberAxis("Shapelet " + shapeletIndex + " - D" + classDimension);
         rangeAxisShapelet.setStandardTickUnits(
                 NumberAxis.createIntegerTickUnits());
         // Line render
         final CategoryItemRenderer rendererShapelet = new LineAndShapeRenderer();
-        rendererShapelet.setSeriesPaint(seriesNo, ten_colors[classDimension%10]);
+        rendererShapelet.setSeriesPaint(seriesNo_shapelet, ten_colors[classDimension%10]);
 
         rendererShapelet.setBaseToolTipGenerator(
                 new StandardCategoryToolTipGenerator());
@@ -164,18 +167,40 @@ public class DualAxisChart extends ApplicationFrame {
         return dataset;
     }
 
-    private CategoryDataset createShapelet(int index) {
+    private CategoryDataset createShapelet(int index, int shapeletMaxLen) {
         ArrayList<Double> shapelet = localShapelet.get(index);
 
         final DefaultCategoryDataset dataset
                 = new DefaultCategoryDataset();
 
-        for (int i = 0; i < shapelet.size(); i++) {
-            double val = shapelet.get(i);
-            dataset.addValue(val,
-                    label_Shapelet_testing, "" + (i + 1));
+        // e.g., currentShapeletSize = 5, shapeletMaxLen = 10
+        int currentShapeletSize = shapelet.size();
+
+        for (int i = 0; i < shapeletMaxLen; i++) {
+            if (i<currentShapeletSize) {
+                double val = shapelet.get(i);
+                dataset.addValue(val,
+                        label_Shapelet_testing, "" + (i + 1));
+            }else{
+                dataset.addValue(null,
+                        label_Shapelet_testing, "" + (i + 1));
+            }
         }
         return dataset;
+    }
+
+    private int maxLen(ArrayList<ArrayList<Double>> shapelets) {
+        ArrayList<Integer> size_arr = new ArrayList<>();
+
+        shapelets.forEach(shapelet->{
+            size_arr.add(shapelet.size());
+        }); {
+
+        }
+
+        int maxLen = Collections.max(size_arr);
+
+        return maxLen;
     }
 
     public double[][] run() {
@@ -207,19 +232,6 @@ public class DualAxisChart extends ApplicationFrame {
         final CategoryDataset timeserise1 = createTimeserise(index, dimension1);
         subplot0.setDataset(datesetIndex, timeserise0);
         subplot1.setDataset(datesetIndex, timeserise1);
-    }
-
-    public void setShapeletInChart(int index) {
-        //  datesetIndex = 0: timeseries plot, datesetIndex = 1: shapelet plot
-        final int datesetIndex = 1;
-        final int subPlotIndex0 = 0;
-        final int subPlotIndex1 = 1;
-        CategoryPlot subplot0 = (CategoryPlot) this.plot.getSubplots().get(subPlotIndex0);
-        CategoryPlot subplot1 = (CategoryPlot) this.plot.getSubplots().get(subPlotIndex1);
-        final CategoryDataset shapelet0 = createShapelet(index);
-        final CategoryDataset shapelet1 = createShapelet(index);
-        subplot0.setDataset(datesetIndex, shapelet0);
-        subplot1.setDataset(datesetIndex, shapelet1);
     }
 
     public ArrayList<ArrayList<ArrayList<Double>>> getLocalTimeseries() {

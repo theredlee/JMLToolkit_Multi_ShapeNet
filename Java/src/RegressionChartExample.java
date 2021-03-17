@@ -33,8 +33,8 @@ public class RegressionChartExample extends ApplicationFrame {
     JFreeChart chart;
     JFreeChart chart0;
     JFreeChart chart1;
-    final int width = 300;
-    final int height = 220;
+    final int width = 250;
+    final int height = 190;
 
     public RegressionChartExample(String inputFileName) throws IOException {
         super("Technobium - Linear Regression");
@@ -233,7 +233,6 @@ public class RegressionChartExample extends ApplicationFrame {
 
         Color color;
         if (index==-1) {
-
             color = Color.ORANGE;
             plot.getRenderer().setSeriesPaint(0, color);
         }else if (index==0) {

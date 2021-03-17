@@ -28,10 +28,12 @@ public class Dataset {
 
     private boolean normalization = false;
     private int testFileNo = 3;
+    final int width = 250;
+    final int height = 190;
 
-    final String win = "M:\\JMLToolkit_Multi_ShapeNet-master\\datasets\\";
+    final String win = "M:\\RedLee\\datasets\\";
     final String mac = "/Users/student/Documents/RL_Folder/DVP/RedLee/datasets/";
-    final String sys = mac;
+    final String sys = win;
 
     public Dataset(boolean normalization) {
         this.normalization = false;
