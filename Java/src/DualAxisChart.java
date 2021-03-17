@@ -1,25 +1,17 @@
 import java.awt.*;
 import java.util.*;
 
-import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
-import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CombinedDomainCategoryPlot;
-import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import java.awt.Color;
 
@@ -60,7 +52,7 @@ public class DualAxisChart extends ApplicationFrame {
         setLocalShapelet(localShapelet);
 
         // Get the maximum size of shapelets
-        int shapeletMaxLen = maxLen(localShapelet);
+        int shapeletMaxLen = getMaxLen(localShapelet);
 
         // Set charts according to the shapelets
         for (int i=0; i<localShapelet.size(); i++) {
@@ -189,7 +181,7 @@ public class DualAxisChart extends ApplicationFrame {
         return dataset;
     }
 
-    private int maxLen(ArrayList<ArrayList<Double>> shapelets) {
+    private int getMaxLen(ArrayList<ArrayList<Double>> shapelets) {
         ArrayList<Integer> size_arr = new ArrayList<>();
 
         shapelets.forEach(shapelet->{

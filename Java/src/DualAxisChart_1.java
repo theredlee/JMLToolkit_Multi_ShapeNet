@@ -49,6 +49,7 @@ public class DualAxisChart_1 extends ApplicationFrame {
     Color[] ten_colors = {new Color(255,0,0), new Color(255,204,51), new Color(0,204,0), new Color(51,153,255), new Color(255,102,0), new Color(153,153,153), new Color(153,102,0), new Color(102,51,0), new Color(102,0,153), new Color(0,0,0)};
     Color timeseries_color = new Color(153,0,0);
 
+
     // ------------------------------------------------------------------------------------------------------\
     public DualAxisChart_1(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localShapeletLabelArr, ArrayList<ArrayList<ArrayList<Double>>> startEndPoints_ALT_AND_AFP) {
         super("DualAxisChart");
