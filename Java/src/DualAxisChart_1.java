@@ -281,7 +281,7 @@ public class DualAxisChart_1 extends ApplicationFrame {
         XYSeries series = new XYSeries("Series Shapelet");
 
         for (int i = 0; i < shapelet.size() + maxShiftLen; i++) {
-            if (i+1 > maxShiftLen) {
+            if (i >= maxShiftLen) {
                 int index = i-maxShiftLen;
                 double val = shapelet.get(index);
                 series.add((i + 1), val);

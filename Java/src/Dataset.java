@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Dataset {
 
@@ -247,8 +245,10 @@ public class Dataset {
         String file_shapelet = sys + "ALT_AFP_ShapeNet/ALT_AFP/shapelet.txt";
         String file_dim = sys + "ALT_AFP_ShapeNet/ALT_AFP/shapelet_dim.txt";
 
-        ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
-        ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
+        ArrayList<ArrayList<Double>> unsorted_shapelet = new ArrayList<ArrayList<Double>>();
+        ArrayList<ArrayList<Double>> sorted_shapelet;
+        ArrayList<Double> unsorted_shapeletLabelArr = new ArrayList<Double>();
+        ArrayList<Double> sorted_shapeletLabelArr;
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -264,7 +264,7 @@ public class Dataset {
                 String str = arrOfStr[j];
                 valArr.add(Double.valueOf(str));
             }
-            shapelet.add(valArr);
+            unsorted_shapelet.add(valArr);
 
             // read next line
             line = reader.readLine();
@@ -278,19 +278,17 @@ public class Dataset {
             ArrayList<Double> valArr = new ArrayList<Double>();
             // Only one value per line
             double val = Double.valueOf(line);
-            shapeletLabelArr.add(val);
+            unsorted_shapeletLabelArr.add(val);
 
             // read next line
             line = reader.readLine();
         }
         reader.close();
 
-        // Set global shapelet and label
-        setGlobalShapelet(shapelet);
-        setGlobalShapeletLabelArr(shapeletLabelArr);
+        // Sort and set global shapelet and label
+        shapeletSortingAndAssignment(unsorted_shapeletLabelArr, unsorted_shapelet);
 
-//        System.out.println(shapelet);
-        System.out.println("shapeletLabelArr.size(): " + shapeletLabelArr.size());
+        System.out.println("shapeletLabelArr.size(): " + unsorted_shapeletLabelArr.size());
     }
 
     public void loadTimeseries() throws IOException {
@@ -603,6 +601,35 @@ public class Dataset {
 //        System.out.println("globalMulti0And1Arr: " + globalMulti0And1Arr);
         System.out.println("accuracy: " + accuracy);
         System.out.println("Total count: " + count[0]);
+    }
+
+    private void shapeletSortingAndAssignment(ArrayList<Double> unsorted_shapeletLabelArr, ArrayList<ArrayList<Double>> unsorted_shapelet) {
+        ArrayList<Double> sorted_shapeletLabelArr = new ArrayList<>();
+        ArrayList<ArrayList<Double>> sorted_shapelet = new ArrayList<>();
+        int[][] match_arr = new int[unsorted_shapeletLabelArr.size()][2];
+
+        for (int i=0; i<unsorted_shapeletLabelArr.size(); i++) {
+            match_arr[i][0] = (int) (double) unsorted_shapeletLabelArr.get(i);
+            match_arr[i][1] = i;
+        }
+
+        java.util.Arrays.sort(match_arr, new java.util.Comparator<int[]>() {
+            public int compare(int[] a, int[] b) {
+                return Double.compare(a[0], b[0]);
+            }
+        });
+
+        for (int i=0; i<match_arr.length; i++) {
+            double label = (double)match_arr[i][0];
+            int matching_index = match_arr[i][1];
+
+            sorted_shapeletLabelArr.add(label);
+            sorted_shapelet.add(unsorted_shapelet.get(matching_index));
+        }
+
+        // Set global shapelet and label
+        setGlobalShapeletLabelArr(sorted_shapeletLabelArr);
+        setGlobalShapelet(sorted_shapelet);
     }
 
     private void setGlobalShapelet(ArrayList<ArrayList<Double>> shapelet) {
