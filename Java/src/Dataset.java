@@ -30,7 +30,7 @@ public class Dataset {
     private int testFileNo = 3;
 
     final String win = "M:\\JMLToolkit_Multi_ShapeNet-master\\datasets\\";
-    final String mac = "/Users/student/Documents/RL_Folder/RedLee/datasets/";
+    final String mac = "/Users/student/Documents/RL_Folder/DVP/RedLee/datasets/";
     final String sys = mac;
 
     public Dataset(boolean normalization) {

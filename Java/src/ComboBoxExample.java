@@ -39,7 +39,7 @@ public class ComboBoxExample  extends ApplicationFrame {
         });
     }
 
-    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart_4 dualAxischart, TextAreaExample labelBox){
+    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletLabelArr, DualAxisChart_1 dualAxischart, TextAreaExample labelBox){
         super("ComboBox");
 
         final JLabel label = new JLabel();

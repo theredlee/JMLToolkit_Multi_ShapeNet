@@ -1,7 +1,5 @@
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.xy.YisSymbolic;
-import org.jfree.ui.RefineryUtilities;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,13 +75,13 @@ public class Main {
         // 1. Initialize histogram and set panel for histogram
         final HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
 //        final LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
-        final DualAxisChart_4 dualAxisChart_4 = new DualAxisChart_4(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+        final DualAxisChart_1 dualAxisChart_1 = new DualAxisChart_1(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
         DualAxixChart_Carousel animator = new DualAxixChart_Carousel(aDataset);
 
         final TextAreaExample textArea = new TextAreaExample();
         final PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
         final com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
-        final ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart_4, textArea);
+        final ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart_1, textArea);
 
         // --------------------------------------------------------
         // 1. Initialize comboBox and set panel for comboBox
@@ -99,7 +97,7 @@ public class Main {
         panel_1.add(textAreaScrollPane);
 
         // 3. Initialize dualAxisChart and set panel for dualAxisChart
-        JScrollPane aDualAxisScrollPane_4 = dualAxisChart_4.getScrollPane();
+        JScrollPane aDualAxisScrollPane_4 = dualAxisChart_1.getScrollPane();
         panel_1.add(aDualAxisScrollPane_4);
 
         // 4. Initialize PriceEstimator and set panel for PriceEstimator
