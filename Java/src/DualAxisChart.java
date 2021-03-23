@@ -19,6 +19,7 @@ import javax.swing.*;
 
 public class DualAxisChart extends ApplicationFrame {
 
+    private Controller controller;
     public ArrayList<ChartPanel> chartPanelArr = new ArrayList<>();
     public ChartPanel chartPanel;
     public JPanel panel;
@@ -246,6 +247,14 @@ public class DualAxisChart extends ApplicationFrame {
         this.panel = panel;
     }
 
+    private void setChartPanelArr(ArrayList<ChartPanel> chartPanelArr) {
+        this.chartPanelArr = chartPanelArr;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
     public JPanel getPanel() {
         return panel;
     }
@@ -256,10 +265,6 @@ public class DualAxisChart extends ApplicationFrame {
 
     public ChartPanel getChartPanel() {
         return chartPanel;
-    }
-
-    private void setChartPanelArr(ArrayList<ChartPanel> chartPanelArr) {
-        this.chartPanelArr = chartPanelArr;
     }
 
     public ArrayList<ChartPanel> getChartPanelArr() {

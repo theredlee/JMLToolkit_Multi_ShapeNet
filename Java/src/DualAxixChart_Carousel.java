@@ -1,11 +1,6 @@
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 
 public class DualAxixChart_Carousel extends JPanel {
@@ -64,8 +59,8 @@ public class DualAxixChart_Carousel extends JPanel {
     }
 
     private void init_charts() throws IOException {
-        dualAxisChart = new DualAxisChart(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
-        dualAxisChart_3 = new DualAxisChart_3(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+        dualAxisChart = new DualAxisChart(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletDimArr());
+        dualAxisChart_3 = new DualAxisChart_3(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletDimArr());
 
         JScrollPane aDualAxisScrollPane = dualAxisChart.getScrollPane();
         scrollPanes[0] = aDualAxisScrollPane;
@@ -129,6 +124,14 @@ public class DualAxixChart_Carousel extends JPanel {
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public DualAxisChart getDualAxisChart() {
+        return this.dualAxisChart;
+    }
+
+    public DualAxisChart_3 getDualAxisChart_3() {
+        return this.dualAxisChart_3;
     }
 
     public static void main(String[] args) {

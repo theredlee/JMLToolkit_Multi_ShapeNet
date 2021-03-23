@@ -75,13 +75,13 @@ public class Main {
         // 1. Initialize histogram and set panel for histogram
         final HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
 //        final LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
-        final DualAxisChart_1 dualAxisChart_1 = new DualAxisChart_1(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletLabelArr());
+        final DualAxisChart_1 dualAxisChart_1 = new DualAxisChart_1(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletDimArr());
         DualAxixChart_Carousel animator = new DualAxixChart_Carousel(aDataset);
 
         final TextAreaExample textArea = new TextAreaExample();
         final PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
         final com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
-        final ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletLabelArr(), dualAxisChart_1, textArea);
+        final ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletDimArr(), dualAxisChart_1, textArea);
 
         // --------------------------------------------------------
         // 1. Initialize comboBox and set panel for comboBox
@@ -151,6 +151,23 @@ public class Main {
         // 7. Initialize histogram and set panel for histogram
         ChartPanel aHistogramChartPanel = histogram.getChartPanel();
         panel_2_2_2.add(aHistogramChartPanel);
+
+        // 8. Initialized the controller
+        Controller controller = new Controller();
+        // Set global dataset first
+        controller.setDataset(aDataset);
+        // Then set dualAxisCharts
+        DualAxisChart dualAxisChart = animator.getDualAxisChart();
+        controller.setDualAxisChart(dualAxisChart);
+        controller.setDualAxisChart_1(dualAxisChart_1);
+        // No DualAxisChart_2 currently
+        DualAxisChart_3 dualAxisChart_3 = animator.getDualAxisChart_3();
+        controller.setDualAxisChart_3(dualAxisChart_3);
+        // Set controller into each dualAxisChart
+        dualAxisChart.setController(controller);
+        dualAxisChart_1.setController(controller);
+        // No DualAxisChart_2 currently
+        dualAxisChart_3.setController(controller);
 
         // Frame setting
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

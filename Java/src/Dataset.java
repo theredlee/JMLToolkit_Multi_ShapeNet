@@ -11,7 +11,7 @@ public class Dataset {
     public ArrayList<ArrayList<Double>> globalShapelet = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalNormalizedShapelet = new ArrayList<ArrayList<Double>>();
     public ArrayList<Double> globalTimeseriesLabelArr = new ArrayList<Double>();
-    public ArrayList<Double> globalShapeletLabelArr = new ArrayList<Double>();
+    public ArrayList<Double> globalShapeletDimArr = new ArrayList<Double>();
     public ArrayList<ArrayList<Double>> globalCoefArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalInterceptArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<Double>> globalFeaturesArr = new ArrayList<ArrayList<Double>>();
@@ -30,8 +30,9 @@ public class Dataset {
     final int height = 190;
 
     final String win = "M:\\RedLee\\datasets\\";
+    final String win2 = "C:\\Users\\demo\\Desktop\\RedLee\\ShapeNet\\datasets\\";
     final String mac = "/Users/student/Documents/RL_Folder/DVP/RedLee/datasets/";
-    final String sys = win;
+    final String sys = win2;
 
     public Dataset(boolean normalization) {
         this.normalization = false;
@@ -44,7 +45,7 @@ public class Dataset {
         String file_dim = sys + "raw-alt-afp-raw/shapelet_dim_0" + testFileNo + ".txt";
 
         ArrayList<ArrayList<Double>> shapelet = new ArrayList<ArrayList<Double>>();
-        ArrayList<Double> shapeletLabelArr = new ArrayList<Double>();
+        ArrayList<Double> shapeletDimArr = new ArrayList<Double>();
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -73,7 +74,7 @@ public class Dataset {
         while (line != null) {
             ArrayList<Double> valArr = new ArrayList<Double>();
             double val = Double.valueOf(line);
-            shapeletLabelArr.add(val);
+            shapeletDimArr.add(val);
 
             // read next line
             line = reader.readLine();
@@ -82,12 +83,12 @@ public class Dataset {
 
         // Set global shapelet and label
         setGlobalShapelet(shapelet);
-        setGlobalShapeletLabelArr(shapeletLabelArr);
+        setGlobalShapeletDimArr(shapeletDimArr);
 
 //        System.out.println(shapelet);
         System.out.println("shapelet: " + shapelet);
-        System.out.println("shapeletLabelArr: " + shapeletLabelArr);
-        System.out.println("shapeletLabelArr.size(): " + shapeletLabelArr.size());
+        System.out.println("shapeletDimArr: " + shapeletDimArr);
+        System.out.println("shapeletDimArr.size(): " + shapeletDimArr.size());
     }
 
     public void loadTimeseries_testing() throws IOException {
@@ -246,9 +247,7 @@ public class Dataset {
         String file_dim = sys + "ALT_AFP_ShapeNet/ALT_AFP/shapelet_dim.txt";
 
         ArrayList<ArrayList<Double>> unsorted_shapelet = new ArrayList<ArrayList<Double>>();
-        ArrayList<ArrayList<Double>> sorted_shapelet;
-        ArrayList<Double> unsorted_shapeletLabelArr = new ArrayList<Double>();
-        ArrayList<Double> sorted_shapeletLabelArr;
+        ArrayList<Double> unsorted_shapeletDimArr = new ArrayList<Double>();
 
         // Read shapelet
         BufferedReader reader = new BufferedReader(new FileReader(file_shapelet));
@@ -278,7 +277,7 @@ public class Dataset {
             ArrayList<Double> valArr = new ArrayList<Double>();
             // Only one value per line
             double val = Double.valueOf(line);
-            unsorted_shapeletLabelArr.add(val);
+            unsorted_shapeletDimArr.add(val);
 
             // read next line
             line = reader.readLine();
@@ -286,9 +285,9 @@ public class Dataset {
         reader.close();
 
         // Sort and set global shapelet and label
-        shapeletSortingAndAssignment(unsorted_shapeletLabelArr, unsorted_shapelet);
+        shapeletSortingAndAssignment(unsorted_shapeletDimArr, unsorted_shapelet);
 
-        System.out.println("shapeletLabelArr.size(): " + unsorted_shapeletLabelArr.size());
+        System.out.println("shapeletLabelArr.size(): " + unsorted_shapeletDimArr.size());
     }
 
     public void loadTimeseries() throws IOException {
@@ -603,13 +602,13 @@ public class Dataset {
         System.out.println("Total count: " + count[0]);
     }
 
-    private void shapeletSortingAndAssignment(ArrayList<Double> unsorted_shapeletLabelArr, ArrayList<ArrayList<Double>> unsorted_shapelet) {
-        ArrayList<Double> sorted_shapeletLabelArr = new ArrayList<>();
+    private void shapeletSortingAndAssignment(ArrayList<Double> unsorted_shapeletDimArr, ArrayList<ArrayList<Double>> unsorted_shapelet) {
+        ArrayList<Double> sorted_shapeletDimArr = new ArrayList<>();
         ArrayList<ArrayList<Double>> sorted_shapelet = new ArrayList<>();
-        int[][] match_arr = new int[unsorted_shapeletLabelArr.size()][2];
+        int[][] match_arr = new int[unsorted_shapeletDimArr.size()][2];
 
-        for (int i=0; i<unsorted_shapeletLabelArr.size(); i++) {
-            match_arr[i][0] = (int) (double) unsorted_shapeletLabelArr.get(i);
+        for (int i=0; i<unsorted_shapeletDimArr.size(); i++) {
+            match_arr[i][0] = (int) (double) unsorted_shapeletDimArr.get(i);
             match_arr[i][1] = i;
         }
 
@@ -620,15 +619,15 @@ public class Dataset {
         });
 
         for (int i=0; i<match_arr.length; i++) {
-            double label = (double)match_arr[i][0];
+            double label = match_arr[i][0];
             int matching_index = match_arr[i][1];
 
-            sorted_shapeletLabelArr.add(label);
+            sorted_shapeletDimArr.add(label);
             sorted_shapelet.add(unsorted_shapelet.get(matching_index));
         }
 
         // Set global shapelet and label
-        setGlobalShapeletLabelArr(sorted_shapeletLabelArr);
+        setGlobalShapeletDimArr(sorted_shapeletDimArr);
         setGlobalShapelet(sorted_shapelet);
     }
 
@@ -668,12 +667,12 @@ public class Dataset {
         return globalMultTFArr;
     }
 
-    private void setGlobalShapeletLabelArr(ArrayList<Double> shapeletLabelArr) {
-        this.globalShapeletLabelArr = shapeletLabelArr;
+    private void setGlobalShapeletDimArr(ArrayList<Double> shapeletDimArr) {
+        this.globalShapeletDimArr = shapeletDimArr;
     }
 
-    public ArrayList<Double> getGlobalShapeletLabelArr() {
-        return globalShapeletLabelArr;
+    public ArrayList<Double> getGlobalShapeletDimArr() {
+        return this.globalShapeletDimArr;
     }
 
     private void setGlobalTimeseriesLabelArr(ArrayList<Double> timeseriesLabelArr) {

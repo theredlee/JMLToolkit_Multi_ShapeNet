@@ -25,6 +25,7 @@ import java.util.*;
 // Single shapelet and simple
 public class DualAxisChart_1 extends ApplicationFrame {
 
+    private Controller controller;
     public ArrayList<ChartPanel> chartPanelArr = new ArrayList<>();
     public ChartPanel chartPanel;
     public JPanel panel;
@@ -636,6 +637,10 @@ public class DualAxisChart_1 extends ApplicationFrame {
         this.panel = panel;
     }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
     public JPanel getPanel() {
         return panel;
     }
@@ -669,9 +674,29 @@ public class DualAxisChart_1 extends ApplicationFrame {
         // Clean all borders of chartPanels at first
         cleanAllChartPanelBorder();
 
-        System.out.println("ChartPane1 clicked!");
         javax.swing.border.Border blackline = BorderFactory.createLineBorder(Color.black);
         panel1.setBorder(blackline);
+
+        // Clear the data in dualAxisChart_3
+        DualAxisChart_3 dualAxisChart_3 = controller.getDualAxisChart_3();
+        Dataset dataset = controller.getDataset();
+        int numOfChartPanel = chartPanelArr.indexOf(panel1);
+        ArrayList<Double> shapeletDimArr = dataset.getGlobalShapeletDimArr();
+        double dim = shapeletDimArr.get(numOfChartPanel);
+        int numOfIndexADim = Collections.frequency(shapeletDimArr, dim);
+        int timeseriesIndex = 0;
+
+        int chartPanelFirstInDim = shapeletDimArr.indexOf(dim);
+        int chartPanelLastInDim = shapeletDimArr.lastIndexOf(dim);
+
+        ArrayList<Integer> chartPanelFirstAndLastArr = new ArrayList<>();
+        // Add the correlcted chartPanel start and end index into one array list
+        chartPanelFirstAndLastArr.add(chartPanelFirstInDim);
+        chartPanelFirstAndLastArr.add(chartPanelLastInDim);
+        System.out.println("chartPanelFirstAndLastArr: " + chartPanelFirstAndLastArr);
+
+        dualAxisChart_3.addTimeseries((int) dim, chartPanelFirstAndLastArr, timeseriesIndex);
+        System.out.println("ChartPane" + dim + " clicked");
     }
 
     private void cleanAllChartPanelBorder() {

@@ -17,6 +17,7 @@ import java.util.*;
 // MultiShapelet and Multiple Timeseries
 public class DualAxisChart_2 extends ApplicationFrame {
 
+    private Controller controller;
     public ArrayList<ChartPanel> chartPanelArr = new ArrayList<>();
     public ChartPanel chartPanel;
     public JPanel panel;
@@ -234,6 +235,10 @@ public class DualAxisChart_2 extends ApplicationFrame {
         final CategoryDataset shapelet1 = createShapelet(index);
         subplot0.setDataset(datesetIndex, shapelet0);
         subplot1.setDataset(datesetIndex, shapelet1);
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public ArrayList<ArrayList<ArrayList<Double>>> getLocalTimeseries() {

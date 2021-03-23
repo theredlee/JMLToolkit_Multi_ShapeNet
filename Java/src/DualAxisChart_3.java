@@ -1,5 +1,6 @@
 import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartTheme;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -7,12 +8,14 @@ import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CombinedDomainCategoryPlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DatasetGroup;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
@@ -27,6 +30,7 @@ import java.util.Set;
 // MultiShapelet Only
 public class DualAxisChart_3 extends ApplicationFrame {
 
+    private Controller controller;
     public ArrayList<ChartPanel> chartPanelArr = new ArrayList<>();
     public ChartPanel chartPanel;
     public JPanel panel;
@@ -409,9 +413,9 @@ public class DualAxisChart_3 extends ApplicationFrame {
 
         // Set charts according to the shapelets
         for (int i=0; i<localShapelet.size(); i++) {
-            int index = i;
+            int shapeletIndex = i;
             int classDimension = (int) ((double) localShapeletLabelArr.get(i));
-            final JFreeChart chart = createChart(index, classDimension);
+            final JFreeChart chart = createChart(shapeletIndex, classDimension);
             final ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(
                     new Dimension(width, height));
@@ -439,48 +443,11 @@ public class DualAxisChart_3 extends ApplicationFrame {
         final int timeseriesRenderIndex = 0;
         final int defaultTimeseriesFirstK = 10;
         final int seriesNo_shapelet = 0;
-        final int timeseriesIndexSize = localTimeseries.size();
         final int timeseries_lengh = localTimeseries.get(0).get(0).size();
 
         // Get distances and start position between each pair of timeseries and shapelet
-        double[][] distanceSortingArr = new double[timeseriesIndexSize][];
-        double[][] distanceAndIndex = {{},{}};
-        int xAxisStartIndex;
-        double distance;
-        ArrayList<Integer> shiftLenBeforeShapeletArr = new ArrayList<>();
-        int maxShiftLen = (int) Double.NEGATIVE_INFINITY;
-        // Get the global start index for all timesries
-        for (int i=0; i<timeseriesIndexSize; i++){
-            double[] distanceSorting = {-1, -1};
-            int timeseriesIndex = i;
-
-            // distanceAndIndex[0][0]: startIndex;
-            // distanceAndIndex[1][0]: distanceMin;
-            distanceAndIndex = Dataset.getDistance(localTimeseries.get(timeseriesIndex).get(classDimension), localShapelet.get(shapeletIndex));
-            xAxisStartIndex = (int) distanceAndIndex[0][0];
-            distance = distanceAndIndex[1][0];
-
-            distanceSorting[0] = xAxisStartIndex;
-            distanceSorting[1] = distance;
-            distanceSortingArr[i] = distanceSorting;
-        }
-
-        java.util.Arrays.sort(distanceSortingArr, new java.util.Comparator<double[]>() {
-            public int compare(double[] a, double[] b) {
-                return Double.compare(a[1], b[1]);
-            }
-        });
-
-        int startPointIndex = 0;
-        for (int i=0; i<distanceSortingArr.length; i++){
-            xAxisStartIndex = (int) ((double) distanceSortingArr[i][startPointIndex]);
-            // Record each xAxisStartIndex between each pair of timeseries and shapelet
-            shiftLenBeforeShapeletArr.add(xAxisStartIndex);
-            // Set/update the maximum xAxisStartIndex
-            if (xAxisStartIndex>maxShiftLen) {
-                maxShiftLen = xAxisStartIndex;
-            }
-        }
+        ArrayList<Integer> shiftLenBeforeShapeletArr = getShiftLenBeforeShapeletArr(shapeletIndex, classDimension);
+        int maxShiftLen = Collections.max(shiftLenBeforeShapeletArr);
 
         Set<Integer> timeseriesIndexSet = new HashSet<Integer>();
         for (int i=0; i<topK; i++) {
@@ -604,6 +571,51 @@ public class DualAxisChart_3 extends ApplicationFrame {
         return dataset;
     }
 
+    public ArrayList<Integer> getShiftLenBeforeShapeletArr(int shapeletIndex, int classDimension) {
+        final int timeseriesIndexSize = localTimeseries.size();
+        // Get distances and start position between each pair of timeseries and shapelet
+        double[][] distanceSortingArr = new double[timeseriesIndexSize][];
+        double[][] distanceAndIndex = {{},{}};
+        int xAxisStartIndex;
+        double distance;
+        ArrayList<Integer> shiftLenBeforeShapeletArr = new ArrayList<>();
+        int maxShiftLen = Integer.MIN_VALUE;
+        // Get the global start index for all timesries
+        for (int i=0; i<timeseriesIndexSize; i++){
+            double[] distanceSorting = {-1, -1};
+            int timeseriesIndex = i;
+
+            // distanceAndIndex[0][0]: startIndex;
+            // distanceAndIndex[1][0]: distanceMin;
+            distanceAndIndex = Dataset.getDistance(localTimeseries.get(timeseriesIndex).get(classDimension), localShapelet.get(shapeletIndex));
+            xAxisStartIndex = (int) distanceAndIndex[0][0];
+            distance = distanceAndIndex[1][0];
+
+            distanceSorting[0] = xAxisStartIndex;
+            distanceSorting[1] = distance;
+            distanceSortingArr[i] = distanceSorting;
+        }
+
+        java.util.Arrays.sort(distanceSortingArr, new java.util.Comparator<double[]>() {
+            public int compare(double[] a, double[] b) {
+                return Double.compare(a[1], b[1]);
+            }
+        });
+
+        int startPointIndex = 0;
+        for (int i=0; i<distanceSortingArr.length; i++){
+            xAxisStartIndex = (int) distanceSortingArr[i][startPointIndex];
+            // Record each xAxisStartIndex between each pair of timeseries and shapelet
+            shiftLenBeforeShapeletArr.add(xAxisStartIndex);
+            // Set/update the maximum xAxisStartIndex
+            if (xAxisStartIndex>maxShiftLen) {
+                maxShiftLen = xAxisStartIndex;
+            }
+        }
+
+        return shiftLenBeforeShapeletArr;
+    }
+
     public double[][] run() {
         double[][] run = new double[][]{
                 {10, 6, 2, 4, 7, 2, 8, 12, 9, 4},
@@ -614,6 +626,10 @@ public class DualAxisChart_3 extends ApplicationFrame {
 
     public void setPlot(final CombinedDomainCategoryPlot plot) {
         this.plot = plot;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public final CombinedDomainCategoryPlot getPlot() {
@@ -666,6 +682,53 @@ public class DualAxisChart_3 extends ApplicationFrame {
 
     public JScrollPane getScrollPane() {
         return scrollPane;
+    }
+
+    public void addTimeseries(int classDimension, ArrayList<Integer> chartPanelFirstAndLastArr, int timeseriesIndex) {
+        // There could be more than 1 shapelets in one dimension
+        // Get the correlated dataset at first
+        int correlatedChartPanelStartIndex = 0;
+        int correlatedChartPanelEndIndex = 1;
+        for (int dim_i=chartPanelFirstAndLastArr.get(correlatedChartPanelStartIndex); dim_i<chartPanelFirstAndLastArr.get(correlatedChartPanelEndIndex)+1; dim_i++) {
+            // Iteratively set the chartPanel of the same dimemsion
+            // (classDimension+dim_i): Since multiple dimension chartPanels are in one chartPanelArr,
+            // we need to use the classDimension as the base and plus the number of charts in the one dimension
+            // to retrieve the correct chartPanel
+            ChartPanel panel1 = chartPanelArr.get(dim_i);
+            JFreeChart chart1 = panel1.getChart();
+            CombinedDomainCategoryPlot plot1 = (CombinedDomainCategoryPlot) chart1.getCategoryPlot();
+            ArrayList<CategoryPlot> subplots1 = new ArrayList<CategoryPlot>(plot1.getSubplots());
+            int shapeletDimIndex = 0;
+            int timesereisDimIndex = 1;
+            CategoryPlot shapeletPlot = subplots1.get(shapeletDimIndex);
+            CategoryPlot timeserisePlot = subplots1.get(timesereisDimIndex);
+            DefaultCategoryDataset shapelet_dataset = (DefaultCategoryDataset) shapeletPlot.getDataset();
+            DefaultCategoryDataset timeseries_dataset = (DefaultCategoryDataset) timeserisePlot.getDataset();
+            // Clear the chart for new task
+            timeseries_dataset.clear();
+
+
+            // Add new selected timeserise
+            // Get distances and start position between each pair of timeseries and shapelet
+            int shapeletIndex = timeseriesIndex;
+            ArrayList<Integer> shiftLenBeforeShapeletArr = getShiftLenBeforeShapeletArr(shapeletIndex, classDimension);
+            int maxShiftLen = Collections.max(shiftLenBeforeShapeletArr);
+            int i = timeseriesIndex;
+
+            ArrayList<Double>  timeserise = localTimeseries.get(timeseriesIndex).get(classDimension);
+            int xAxisShiftLen = maxShiftLen - shiftLenBeforeShapeletArr.get(i);
+
+            for (int j = 0; j < timeserise.size() + xAxisShiftLen; j++) {
+                if (j+1 > xAxisShiftLen) {
+                    double val = timeserise.get(j-xAxisShiftLen);
+                    timeseries_dataset.addValue(val,
+                            labelTimeseries+(i+1), "" + (j + 1));
+                } else {
+                    timeseries_dataset.addValue(null,
+                            labelTimeseries+(i+1), "" + (j + 1));
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------------------
