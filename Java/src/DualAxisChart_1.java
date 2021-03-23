@@ -19,6 +19,8 @@ import org.jfree.ui.ApplicationFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 // Single shapelet and simple
 public class DualAxisChart_1 extends ApplicationFrame {
@@ -28,8 +30,6 @@ public class DualAxisChart_1 extends ApplicationFrame {
     public JPanel panel;
     public JScrollPane scrollPane;
     private CombinedDomainCategoryPlot plot = new CombinedDomainCategoryPlot();
-    final String team1 = "1st Team";
-    final String team2 = "2nd Team";
     final String label0 = "1st Timeseries Dimension ";
     final String label1 = "2nd Timeseries Dimension ";
     final String labelTimeseries = "Timeseries Dimension ";
@@ -413,6 +413,20 @@ public class DualAxisChart_1 extends ApplicationFrame {
             final ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(
                     new Dimension(width, height));
+
+            // Listner event
+            // usually better off with mousePressed rather than clicked
+            chartPanel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    chartPanel1ClickTest(e);
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                }
+            });
+
             chartPanelArr.add(chartPanel);
         }
 
@@ -650,6 +664,21 @@ public class DualAxisChart_1 extends ApplicationFrame {
         return scrollPane;
     }
 
+    private void chartPanel1ClickTest(MouseEvent e) {
+        ChartPanel panel1 = (ChartPanel) e.getSource();
+        // Clean all borders of chartPanels at first
+        cleanAllChartPanelBorder();
+
+        System.out.println("ChartPane1 clicked!");
+        javax.swing.border.Border blackline = BorderFactory.createLineBorder(Color.black);
+        panel1.setBorder(blackline);
+    }
+
+    private void cleanAllChartPanelBorder() {
+        for (int i=0; i<chartPanelArr.size(); i++) {
+            chartPanelArr.get(i).setBorder(null);
+        }
+    }
     // ------------------------------------------------------------------------------
 
     public static void main(final String[] args) {
