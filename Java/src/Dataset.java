@@ -32,7 +32,7 @@ public class Dataset {
     final String win = "M:\\RedLee\\datasets\\";
     final String win2 = "C:\\Users\\demo\\Desktop\\RedLee\\ShapeNet\\datasets\\";
     final String mac = "/Users/student/Documents/RL_Folder/DVP/RedLee/datasets/";
-    final String sys = win2;
+    final String sys = mac;
 
     public Dataset(boolean normalization) {
         this.normalization = false;

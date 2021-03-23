@@ -3,12 +3,15 @@ import org.jfree.ui.ApplicationFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ComboBoxExample  extends ApplicationFrame {
-    JFrame f;
+
+    private Controller controller;
     public JPanel panel;
     boolean shapeletInit = false;
     boolean timeseriesInitiated = false;
@@ -55,19 +58,33 @@ public class ComboBoxExample  extends ApplicationFrame {
         panelButton.setPreferredSize(new Dimension(100,40));
         panelButton.setLayout(new BorderLayout());
 
-        JLabel jlabel_timeseries = new JLabel("Timeseries: ");
-        jlabel_timeseries.setSize(100,50);
-        panelTimeseries.add(jlabel_timeseries);
+        JLabel jlabel_timeseries_class = new JLabel("Timeseries class: ");
+        jlabel_timeseries_class.setVerticalAlignment(JLabel.TOP);
+        jlabel_timeseries_class.setSize(100,50);
+
         panelTimeseries.add(cbTimeseriesLabel);
         panelTimeseries.add(cbTimeseries);
+
+        JButton button_clear=new JButton("Clear");
+        button_clear.setAlignmentY(Button.BOTTOM_ALIGNMENT);
+        button_clear.setPreferredSize(new Dimension(75,20));
+        panelTimeseries.add(button_clear);
+
         panelButton.add(button, BorderLayout.CENTER);
 
+        panelShapeletAndTimeseries.add(jlabel_timeseries_class, BorderLayout.WEST);
         panelShapeletAndTimeseries.add(panelTimeseries, BorderLayout.CENTER);
         panel.add(panelShapeletAndTimeseries, BorderLayout.WEST);
         panel.add(panelButton, BorderLayout.CENTER);
 
         // Set the panel globally
         setPanel(panel);
+
+
+        button_clear.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cleanBtnAction();
+            }});
 
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -135,8 +152,17 @@ public class ComboBoxExample  extends ApplicationFrame {
         });
     }
 
+    private void cleanBtnAction() {
+        DualAxisChart_3 dualAxisChart_3 = controller.getDualAxisChart_3();
+        dualAxisChart_3.cleanTimeseries();
+    }
+
     private void setPanel (JPanel panel) {
         this.panel = panel;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
     public JPanel getPanel() {

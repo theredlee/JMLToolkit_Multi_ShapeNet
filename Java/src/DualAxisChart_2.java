@@ -41,7 +41,7 @@ public class DualAxisChart_2 extends ApplicationFrame {
     final int height = 450;
     final int dim_cnt = 2;
 
-    Color[] ten_colors = {new Color(255,0,0), new Color(255,204,51), new Color(0,204,0), new Color(51,153,255), new Color(255,102,0), new Color(153,153,153), new Color(153,102,0), new Color(102,51,0), new Color(102,0,153), new Color(0,0,0)};
+    Color[] ten_colors = {new Color(255,204,51), new Color(51,153,255), new Color(255,102,0), new Color(153,153,153), new Color(153,102,0), new Color(102,51,0), new Color(0,204,0), new Color(255,0,0), new Color(102,0,153), new Color(0,0,0)};
 
     // ------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------

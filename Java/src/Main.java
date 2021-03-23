@@ -122,10 +122,6 @@ public class Main {
         panel_2.add(panel_2_1);
         frame.add(panel_2, BorderLayout.EAST);
 
-        // 5. Initialize lineChart and set panel for comboBox
-//        ChartPanel aLineChartPanel = lineChart.getPanel();
-//        panel_2_1.add(aLineChartPanel);
-
         // 6. Initialize dualAxisChart_2
 //        JScrollPane aDualAxisScrollPane_2 = dualAxisChart_2.getScrollPane();
 //        panel_2_2_1.add(aDualAxisScrollPane_2, BorderLayout.CENTER);
@@ -138,15 +134,36 @@ public class Main {
         panel_2_2.add(panel_2_2_1);
         panel_2.add(panel_2_2);
 
-        // 6. Initialize pieChart and set panel for pieChart
+        // 5. Initialize pieChart and set panel for pieChart
         ChartPanel pieChartPanel = pieChart.getPanel();
+//        panel_2_2_2.setLayout(new BoxLayout(panel_2_2_2, BoxLayout.Y_AXIS));
+//        panel_2_2_2.add(pieChartPanel);
+//        panel_2_2_2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//        panel_2_2_2.setMinimumSize(new Dimension(pieChartPanel.getWidth(),panel_2_2_1.getHeight()));
+//        panel_2_2.setLayout(new BoxLayout(panel_2_2, BoxLayout.X_AXIS));
+//        panel_2_2.add(panel_2_2_2);
+//        panel_2.add(panel_2_2);
+
+
+        // 6. Initialize TableExample
+        TableExample confusion_table = new TableExample();
+        JPanel confusionAndPieChartScrollPanel = new JPanel();
+        confusionAndPieChartScrollPanel.setLayout(new GridLayout(1,2));
+        confusionAndPieChartScrollPanel.add(pieChartPanel);
+        confusionAndPieChartScrollPanel.add(confusion_table.getScrollPane());
+        JScrollPane confusionAndPieChartScrollPane = new JScrollPane();
+        confusionAndPieChartScrollPane.add(confusionAndPieChartScrollPanel);
+        confusionAndPieChartScrollPane.setViewportView(confusionAndPieChartScrollPanel);
+        confusionAndPieChartScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        confusionAndPieChartScrollPane.setPreferredSize(new Dimension(400, 400));
+
         panel_2_2_2.setLayout(new BoxLayout(panel_2_2_2, BoxLayout.Y_AXIS));
-        panel_2_2_2.add(pieChartPanel);
-        panel_2_2_2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//        panel_2_2_2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panel_2_2_2.setMinimumSize(new Dimension(pieChartPanel.getWidth(),panel_2_2_1.getHeight()));
+        panel_2_2_2.add(confusionAndPieChartScrollPane);
         panel_2_2.setLayout(new BoxLayout(panel_2_2, BoxLayout.X_AXIS));
         panel_2_2.add(panel_2_2_2);
-//        panel_2.add(panel_2_2);
+
 
         // 7. Initialize histogram and set panel for histogram
         ChartPanel aHistogramChartPanel = histogram.getChartPanel();
@@ -170,6 +187,8 @@ public class Main {
         dualAxisChart_1.setController(controller);
         // No DualAxisChart_2 currently
         dualAxisChart_3.setController(controller);
+        // comboBox set controller
+        comboBox.setController(controller);
 
         // Frame setting
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
