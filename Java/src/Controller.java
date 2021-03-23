@@ -1,5 +1,6 @@
 public class Controller {
     Dataset dataset;
+    ComboBoxExample comboBox;
     DualAxisChart dualAxisChart;
     DualAxisChart_1 dualAxisChart_1;
     DualAxisChart_2 dualAxisChart_2;
@@ -7,6 +8,10 @@ public class Controller {
 
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
+    }
+
+    public void setComboBox(ComboBoxExample comboBox) {
+        this.comboBox = comboBox;
     }
 
     public void setDualAxisChart(DualAxisChart dualAxisChart) {
@@ -27,6 +32,10 @@ public class Controller {
 
     public Dataset getDataset() {
         return dataset;
+    }
+
+    public ComboBoxExample getComboBox() {
+        return comboBox;
     }
 
     public DualAxisChart getDualAxisChart() {

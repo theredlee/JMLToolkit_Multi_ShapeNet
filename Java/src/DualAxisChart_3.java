@@ -445,8 +445,13 @@ public class DualAxisChart_3 extends ApplicationFrame {
         final int seriesNo_shapelet = 0;
         final int timeseries_lengh = localTimeseries.get(0).get(0).size();
 
+        int timeseriesIndexSize = localTimeseries.size();
+        ArrayList<Integer> timeseriesIndexArr = new ArrayList<>();
+        for (int i=0; i<timeseriesIndexSize; i++) {
+            timeseriesIndexArr.add(i);
+        }
         // Get distances and start position between each pair of timeseries and shapelet
-        ArrayList<Integer> shiftLenBeforeShapeletArr = getShiftLenBeforeShapeletArr(shapeletIndex, classDimension);
+        ArrayList<Integer> shiftLenBeforeShapeletArr = getShiftLenBeforeShapeletArr(timeseriesIndexArr, shapeletIndex, classDimension);
         int maxShiftLen = Collections.max(shiftLenBeforeShapeletArr);
 
         Set<Integer> timeseriesIndexSet = new HashSet<Integer>();
@@ -571,19 +576,18 @@ public class DualAxisChart_3 extends ApplicationFrame {
         return dataset;
     }
 
-    public ArrayList<Integer> getShiftLenBeforeShapeletArr(int shapeletIndex, int classDimension) {
-        final int timeseriesIndexSize = localTimeseries.size();
+    public ArrayList<Integer> getShiftLenBeforeShapeletArr(ArrayList<Integer> timeseriesIndexArr, int shapeletIndex, int classDimension) {
         // Get distances and start position between each pair of timeseries and shapelet
-        double[][] distanceSortingArr = new double[timeseriesIndexSize][];
+        double[][] distanceSortingArr = new double[timeseriesIndexArr.size()][];
         double[][] distanceAndIndex = {{},{}};
         int xAxisStartIndex;
         double distance;
         ArrayList<Integer> shiftLenBeforeShapeletArr = new ArrayList<>();
         int maxShiftLen = Integer.MIN_VALUE;
         // Get the global start index for all timesries
-        for (int i=0; i<timeseriesIndexSize; i++){
+        for (int i=0; i<timeseriesIndexArr.size(); i++){
             double[] distanceSorting = {-1, -1};
-            int timeseriesIndex = i;
+            int timeseriesIndex = timeseriesIndexArr.get(i);
 
             // distanceAndIndex[0][0]: startIndex;
             // distanceAndIndex[1][0]: distanceMin;
@@ -707,25 +711,30 @@ public class DualAxisChart_3 extends ApplicationFrame {
             // Clear the chart for new task
             timeseries_dataset.clear();
 
-
             // Add new selected timeserise
             // Get distances and start position between each pair of timeseries and shapelet
+            ArrayList<Integer> timeseriesIndexArr = new ArrayList<>();
+            timeseriesIndexArr.add(timeseriesIndex);
+            // Later there need to add other reserved timeseries back into the chart
+
             int shapeletIndex = timeseriesIndex;
-            ArrayList<Integer> shiftLenBeforeShapeletArr = getShiftLenBeforeShapeletArr(shapeletIndex, classDimension);
+            ArrayList<Integer> shiftLenBeforeShapeletArr = getShiftLenBeforeShapeletArr(timeseriesIndexArr, shapeletIndex, classDimension);
             int maxShiftLen = Collections.max(shiftLenBeforeShapeletArr);
-            int i = timeseriesIndex;
 
-            ArrayList<Double>  timeserise = localTimeseries.get(timeseriesIndex).get(classDimension);
-            int xAxisShiftLen = maxShiftLen - shiftLenBeforeShapeletArr.get(i);
+            for (int i=0; i<timeseriesIndexArr.size(); i++) {
 
-            for (int j = 0; j < timeserise.size() + xAxisShiftLen; j++) {
-                if (j+1 > xAxisShiftLen) {
-                    double val = timeserise.get(j-xAxisShiftLen);
-                    timeseries_dataset.addValue(val,
-                            labelTimeseries+(i+1), "" + (j + 1));
-                } else {
-                    timeseries_dataset.addValue(null,
-                            labelTimeseries+(i+1), "" + (j + 1));
+                ArrayList<Double>  timeserise = localTimeseries.get(timeseriesIndex).get(classDimension);
+                int xAxisShiftLen = maxShiftLen - shiftLenBeforeShapeletArr.get(i);
+
+                for (int j = 0; j < timeserise.size() + xAxisShiftLen; j++) {
+                    if (j+1 > xAxisShiftLen) {
+                        double val = timeserise.get(j-xAxisShiftLen);
+                        timeseries_dataset.addValue(val,
+                                labelTimeseries+(i+1), "" + (j + 1));
+                    } else {
+                        timeseries_dataset.addValue(null,
+                                labelTimeseries+(i+1), "" + (j + 1));
+                    }
                 }
             }
         }

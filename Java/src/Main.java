@@ -156,6 +156,8 @@ public class Main {
         Controller controller = new Controller();
         // Set global dataset first
         controller.setDataset(aDataset);
+        // Set comboBox
+        controller.setComboBox(comboBox);
         // Then set dualAxisCharts
         DualAxisChart dualAxisChart = animator.getDualAxisChart();
         controller.setDualAxisChart(dualAxisChart);
