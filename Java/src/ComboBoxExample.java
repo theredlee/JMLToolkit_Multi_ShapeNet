@@ -16,14 +16,14 @@ public class ComboBoxExample  extends ApplicationFrame {
     boolean shapeletInit = false;
     boolean timeseriesInitiated = false;
 
+    final int[] previousSwitchLabel = {-1, -1};
+    final int[] previousSwitch = {-1, -1};
+
     final JComboBox cbTimeseriesLabel;
     final JComboBox cbTimeseries;
 
-    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletDimArr, DualAxisChart_1 dualAxischart, TextAreaExample labelBox){
+    ComboBoxExample(ArrayList<ArrayList<ArrayList<Double>>> localTimeseries, ArrayList<ArrayList<Double>> localShapelet, ArrayList<Double> localTimeseriesLabelArr, ArrayList<Double> localShapeletDimArr, TextAreaExample labelBox){
         super("ComboBox");
-
-        final int[] previousSwitchLabel = {-1, -1};
-        final int[] previousSwitch = {-1, -1};
 
         // Transform to set to remove all duplicated items
         Set<Double> labelSet = new HashSet<Double>(localTimeseriesLabelArr);
@@ -38,8 +38,12 @@ public class ComboBoxExample  extends ApplicationFrame {
         cbTimeseriesLabel = new JComboBox(labelArr);
         cbTimeseries = new JComboBox();
 
-        cbTimeseriesLabel.setPreferredSize(new Dimension(90,20));
-        cbTimeseries.setPreferredSize(new Dimension(90,20));
+        int margin10 = 10;
+        int margin20 = 25;
+        cbTimeseriesLabel.setPreferredSize(new Dimension(90,30));
+        cbTimeseriesLabel.setBorder(BorderFactory.createEmptyBorder(margin20, margin10, margin20, margin10));
+        cbTimeseries.setPreferredSize(new Dimension(90,30));
+        cbTimeseries.setBorder(BorderFactory.createEmptyBorder(margin20, margin10, margin20, margin10));
 
         JButton button=new JButton("Show");
 //        button.setBounds(cbShapelet.getX()+cbShapelet.getWidth()+10,cbSwitch.getY(),75,20);
@@ -54,8 +58,9 @@ public class ComboBoxExample  extends ApplicationFrame {
 
         JPanel panelTimeseries = new JPanel();
         JPanel panelButton = new JPanel();
-        panelTimeseries.setPreferredSize(new Dimension(200,30));
-        panelButton.setPreferredSize(new Dimension(100,40));
+        panelTimeseries.setPreferredSize(new Dimension(250,50));
+        panelTimeseries.setLayout(new GridLayout(3,1) );
+        panelButton.setPreferredSize(new Dimension(75,40));
         panelButton.setLayout(new BorderLayout());
 
         JLabel jlabel_timeseries_class = new JLabel("Timeseries class: ");
@@ -66,16 +71,16 @@ public class ComboBoxExample  extends ApplicationFrame {
         panelTimeseries.add(cbTimeseries);
 
         JButton button_clear=new JButton("Clear");
-        button_clear.setAlignmentY(Button.BOTTOM_ALIGNMENT);
         button_clear.setPreferredSize(new Dimension(75,20));
+        button_clear.setMargin(new Insets(margin20, margin10, margin20, margin10));
         panelTimeseries.add(button_clear);
 
         panelButton.add(button, BorderLayout.CENTER);
 
-        panelShapeletAndTimeseries.add(jlabel_timeseries_class, BorderLayout.WEST);
+        panelShapeletAndTimeseries.add(jlabel_timeseries_class, BorderLayout.NORTH);
         panelShapeletAndTimeseries.add(panelTimeseries, BorderLayout.CENTER);
         panel.add(panelShapeletAndTimeseries, BorderLayout.WEST);
-        panel.add(panelButton, BorderLayout.CENTER);
+        panel.add(panelButton, BorderLayout.EAST);
 
         // Set the panel globally
         setPanel(panel);
@@ -88,68 +93,72 @@ public class ComboBoxExample  extends ApplicationFrame {
 
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // -------- Set timeseries with specific label
-                // Switch: timeseries or shapelet
-                ArrayList<Integer>[] switchIndexArr = new ArrayList[2];
-                for (int i=0; i<2; i++) {
-                    switchIndexArr[i] = new ArrayList<>();
-                }
+                updateComboBox(localTimeseriesLabelArr);
+            }
+        });
+    }
 
-                int timeseriesIndex = 0;
-                // count
-                int switchWithLabelCount = 0;
-                int[] selectedSwitchLabel = new int[1];
-                int[] selectedSwitch = new int[1];
+    public void updateComboBox(ArrayList<Double> localTimeseriesLabelArr) {
+        DualAxisChart_1 dualAxischart = controller.getDualAxisChart_1();
+        // -------- Set timeseries with specific label
+        // Switch: timeseries or shapelet
+        ArrayList<Integer>[] switchIndexArr = new ArrayList[2];
+        for (int i=0; i<2; i++) {
+            switchIndexArr[i] = new ArrayList<>();
+        }
 
-                if (timeseriesInitiated) {
-                    selectedSwitch[timeseriesIndex] = Integer.parseInt((String) cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()));
-                    selectedSwitchLabel[timeseriesIndex] = Integer.parseInt((String) cbTimeseriesLabel.getItemAt(cbTimeseriesLabel.getSelectedIndex()));
+        int timeseriesIndex = 0;
+        // count
+        int switchWithLabelCount = 0;
+        int[] selectedSwitchLabel = new int[1];
+        int[] selectedSwitch = new int[1];
+
+        if (timeseriesInitiated) {
+            selectedSwitch[timeseriesIndex] = Integer.parseInt((String) cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()));
+            selectedSwitchLabel[timeseriesIndex] = Integer.parseInt((String) cbTimeseriesLabel.getItemAt(cbTimeseriesLabel.getSelectedIndex()));
 //                    System.out.println("selectedSwitchLabel[timeseriesIndex] point 0: " + selectedSwitchLabel[timeseriesIndex]);
 //                    System.out.println("previousSwitchLabel[timeseriesIndex] point 0: " + previousSwitchLabel[timeseriesIndex]);
-                } else {
-                    // Default value: 0
-                    selectedSwitch[timeseriesIndex] = 0;
-                    timeseriesInitiated = true;
-                }
+        } else {
+            // Default value: 0
+            selectedSwitch[timeseriesIndex] = 0;
+            timeseriesInitiated = true;
+        }
 
-                // For timeseries label selection change
-                if ((selectedSwitchLabel[timeseriesIndex] != previousSwitchLabel[timeseriesIndex])) {
+        // For timeseries label selection change
+        if ((selectedSwitchLabel[timeseriesIndex] != previousSwitchLabel[timeseriesIndex])) {
 //                    System.out.println("selectedSwitchLabel[timeseriesIndex] point 1: " + selectedSwitchLabel[timeseriesIndex]);
 //                    System.out.println("previousSwitchLabel[timeseriesIndex] point 1: " + previousSwitchLabel[timeseriesIndex]);
 
-                    for (int i=0; i<localTimeseriesLabelArr.size(); i++) {
-                        double correspondingLocalLabel = localTimeseriesLabelArr.get(i);
-                        if (correspondingLocalLabel==selectedSwitchLabel[timeseriesIndex]) {
-                            switchIndexArr[timeseriesIndex].add(i);
-                            switchWithLabelCount++;
-                        }
-                    }
-
-                    String[] switchArr = new String[switchWithLabelCount];
-                    for (int i=0; i<switchIndexArr[timeseriesIndex].size(); i++) {
-                        switchArr[i] = String.valueOf(switchIndexArr[timeseriesIndex].get(i));
-                    }
-
-                    DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(switchArr);
-                    cbTimeseries.setModel(model);
-
-                    // Update label and switch if they are changed
-                    previousSwitchLabel[timeseriesIndex] = selectedSwitchLabel[timeseriesIndex];
-                    previousSwitch[timeseriesIndex] = selectedSwitch[timeseriesIndex];
-                    selectedSwitch[timeseriesIndex] = Integer.parseInt((String) cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()));
-                    dualAxischart.setTimeseriesInChart(selectedSwitch[timeseriesIndex]);
+            for (int i=0; i<localTimeseriesLabelArr.size(); i++) {
+                double correspondingLocalLabel = localTimeseriesLabelArr.get(i);
+                if (correspondingLocalLabel==selectedSwitchLabel[timeseriesIndex]) {
+                    switchIndexArr[timeseriesIndex].add(i);
+                    switchWithLabelCount++;
                 }
+            }
 
-                // For timeseries selection change
-                if (selectedSwitch[timeseriesIndex] != previousSwitch[timeseriesIndex]) {
-                    dualAxischart.setTimeseriesInChart(selectedSwitch[timeseriesIndex]);
-                }
+            String[] switchArr = new String[switchWithLabelCount];
+            for (int i=0; i<switchIndexArr[timeseriesIndex].size(); i++) {
+                switchArr[i] = String.valueOf(switchIndexArr[timeseriesIndex].get(i));
+            }
+
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(switchArr);
+            cbTimeseries.setModel(model);
+
+            // Update label and switch if they are changed
+            previousSwitchLabel[timeseriesIndex] = selectedSwitchLabel[timeseriesIndex];
+            previousSwitch[timeseriesIndex] = selectedSwitch[timeseriesIndex];
+            selectedSwitch[timeseriesIndex] = Integer.parseInt((String) cbTimeseries.getItemAt(cbTimeseries.getSelectedIndex()));
+            dualAxischart.setTimeseriesInChart(selectedSwitch[timeseriesIndex]);
+        }
+
+        // For timeseries selection change
+        if (selectedSwitch[timeseriesIndex] != previousSwitch[timeseriesIndex]) {
+            dualAxischart.setTimeseriesInChart(selectedSwitch[timeseriesIndex]);
+        }
 
 //                System.out.println("selectedSwitchLabel[timeseriesIndex] point 2: " + selectedSwitchLabel[timeseriesIndex]);
 //                System.out.println("previousSwitchLabel[timeseriesIndex] point 2: " + previousSwitchLabel[timeseriesIndex]);
-
-            }
-        });
     }
 
     private void cleanBtnAction() {

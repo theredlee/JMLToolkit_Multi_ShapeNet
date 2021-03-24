@@ -48,12 +48,12 @@ public class PieChartExample extends JFrame {
         setContentPane(chartPanel);
     }
 
-    public PieChartExample(ArrayList<ArrayList<Double>> valPosAndNegArr, ArrayList<ArrayList<Double>> valTFArr, int count) {
+    public PieChartExample(ArrayList<ArrayList<Double>> valPosAndNegArr, ArrayList<ArrayList<Double>> valTPandTPArrArr, int count) {
         super("Distance (SVM) Accuracy");
 
         // Create dataset
         // PieDataset dataset = createDataset();
-        PieDataset dataset = createDistance(valPosAndNegArr, valTFArr, count);
+        PieDataset dataset = createDistance(valPosAndNegArr, valTPandTPArrArr, count);
 
         // Create chart
         JFreeChart chart = ChartFactory.createPieChart(
@@ -77,7 +77,6 @@ public class PieChartExample extends JFrame {
     }
 
     private PieDataset createDataset() {
-
         DefaultPieDataset dataset=new DefaultPieDataset();
         dataset.setValue("80-100", 120);
         dataset.setValue("60-79", 80);
@@ -87,23 +86,23 @@ public class PieChartExample extends JFrame {
         return dataset;
     }
 
-    private PieDataset createDistance(ArrayList<ArrayList<Double>> valPosAndNegArr, ArrayList<ArrayList<Double>> valTFArr, int count) {
-        final int posOrTindex = 0;
-        final int negOrFindex = 1;
-        int posCount = valPosAndNegArr.get(posOrTindex).size();
-        int negCount = valPosAndNegArr.get(negOrFindex).size();
-        int PosTCount = valTFArr.get(posOrTindex).size();
-        int NegFCount = valTFArr.get(negOrFindex).size();
-        int otherCount = count - (PosTCount+NegFCount);
+    private PieDataset createDistance(ArrayList<ArrayList<Double>> valPosAndNegArr, ArrayList<ArrayList<Double>> valTPandTPArrArr, int count) {
+        final int positiveOrTrueIndex = 0;
+        final int negativeOrFalseindex = 1;
+        int posCount = valPosAndNegArr.get(positiveOrTrueIndex).size();
+        int negCount = valPosAndNegArr.get(negativeOrFalseindex).size();
+        int turePositiveCount = valTPandTPArrArr.get(positiveOrTrueIndex).size();
+        int trueNegativeCount = valTPandTPArrArr.get(negativeOrFalseindex).size();
+        int otherCount = count - (turePositiveCount+trueNegativeCount);
 
-        System.out.println("posCount: " + posCount + ", negCount: " + negCount + ", PosTCount: " + PosTCount + ", NegFCount: " + NegFCount + ", otherCount: " + otherCount);
+        System.out.println("posCount: " + posCount + ", negCount: " + negCount + ", turePositiveCount: " + turePositiveCount + ", trueNegativeCount: " + trueNegativeCount + ", otherCount: " + otherCount);
 
         DefaultPieDataset dataset=new DefaultPieDataset();
 //        dataset.setValue("posCount", posCount);
 //        dataset.setValue("negCount", negCount);
-        dataset.setValue("Others", otherCount);
-        dataset.setValue("PosTCount", PosTCount);
-        dataset.setValue("NegFCount", NegFCount);
+        dataset.setValue("FT&FN(Others)", otherCount);
+        dataset.setValue("TPCount", turePositiveCount);
+        dataset.setValue("TNCount", trueNegativeCount);
         return dataset;
     }
 
@@ -116,12 +115,12 @@ public class PieChartExample extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            PieChartExample example = new PieChartExample("Pie Chart Example");
-            example.setSize(800, 400);
-            example.setLocationRelativeTo(null);
-            example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            example.setVisible(true);
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            PieChartExample example = new PieChartExample("Pie Chart Example");
+//            example.setSize(800, 400);
+//            example.setLocationRelativeTo(null);
+//            example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//            example.setVisible(true);
+//        });
     }
 }  

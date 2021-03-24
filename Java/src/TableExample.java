@@ -1,16 +1,37 @@
+import org.jfree.data.general.DefaultPieDataset;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.security.PublicKey;
+import java.util.ArrayList;
 
 public class TableExample {
     JScrollPane scrollPane;
 
-    public TableExample() {
-        JFrame f = new JFrame("Table Example");
-        String data[][]={ {"101","Amit","670000"},
-                {"102","Jai","780000"},
-                {"101","Sachin","700000"}};
-        String column[]={"ID","NAME","SALARY"};
+    public TableExample(ArrayList<ArrayList<Double>> valPosAndNegArr, ArrayList<ArrayList<Double>> valTPandTPArrArr, int count) {
+        final int positiveOrTrueIndex = 0;
+        final int negativeOrFalseindex = 1;
+
+        int posCount = valPosAndNegArr.get(positiveOrTrueIndex).size();
+        int negCount = valPosAndNegArr.get(negativeOrFalseindex).size();
+        int turePositiveCount = valTPandTPArrArr.get(positiveOrTrueIndex).size();
+        int trueNegativeCount = valTPandTPArrArr.get(negativeOrFalseindex).size();
+        int falsePositiveCount = posCount - turePositiveCount;
+        int falseNegativeCount = negCount - trueNegativeCount;
+        int otherCount = count - (turePositiveCount+trueNegativeCount);
+
+        System.out.println("posCount: " + posCount + ", negCount: " + negCount + ", turePositiveCount: " + turePositiveCount + ", trueNegativeCount: " + trueNegativeCount + ", otherCount: " + otherCount);
+
+        // ->->->->->->->->->->->->->->->->->->->->->->
+
+        JFrame f = new JFrame("Confusion Matrix");
+        String data[][]=
+                {
+                    {"Actual 0",String.valueOf(turePositiveCount), String.valueOf(falsePositiveCount), String.valueOf(posCount)},
+                    {"Actual 1",String.valueOf(falseNegativeCount),String.valueOf(trueNegativeCount), String.valueOf(negCount)},
+                    {"   ", String.valueOf(turePositiveCount+falseNegativeCount), String.valueOf(falsePositiveCount+trueNegativeCount), String.valueOf(posCount+negCount)}
+                };
+        String column[]={"Label","Predicted 0","Predicted 1", "   "};
         final JTable jt=new JTable(data,column);
         jt.setCellSelectionEnabled(true);
         ListSelectionModel select= jt.getSelectionModel();

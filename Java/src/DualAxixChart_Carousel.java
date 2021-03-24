@@ -21,7 +21,7 @@ public class DualAxixChart_Carousel extends JPanel {
     DualAxisChart dualAxisChart;
     DualAxisChart_3 dualAxisChart_3;
     final int width = 550*2;
-    final int height = 550;
+    final int height = 700;
     Dataset aDataset;
 
     public DualAxixChart_Carousel(Dataset aDataset) throws IOException {

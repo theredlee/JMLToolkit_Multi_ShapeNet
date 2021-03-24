@@ -19,7 +19,7 @@ public class Dataset {
     public ArrayList<Double> globalMultiArr = new ArrayList<Double>();
 
     public ArrayList<ArrayList<Double>> globalMultPosAndNegArr = new ArrayList<ArrayList<Double>>();
-    public ArrayList<ArrayList<Double>> globalMultTFArr = new ArrayList<ArrayList<Double>>();
+    public ArrayList<ArrayList<Double>> globalMultTPandTPArr = new ArrayList<ArrayList<Double>>();
     public ArrayList<ArrayList<ArrayList<Double>>> globalStartEndPoints_ALT_AND_AFP = new ArrayList<ArrayList<ArrayList<Double>>>();
     public double accuracy;
     public int count;
@@ -32,7 +32,7 @@ public class Dataset {
     final String win = "M:\\RedLee\\datasets\\";
     final String win2 = "C:\\Users\\demo\\Desktop\\RedLee\\ShapeNet\\datasets\\";
     final String mac = "/Users/student/Documents/RL_Folder/DVP/RedLee/datasets/";
-    final String sys = mac;
+    final String sys = win2;
 
     public Dataset(boolean normalization) {
         this.normalization = false;
@@ -521,8 +521,8 @@ public class Dataset {
         ArrayList<Double> arrT = new ArrayList<Double>();
         ArrayList<Double> arrF = new ArrayList<Double>();
 
-        ArrayList<Double> arrPosT = new ArrayList<Double>();
-        ArrayList<Double> arrNegF = new ArrayList<Double>();
+        ArrayList<Double> arrTruePositive = new ArrayList<Double>();
+        ArrayList<Double> arrTrueNegative = new ArrayList<Double>();
 
         final int[] positiveCount = {0};
 
@@ -552,7 +552,7 @@ public class Dataset {
                     positiveCount[0]++;
                     accuracyCount[0]++;
 //                    arrT.add(rowSum);
-                    arrPosT.add(rowSum);
+                    arrTruePositive.add(rowSum);
                     globalMulti0And1Arr.get(label0Index).add(rowSum);
                 }else{
                     // Label = 1
@@ -565,7 +565,7 @@ public class Dataset {
                     // Label = 1
                     accuracyCount[0]++;
 //                    arrT.add(rowSum);
-                    arrNegF.add(rowSum);
+                    arrTrueNegative.add(rowSum);
                     globalMulti0And1Arr.get(label1Index).add(rowSum);
                 }else{
                     // Label = 0
@@ -588,8 +588,8 @@ public class Dataset {
 
         globalMultPosAndNegArr.add(arrPos);
         globalMultPosAndNegArr.add(arrNeg);
-        globalMultTFArr.add(arrPosT);
-        globalMultTFArr.add(arrNegF);
+        globalMultTPandTPArr.add(arrTruePositive);
+        globalMultTPandTPArr.add(arrTrueNegative);
 //        globalMultTFArr.add(arrT);
 //        globalMultTFArr.add(arrF);
 
@@ -663,8 +663,8 @@ public class Dataset {
         return globalMultPosAndNegArr;
     }
 
-    public ArrayList<ArrayList<Double>> getGlobalMultTFArr() {
-        return globalMultTFArr;
+    public ArrayList<ArrayList<Double>> getGlobalMultTPandTPArr() {
+        return globalMultTPandTPArr;
     }
 
     private void setGlobalShapeletDimArr(ArrayList<Double> shapeletDimArr) {

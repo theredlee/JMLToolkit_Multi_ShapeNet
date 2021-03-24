@@ -46,7 +46,7 @@ public class Main {
 
     private static void formal_main() throws IOException {
 
-        final int maxWidth = 800;
+        final int maxWidth = 900;
         final int maxHeight = 600;
 
         Dataset aDataset = new Dataset(true);
@@ -73,21 +73,21 @@ public class Main {
 
         // ---------------------------------------------------------------------------------------------------------
         // 1. Initialize histogram and set panel for histogram
-        final HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr());
+        final HistogramExample histogram = new HistogramExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTPandTPArr());
 //        final LineChartExample lineChart = new LineChartExample("Line Chart Example", aDataset.getGlobalShapelet());
         final DualAxisChart_1 dualAxisChart_1 = new DualAxisChart_1(aDataset.getGlobalTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalShapeletDimArr());
-        DualAxixChart_Carousel animator = new DualAxixChart_Carousel(aDataset);
+        DualAxixChart_Carousel dualAxixChart_carousel = new DualAxixChart_Carousel(aDataset);
 
         final TextAreaExample textArea = new TextAreaExample();
-        final PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTFArr(), aDataset.getCount());
+        final PieChartExample pieChart = new PieChartExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTPandTPArr(), aDataset.getCount());
         final com.technobium.regression.RegressionChartExample regressionChart = new com.technobium.regression.RegressionChartExample(aDataset.getGlobalMultiArr(), aDataset.getGlobalTimeseriesLabelArr());
-        final ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletDimArr(), dualAxisChart_1, textArea);
+        final ComboBoxExample comboBox = new ComboBoxExample(aDataset.getGlobalRawTimeseries(), aDataset.getGlobalShapelet(), aDataset.getGlobalTimeseriesLabelArr(), aDataset.getGlobalShapeletDimArr(), textArea);
 
         // --------------------------------------------------------
         // 1. Initialize comboBox and set panel for comboBox
         JPanel comboBoxPanel = comboBox.getPanel();
         panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
-        panel_1.setPreferredSize(new Dimension(250+20, frame.getHeight()));
+        panel_1.setPreferredSize(new Dimension(350+20, frame.getHeight()));
         panel_1.add(comboBoxPanel);
         panel_1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         frame.add(panel_1, BorderLayout.WEST);
@@ -126,7 +126,7 @@ public class Main {
 //        JScrollPane aDualAxisScrollPane_2 = dualAxisChart_2.getScrollPane();
 //        panel_2_2_1.add(aDualAxisScrollPane_2, BorderLayout.CENTER);
 
-        panel_2_2_1.add(animator, BorderLayout.CENTER);
+        panel_2_2_1.add(dualAxixChart_carousel, BorderLayout.CENTER);
 
         panel_2_2_1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panel_2_2_1.setMinimumSize(new Dimension(aDualAxisScrollPane_4.getWidth(), aDualAxisScrollPane_4.getHeight()));
@@ -146,20 +146,22 @@ public class Main {
 
 
         // 6. Initialize TableExample
-        TableExample confusion_table = new TableExample();
+        TableExample confusion_table = new TableExample(aDataset.getGlobalMultPosAndNegArr(), aDataset.getGlobalMultTPandTPArr(), aDataset.getCount());
         JPanel confusionAndPieChartScrollPanel = new JPanel();
         confusionAndPieChartScrollPanel.setLayout(new GridLayout(1,2));
+        JScrollPane confusion_matrix_panel = confusion_table.getScrollPane();
+        confusion_matrix_panel.setPreferredSize(new Dimension(450, 350));
+        confusionAndPieChartScrollPanel.add(confusion_matrix_panel);
         confusionAndPieChartScrollPanel.add(pieChartPanel);
-        confusionAndPieChartScrollPanel.add(confusion_table.getScrollPane());
         JScrollPane confusionAndPieChartScrollPane = new JScrollPane();
         confusionAndPieChartScrollPane.add(confusionAndPieChartScrollPanel);
         confusionAndPieChartScrollPane.setViewportView(confusionAndPieChartScrollPanel);
         confusionAndPieChartScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        confusionAndPieChartScrollPane.setPreferredSize(new Dimension(400, 400));
+        confusionAndPieChartScrollPane.setPreferredSize(new Dimension(450,350));
 
         panel_2_2_2.setLayout(new BoxLayout(panel_2_2_2, BoxLayout.Y_AXIS));
 //        panel_2_2_2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        panel_2_2_2.setMinimumSize(new Dimension(pieChartPanel.getWidth(),panel_2_2_1.getHeight()));
+        panel_2_2_2.setMinimumSize(new Dimension(300,panel_2_2_1.getHeight()));
         panel_2_2_2.add(confusionAndPieChartScrollPane);
         panel_2_2.setLayout(new BoxLayout(panel_2_2, BoxLayout.X_AXIS));
         panel_2_2.add(panel_2_2_2);
@@ -176,11 +178,11 @@ public class Main {
         // Set comboBox
         controller.setComboBox(comboBox);
         // Then set dualAxisCharts
-        DualAxisChart dualAxisChart = animator.getDualAxisChart();
+        DualAxisChart dualAxisChart = dualAxixChart_carousel.getDualAxisChart();
         controller.setDualAxisChart(dualAxisChart);
         controller.setDualAxisChart_1(dualAxisChart_1);
         // No DualAxisChart_2 currently
-        DualAxisChart_3 dualAxisChart_3 = animator.getDualAxisChart_3();
+        DualAxisChart_3 dualAxisChart_3 = dualAxixChart_carousel.getDualAxisChart_3();
         controller.setDualAxisChart_3(dualAxisChart_3);
         // Set controller into each dualAxisChart
         dualAxisChart.setController(controller);
@@ -189,6 +191,8 @@ public class Main {
         dualAxisChart_3.setController(controller);
         // comboBox set controller
         comboBox.setController(controller);
+        // Initialize comboBox default values
+        comboBox.updateComboBox(aDataset.getGlobalTimeseriesLabelArr());
 
         // Frame setting
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
