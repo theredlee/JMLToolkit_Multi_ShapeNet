@@ -79,7 +79,7 @@ public class HistogramExample extends JFrame {
         double[][] TFArr = {valT, valF};
 
         // (>0 & label==0) && (<0 & label==1): T, otherwise: F
-        String[] PNlabelArr = {">0", "<0"};
+        String[] PNlabelArr = {"1", "0"};
         for (int i=0; i<valPosAndNegArr.size(); i++) {
             ArrayList<Double> valArr = valPosAndNegArr.get(i);
             for (int j=0; j<valArr.size(); j++) {
@@ -91,7 +91,7 @@ public class HistogramExample extends JFrame {
         }
 
         // 0: arrT & 1: arrF
-        String[] TFlabelArr = {">0_True", "<0_False"};
+        String[] TFlabelArr = {"True 1", "True 0"};
         for (int i=0; i<valTFArr.size(); i++) {
             ArrayList<Double> valArr = valTFArr.get(i);
             for (int j=0; j<valArr.size(); j++) {
